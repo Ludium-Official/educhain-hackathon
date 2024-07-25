@@ -1,11 +1,14 @@
-import { GetServerSideProps, GetServerSidePropsContext } from '@/types/next-server-side';
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+} from "@/types/next-server-side";
 
-import { getServerSideApp } from './getServerSideApp';
+import { getServerSideApp } from "./getServerSideApp";
 
 export const withSession =
   <P extends {} = {}, B extends {} = {}, Q extends {} = {}>(
     handler: GetServerSideProps<P, B, Q>,
-    binder?: (app: any) => void,
+    binder?: (app: any) => void
   ) =>
   async (context: GetServerSidePropsContext<B, Q>) => {
     const app = getServerSideApp();

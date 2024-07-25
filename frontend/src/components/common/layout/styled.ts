@@ -1,69 +1,69 @@
-import { styled } from '@mui/material';
+import { styled } from "@mui/material";
 
-export const Body = styled('div')(({ theme }) => ({
-  position: 'relative',
-  overflow: 'hidden',
+export const Body = styled("div")(({ theme }) => ({
+  position: "relative",
+  overflow: "hidden",
 
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
 
-  width: '100%',
-  minHeight: '100vh',
+  width: "100%",
+  minHeight: "100vh",
 }));
 
-export const Container = styled('div')({
+export const Container = styled("div")({
   zIndex: 1,
-  position: 'relative',
+  position: "relative",
 
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 
-  maxWidth: '192rem',
-  margin: '0 auto 17.2rem',
+  maxWidth: "192rem",
+  margin: "0 auto 17.2rem",
 });
 
-export const BgGradient = styled('div')({
-  position: 'absolute',
+export const BgGradient = styled("div")({
+  position: "absolute",
 });
 
 export const HeaderGradient = styled(BgGradient)({
-  top: '0',
+  top: "0",
 
-  width: '100%',
-  height: '28rem',
-  background: 'linear-gradient(180deg, #20233B 0%, rgba(44, 32, 59, 0) 100%)',
+  width: "100%",
+  height: "28rem",
+  background: "linear-gradient(180deg, #20233B 0%, rgba(44, 32, 59, 0) 100%)",
 });
 
 export const FooterGradient = styled(BgGradient)(({ theme }) => ({
-  bottom: '-26rem',
-  left: '50%',
-  transform: 'translate(-50%, 0)',
+  bottom: "-26rem",
+  left: "50%",
+  transform: "translate(-50%, 0)",
 
-  width: '59rem',
-  height: '52.6rem',
-  opacity: '0.6',
-  filter: 'blur(20rem)',
+  width: "59rem",
+  height: "52.6rem",
+  opacity: "0.6",
+  filter: "blur(20rem)",
 }));
 
-export const BackgroundWrapper = styled('div')({
-  position: 'absolute',
+export const BackgroundWrapper = styled("div")({
+  position: "absolute",
 
-  display: 'flex',
-  justifyContent: 'center',
+  display: "flex",
+  justifyContent: "center",
 
-  width: '100%',
+  width: "100%",
 });
 
-export const ImgWrapper = styled('div')({
-  position: 'relative',
+export const ImgWrapper = styled("div")({
+  position: "relative",
 
-  width: '192rem',
-  height: '10rem',
+  width: "192rem",
+  height: "10rem",
 });
 
-export const BackgrounImg = styled('img')({
-  position: 'absolute',
-  top: '-50rem',
+export const BackgrounImg = styled("img")({
+  position: "absolute",
+  top: "-50rem",
 });
