@@ -29,10 +29,86 @@ pragma solidity ^0.8.20;
 
 // https://ludium.world/
 
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "./bounty/LDBountyEdu.sol";
+
 /**
  *  @title Ludium bounty contract factory
  *  @notice A new proxy is created every time a program(bounty) is generated.
  */
-contract LDBounty {
-// do something...
+contract LDBounty is OwnableUpgradeable, LDBountyEdu {
+    function initialize(
+        address initialOwner,
+        uint256 programId_,
+        uint256 feeRatio_,
+        address validator_,
+        address treasury_,
+        uint256[2][] memory prizeConfig,
+        uint256 start,
+        uint256 end
+    ) public initializer {
+        __Ownable_init(initialOwner);
+        __LDBountyEdu_init(programId_, feeRatio_, validator_, treasury_, prizeConfig, start, end);
+
+        // [Todo] event emit
+    }
+
+    // =========================== View =========================== //
+
+    function programId() public view returns (uint256) {
+        return _programId();
+    }
+
+    function programDuration() public view returns (uint256[2] memory) {
+        return [_startDate(), _endDate()];
+    }
+
+    function feeRatio() public view returns (uint256) {
+        return _feeRatio();
+    }
+
+    function treasury() public view returns (address) {
+        return _treasury();
+    }
+
+    function validator() public view returns (address) {
+        return _validator();
+    }
+
+    function totalChapter() public view returns (uint256) {
+        return _totalChapter();
+    }
+
+    function reserveAndPrize(uint256 chapterIndex) public view returns (uint256[2] memory) {
+        return [_reserve(chapterIndex), _prize(chapterIndex)];
+    }
+
+    // =========================== Write =========================== //
+
+    function claim(uint256 programId_, uint256 chapterIndex, uint256 submissionId, address recipient, bytes memory sig)
+        external
+    {
+        require(recipient == msg.sender);
+
+        _claimValidation(programId_, chapterIndex, submissionId, recipient);
+        _sigValidation(programId_, chapterIndex, submissionId, recipient, sig);
+
+        _claim(chapterIndex, recipient, submissionId);
+
+        // [Todo] event emit
+    }
+
+    // =========================== Only Owner =========================== //
+
+    function addChapter(uint256 reserve, uint256 prize) external onlyOwner {
+        _addChapter(reserve, prize);
+
+        // [Todo] event emit
+    }
+
+    function setValidator(address newValidator) external onlyOwner {
+        _setValidator(newValidator);
+
+        // [Todo] event emit
+    }
 }
