@@ -12,7 +12,6 @@ interface HomeProps extends CommonProps {
 
 const Home: NextPage<HomeProps> = ({ value, infoMessage }) => {
   const { isMobile } = useMedia();
-  console.log(value);
 
   return isMobile ? (
     <div>mobile</div>

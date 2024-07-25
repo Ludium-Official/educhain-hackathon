@@ -1,8 +1,15 @@
+import { AxiosRequestConfig } from "axios";
 import { Requester } from "./Requester";
 import { getApiServerHost } from "./getApiHost";
 
 export class ServerRequester extends Requester {
   constructor() {
-    super(getApiServerHost());
+    const axiosOptions: AxiosRequestConfig = {
+      headers: {
+        "x-api-key": process.env.NEXT_PUBLIC_LUDIUM_SECRET_KEY,
+      },
+    };
+
+    super(getApiServerHost(), axiosOptions);
   }
 }

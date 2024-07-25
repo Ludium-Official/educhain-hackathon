@@ -1,12 +1,8 @@
+import { withAuth } from "@/middlewares/authMiddleware";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Data = {
-  name: string;
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  return res.status(200).json({ message: "Hello, world!" });
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(200).json({ name: "John Doe" });
-}
+export default withAuth(handler);
