@@ -1,10 +1,10 @@
-import { ErrorStatus } from "./styled";
+import Layout from "@/components/common/layout";
+import { FailedAxiosData } from "@/functions/axios-function";
+import { withSession } from "@/middlewares/withSession";
+import { NextPage } from "@/types/next-page";
 import { GetServerSideProps } from "@/types/next-server-side";
 import { HttpStatusCode } from "axios";
-import Layout from "@/components/common/layout";
-import { NextPage } from "@/types/next-page";
-import { withSession } from "@/middlewares/withSession";
-import { FailedAxiosData } from "@/functions/axios-function";
+import { ErrorStatus } from "./styled";
 
 const Error: NextPage<Partial<FailedAxiosData>> = ({ statusCode, message }) => {
   return (

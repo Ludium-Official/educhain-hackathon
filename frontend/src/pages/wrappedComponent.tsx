@@ -1,12 +1,12 @@
-import { NoSsr, StyledEngineProvider, ThemeProvider } from '@mui/material';
-import React, { Suspense, useEffect, useState } from 'react';
-import { Themes, useSetting } from '@/hooks/store/useSetting';
+import { Themes, useSetting } from "@/hooks/store/useSetting";
+import { NoSsr, StyledEngineProvider, ThemeProvider } from "@mui/material";
+import React, { Suspense, useEffect, useState } from "react";
 
-import { CacheProvider } from '@emotion/react';
-import { CommonProps } from '@/types/next-server-side';
-import createEmotionCache from '@/styles/createEmotionCache';
-import { darkTheme } from '@/styles/themes/darkTheme';
-import { lightTheme } from '@/styles/themes/lightTheme';
+import createEmotionCache from "@/styles/createEmotionCache";
+import { darkTheme } from "@/styles/themes/darkTheme";
+import { lightTheme } from "@/styles/themes/lightTheme";
+import { CommonProps } from "@/types/next-server-side";
+import { CacheProvider } from "@emotion/react";
 
 const cache = createEmotionCache();
 
@@ -14,7 +14,11 @@ interface WrappedComponentProps extends CommonProps {
   children: JSX.Element;
 }
 
-const WrappedComponent: React.FC<WrappedComponentProps> = ({ user, isLoggedIn, children }) => {
+const WrappedComponent: React.FC<WrappedComponentProps> = ({
+  user,
+  isLoggedIn,
+  children,
+}) => {
   const { theme } = useSetting();
 
   const [currentTheme, setCurrentTheme] = useState(darkTheme);

@@ -1,4 +1,4 @@
-import { AppProps, AppType } from 'next/app';
+import { AppProps, AppType } from "next/app";
 import Document, {
   DocumentContext,
   DocumentProps,
@@ -6,12 +6,12 @@ import Document, {
   Html,
   Main,
   NextScript,
-} from 'next/document';
+} from "next/document";
 
-import { CommonProps } from '@/types/next-server-side';
-import { NextPage } from 'next';
-import createEmotionCache from '@/styles/createEmotionCache';
-import createEmotionServer from '@emotion/server/create-instance';
+import createEmotionCache from "@/styles/createEmotionCache";
+import { CommonProps } from "@/types/next-server-side";
+import createEmotionServer from "@emotion/server/create-instance";
+import { NextPage } from "next";
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: JSX.Element[];
@@ -23,7 +23,10 @@ const MyDocument: NextPage<MyDocumentProps> = ({ emotionStyleTags }) => {
       <Head>
         <meta charSet="utf-8" />
 
-        <meta httpEquiv="Cache-Control" content="private, no-cache, no-store, must-revalidate" />
+        <meta
+          httpEquiv="Cache-Control"
+          content="private, no-cache, no-store, must-revalidate"
+        />
         <meta httpEquiv="Pragma" content="no-cache" />
         <meta httpEquiv="Expires" content="-1" />
 
@@ -47,7 +50,9 @@ MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   ctx.renderPage = () =>
     originalRenderPage({
       enhanceApp: (
-        App: React.ComponentType<React.ComponentProps<AppType> & AppProps<CommonProps>>,
+        App: React.ComponentType<
+          React.ComponentProps<AppType> & AppProps<CommonProps>
+        >
       ) =>
         function EnhanceApp(props) {
           const appProps = {
@@ -62,7 +67,7 @@ MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   const emotionStyles = extractCriticalToChunks(initialProps.html);
   const emotionStyleTags = emotionStyles.styles.map((style) => (
     <style
-      data-emotion={`${style.key} ${style.ids.join(' ')}`}
+      data-emotion={`${style.key} ${style.ids.join(" ")}`}
       key={style.key}
       dangerouslySetInnerHTML={{ __html: style.css }}
     />
