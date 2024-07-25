@@ -1,7 +1,8 @@
-import { Requester } from './Requester';
+import { Requester } from "./Requester";
+import { getApiServerHost } from "./getApiHost";
 
 export class ServerRequester extends Requester {
   constructor() {
-    super(process.env.API_SERVER_BASE_URL);
+    super(getApiServerHost());
   }
 }
