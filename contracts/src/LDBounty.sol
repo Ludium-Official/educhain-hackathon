@@ -29,84 +29,10 @@ pragma solidity ^0.8.20;
 
 // https://ludium.world/
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-
-contract LDBountyEdu is Initializable {
-    // do something..
-    string public constant CONTRACT_TYPE = "education";
-    string public constant VERSION = "0.1";
-
-    // keccak256(abi.encode(uint256(keccak256("ludium.storage.LDBountyEdu")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant StorageLocation = 0xa419b7f6ee91760ab22b2e802b2afe5f4c2332b9057019e99ee975ac82881300;
-
-    struct LDBountyEduStorage {
-        address _validator;
-        uint256 _feeRatio;
-        uint256 _totalChapter;
-        uint256 _start;
-        uint256 _end;
-        mapping(uint256 => uint256) _reserve;
-        mapping(uint256 => uint256) _prize;
-        mapping(uint256 => mapping(address => bool)) _claimed;
-    }
-
-    function _getStorage() private pure returns (LDBountyEduStorage storage $) {
-        assembly {
-            $.slot := StorageLocation
-        }
-    }
-
-    /**
-     * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
-     */
-    function __LDBountyEdu_init(
-        uint256 feeRatio,
-        address validator,
-        uint256[2][] memory prizeConfig,
-        uint256 start,
-        uint256 end
-    ) internal onlyInitializing {
-        __LDBountyEdu_init_unchained(feeRatio, validator, prizeConfig, start, end);
-    }
-
-    function __LDBountyEdu_init_unchained(
-        uint256 feeRatio,
-        address validator,
-        uint256[2][] memory prizeConfig,
-        uint256 start,
-        uint256 end
-    ) internal onlyInitializing {
-        LDBountyEduStorage storage $ = _getStorage();
-        $._validator = validator;
-        $._feeRatio = feeRatio;
-        $._totalChapter = prizeConfig.length;
-        $._start = start;
-        $._end = end;
-
-        for (uint256 i = 0; i < prizeConfig.length; i++) {
-            uint256 chapterIndex = i + 1;
-            $._reserve[chapterIndex] = prizeConfig[i][0];
-            $._prize[chapterIndex] = prizeConfig[i][1];
-        }
-    }
-
-    // event
-
-    // view validator
-    // set validator
-
-    // view feeRatio
-
-    // view totalChapter
-
-    // view start, end
-
-    // deposit
-    // withdraw
-
-    // add chapter
-
-    // claim
+/**
+ *  @title Ludium bounty contract factory
+ *  @notice A new proxy is created every time a program(bounty) is generated.
+ */
+contract LDBounty {
+// do something...
 }
