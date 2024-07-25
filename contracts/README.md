@@ -18,7 +18,7 @@ Currently, only the beta version, "education v0.1" is implemented.
 
 The Ludium treasury contract where the fees from bounty rewards are collected.
 
-### Tracker
+### EventLogger
 
 Contract that records various events such as bounty creation, bounty claiming, etc.
 By querying the Tracker, all events can be logged without the need to track events from multiple proxy contracts.

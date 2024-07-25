@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
-
 /**
  * DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
  * CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -27,22 +26,63 @@ pragma solidity ^0.8.20;
  * CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
  * DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
  */
-contract LDBountyEdu {
+
+// https://ludium.world/
+
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
+contract LDBountyEdu is Initializable {
     // do something..
     string public constant CONTRACT_TYPE = "education";
     string public constant VERSION = "0.1";
 
-    // 슬롯 위치
+    // keccak256(abi.encode(uint256(keccak256("ludium.storage.LDBountyEdu")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant StorageLocation = 0xa419b7f6ee91760ab22b2e802b2afe5f4c2332b9057019e99ee975ac82881300;
 
-    // validator: 상금 수령 서명 유효성 검사에서만 활용
-    // owner: 컨트랙트 업데이트 및 withdraw, ... 권한
+    struct LDBountyEduStorage {
+        address _owner;
+        address _validator;
+        uint256 _feeRatio;
+        uint256 _totalChapter;
+        mapping(uint256 => uint256) _reserve;
+        mapping(uint256 => uint256) _prize;
+        mapping(uint256 => mapping(address => bool)) _claimed;
+    }
 
-    // struct 결정
-    // 챕터 할당량, 보상 금액,
-    // 챕터는 프로그램에 따라 한개 일 수도, 여러개 일 수도?
+    function _getStorage() private pure returns (LDBountyEduStorage storage $) {
+        assembly {
+            $.slot := StorageLocation
+        }
+    }
 
-    // view 함수
-    // 총 챕터가 몇 개인가?
-    // 챕터당 보상이 얼마인가?
-    // 챕터 보상 할당량이 얼마 남았는가?
+    /**
+     * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
+     */
+    function __LDBountyEdu_init(uint256 feeRatio, address owner, address validator, uint256[2][] memory chapterOption)
+        internal
+        onlyInitializing
+    {
+        __LDBountyEdu_init_unchained(feeRatio, owner, validator, chapterOption);
+    }
+
+    function __LDBountyEdu_init_unchained(
+        uint256 feeRatio,
+        address owner,
+        address validator,
+        uint256[2][] memory chapterOption
+    ) internal onlyInitializing {
+        LDBountyEduStorage storage $ = _getStorage();
+        $._owner = owner;
+        $._validator = validator;
+        $._feeRatio = feeRatio;
+        $._totalChapter = chapterOption.length;
+
+        for (uint256 i = 0; i < chapterOption.length; i++) {
+            uint256 chapterIndex = i + 1;
+            $._reserve[chapterIndex] = chapterOption[i][0];
+            $._prize[chapterIndex] = chapterOption[i][1];
+        }
+    }
 }
