@@ -1,6 +1,6 @@
 import { CommonProps, GetServerSideProps } from "@/types/next-server-side";
 
-import Layout from "@/components/layout";
+import Layout from "@/components/common/layout";
 import { NextPage } from "@/types/next-page";
 import { useMedia } from "@/hooks/useMedia";
 import { withSession } from "@/middlewares/withSession";

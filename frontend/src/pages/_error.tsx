@@ -1,7 +1,7 @@
 import { ErrorStatus } from "./styled";
 import { GetServerSideProps } from "@/types/next-server-side";
 import { HttpStatusCode } from "axios";
-import Layout from "@/components/layout";
+import Layout from "@/components/common/layout";
 import { NextPage } from "@/types/next-page";
 import { withSession } from "@/middlewares/withSession";
 import { FailedAxiosData } from "@/functions/axios-function";
