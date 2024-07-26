@@ -28,8 +28,13 @@
     "typeRoots": ["./src/types"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../api/dist/**/*"],
-  "exclude": ["node_modules", "next.config.js"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "next.config.mjs"]
 }
