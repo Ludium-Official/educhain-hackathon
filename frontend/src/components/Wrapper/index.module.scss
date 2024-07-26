@@ -1,30 +1,24 @@
 .container {
   display: flex;
 
-  height: 100dvh;
   max-width: 1440px;
+  min-height: 100dvh;
   margin: 0 auto;
-
-  overflow: hidden;
 }
 
 .wrapper {
   background-color: var(--gray-07);
   width: 100%;
+  margin-left: 247px;
 }
 
 .body {
+  position: relative;
+
   display: flex;
   flex-direction: column;
-  flex: 1 1 0%;
-
-  overflow: scroll;
 
   .header {
-    position: sticky;
-    top: 0;
-
-    width: 100%;
     background-color: var(--white);
     padding: 22px 40px;
     border-bottom: 1px solid var(--gray-06);

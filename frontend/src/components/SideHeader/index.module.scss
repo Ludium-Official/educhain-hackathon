@@ -1,5 +1,7 @@
 .container {
-  flex: none;
+  z-index: 99;
+  position: fixed;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;

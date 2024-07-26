@@ -3,6 +3,10 @@
 import { sha256ToHex } from "@/app/libs/cryptoEncode";
 import fetchData from "@/app/libs/fetchData";
 import LudiumLogo from "@/assets/common/LudiumLogo.svg";
+import ActiveAnnouncementLogo from "@/assets/header/ActiveAnnouncementLogo.svg";
+import ActiveCommunityLogo from "@/assets/header/ActiveCommunityLogo.svg";
+import ActiveProfileLogo from "@/assets/header/ActiveProfileLogo.svg";
+import ActiveWorkLogo from "@/assets/header/ActiveWorkLogo.svg";
 import AnnouncementLogo from "@/assets/header/AnnouncementLogo.svg";
 import CommunityLogo from "@/assets/header/CommunityLogo.svg";
 import ProfileLogo from "@/assets/header/ProfileLogo.svg";
@@ -23,7 +27,7 @@ const SideHeader = () => {
   const pathname = usePathname();
   const { setUser } = useUser();
   const account = useAccount();
-  console.log(pathname);
+  const currentPage = `/${pathname.split("/")[1]}`;
 
   const callData = useCallback(
     async (addressKey: string) => {
@@ -33,7 +37,10 @@ const SideHeader = () => {
 
       if (response.length > 0) {
         setUser(response[0]);
+        return;
       }
+
+      setUser(null);
     },
     [setUser]
   );
@@ -48,8 +55,6 @@ const SideHeader = () => {
 
       return;
     }
-
-    setUser(null);
   }, [account?.address, callData]);
 
   return (
@@ -60,8 +65,23 @@ const SideHeader = () => {
         </Link>
         <div className={styles.navigation}>
           {account.address ? (
-            <Link className={styles.link} href={PATH.PROFILE}>
-              <Image src={ProfileLogo.src} alt="logo" width={24} height={24} />
+            <Link
+              className={clsx(
+                currentPage === PATH.PROFILE ? styles.this : null,
+                styles.link
+              )}
+              href={PATH.PROFILE}
+            >
+              <Image
+                src={
+                  currentPage === PATH.PROFILE
+                    ? ActiveProfileLogo.src
+                    : ProfileLogo.src
+                }
+                alt="logo"
+                width={24}
+                height={24}
+              />
               프로필
             </Link>
           ) : (
@@ -76,20 +96,57 @@ const SideHeader = () => {
           )}
           <Link
             className={clsx(
-              pathname === PATH.ANNOUNCEMENT ? styles.this : null,
+              currentPage === PATH.ANNOUNCEMENT ? styles.this : null,
               styles.link
             )}
             href={PATH.ANNOUNCEMENT}
           >
-            <img src={AnnouncementLogo.src} alt="logo" />
+            <Image
+              src={
+                currentPage === PATH.ANNOUNCEMENT
+                  ? ActiveAnnouncementLogo.src
+                  : AnnouncementLogo.src
+              }
+              alt="logo"
+              width={24}
+              height={24}
+            />
             공고 수행
           </Link>
-          <Link className={styles.link} href={PATH.WORK}>
-            <Image src={WorkLogo.src} alt="logo" width={24} height={24} />
+          <Link
+            className={clsx(
+              currentPage === PATH.WORK ? styles.this : null,
+              styles.link
+            )}
+            href={PATH.WORK}
+          >
+            <Image
+              src={
+                currentPage === PATH.WORK ? ActiveWorkLogo.src : WorkLogo.src
+              }
+              alt="logo"
+              width={24}
+              height={24}
+            />
             학습 참여
           </Link>
-          <Link className={styles.link} href={PATH.PROGRAM}>
-            <Image src={CommunityLogo.src} alt="logo" width={24} height={24} />
+          <Link
+            className={clsx(
+              currentPage === PATH.PROGRAM ? styles.this : null,
+              styles.link
+            )}
+            href={PATH.PROGRAM}
+          >
+            <Image
+              src={clsx(
+                currentPage === PATH.PROGRAM
+                  ? ActiveCommunityLogo.src
+                  : CommunityLogo.src
+              )}
+              alt="logo"
+              width={24}
+              height={24}
+            />
             커뮤니티
           </Link>
         </div>

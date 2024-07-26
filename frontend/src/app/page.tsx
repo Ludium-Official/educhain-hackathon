@@ -19,6 +19,7 @@ export default function Home() {
     const callData = async () => {
       const response = (await fetchData("/announcements", "POST", {
         isDash: true,
+        job: "manage",
       })) as Announcements[];
 
       setAnnouncements(response);
@@ -94,7 +95,7 @@ export default function Home() {
               <div className={styles.table}>
                 <div className={styles.tableHeader}>
                   공고 목록
-                  <Link className={styles.link} href={PATH.HOME}>
+                  <Link className={styles.link} href={PATH.ANNOUNCEMENT}>
                     모두 보기
                     <Image
                       className={styles.seeLink}
@@ -107,7 +108,7 @@ export default function Home() {
                 </div>
                 {announcements.map((announcement) => (
                   <div key={announcement.id} className={styles.tableBody}>
-                    <Link href={PATH.HOME}>
+                    <Link href={`${PATH.ANNOUNCEMENT}/${announcement.id}`}>
                       <div className={styles.endTime}>
                         {getConvertDeadline(announcement.end_at)}
                       </div>
