@@ -1,22 +1,23 @@
 .container {
-  position: relative;
-
   display: flex;
-  flex-direction: column;
 
-  background-color: #111;
-  min-height: 100vh;
+  max-width: 1440px;
+  height: 100dvh;
+  margin: 0 auto;
 
-  color: #fff;
+  overflow: hidden;
+}
+
+.wrapper {
+  background-color: var(--gray-07);
+  width: 100%;
 }
 
 .body {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex: 1 1 0%;
 
-  max-width: 1440px;
-  min-height: calc(100vh - 6rem);
-  margin: 10rem auto 0;
-  padding: 0 2rem;
+  height: 2000px;
+
+  overflow: hidden;
 }

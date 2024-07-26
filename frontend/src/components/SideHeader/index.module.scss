@@ -1,0 +1,57 @@
+.container {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 247px;
+  padding: 20px 40px;
+}
+
+.sideContent {
+  display: flex;
+  flex-direction: column;
+
+  .navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    margin-top: 45px;
+
+    font-size: 18px;
+    font-weight: 500;
+
+    .connectBtnWrapper {
+      button {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        padding: 16px 0;
+        background: none;
+        box-shadow: none;
+
+        color: var(--gray-02);
+        font-weight: 500;
+
+        &::before {
+          display: block;
+
+          content: "";
+          background-image: url("../../assets/header/ProfileLogo.svg");
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+
+    .link {
+      display: flex;
+      align-items: end;
+      gap: 16px;
+
+      padding: 16px 0;
+    }
+  }
+}

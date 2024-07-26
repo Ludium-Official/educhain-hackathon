@@ -1,6 +1,7 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
-import { DBUser } from "@/types/user";
+import { DBUser } from "@/types/entities/user";
+import { User } from "@/types/user";
 import { NextResponse } from "next/server";
 import pool from "../db";
 
@@ -14,7 +15,9 @@ const handler = async (req: Request) => {
 
     const users = rows as DBUser[];
 
-    return NextResponse.json(users);
+    const withoutId: User[] = users.map(({ id, ...rest }) => rest);
+
+    return NextResponse.json(withoutId);
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
