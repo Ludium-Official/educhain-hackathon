@@ -11,15 +11,19 @@ import { PATH } from "@/constant/route";
 import { useUser } from "@/hooks/store/user";
 import { User } from "@/types/user";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useAccount } from "wagmi";
 import styles from "./index.module.scss";
 
 const SideHeader = () => {
-  const { user, setUser } = useUser();
+  const pathname = usePathname();
+  const { setUser } = useUser();
   const account = useAccount();
+  console.log(pathname);
 
   const callData = useCallback(
     async (addressKey: string) => {
@@ -55,7 +59,7 @@ const SideHeader = () => {
           <Image src={LudiumLogo.src} alt="logo" width={70} height={32} />
         </Link>
         <div className={styles.navigation}>
-          {user ? (
+          {account.address ? (
             <Link className={styles.link} href={PATH.PROFILE}>
               <Image src={ProfileLogo.src} alt="logo" width={24} height={24} />
               프로필
@@ -70,21 +74,22 @@ const SideHeader = () => {
               />
             </div>
           )}
-          <Link className={styles.link} href={PATH.ANNOUNCEMENT}>
-            <Image
-              src={AnnouncementLogo.src}
-              alt="logo"
-              width={24}
-              height={24}
-            />{" "}
+          <Link
+            className={clsx(
+              pathname === PATH.ANNOUNCEMENT ? styles.this : null,
+              styles.link
+            )}
+            href={PATH.ANNOUNCEMENT}
+          >
+            <img src={AnnouncementLogo.src} alt="logo" />
             공고 수행
           </Link>
           <Link className={styles.link} href={PATH.WORK}>
-            <Image src={WorkLogo.src} alt="logo" width={24} height={24} /> 학습
-            참여
+            <Image src={WorkLogo.src} alt="logo" width={24} height={24} />
+            학습 참여
           </Link>
           <Link className={styles.link} href={PATH.PROGRAM}>
-            <Image src={CommunityLogo.src} alt="logo" width={24} height={24} />{" "}
+            <Image src={CommunityLogo.src} alt="logo" width={24} height={24} />
             커뮤니티
           </Link>
         </div>

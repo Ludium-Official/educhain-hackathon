@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
 div,
@@ -349,7 +353,6 @@ html input[disabled] {
 
 input[type="checkbox"],
 input[type="radio"] {
-  box-sizing: border-box; /* 1 */
   padding: 0; /* 2 */
 }
 
@@ -447,9 +450,9 @@ button {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: none !important;
   outline: none;
-  color: var(--gray-02);
+  color: var(--gray-02) !important;
 }
 
 :root {
