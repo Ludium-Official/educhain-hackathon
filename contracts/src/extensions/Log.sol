@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "../interfaces/ILDEventLogger.sol";
+import "../interfaces/ILD_EventLogger.sol";
 
 contract Log is Initializable {
     // keccak256(abi.encode(uint256(keccak256("ludium.storage.Log")) - 1)) & ~bytes32(uint256(0xff))
@@ -38,21 +38,21 @@ contract Log is Initializable {
         uint256 amount
     ) internal {
         LDLogStorage storage $ = _getLogStorage();
-        ILDEventLogger($._logger).logPrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
+        ILD_EventLogger($._logger).logPrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
     }
 
     function _logChapterAdded(uint256 programId, uint256 newChapterIndex, uint256 reserve, uint256 prize) internal {
         LDLogStorage storage $ = _getLogStorage();
-        ILDEventLogger($._logger).logChapterAdded(programId, newChapterIndex, reserve, prize);
+        ILD_EventLogger($._logger).logChapterAdded(programId, newChapterIndex, reserve, prize);
     }
 
     function _logValidatorChanged(address oldValidator, address newValidator) internal {
         LDLogStorage storage $ = _getLogStorage();
-        ILDEventLogger($._logger).logValidatorChanged(oldValidator, newValidator);
+        ILD_EventLogger($._logger).logValidatorChanged(oldValidator, newValidator);
     }
 
     function _logWithdraw(uint256 programId, uint256 amount) internal {
         LDLogStorage storage $ = _getLogStorage();
-        ILDEventLogger($._logger).logWithdraw(programId, amount);
+        ILD_EventLogger($._logger).logWithdraw(programId, amount);
     }
 }

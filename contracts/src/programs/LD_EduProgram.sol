@@ -4,11 +4,11 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-import "./bounty/LDBountyEdu.sol";
-import "./extensions/Log.sol";
-import "./interfaces/ILDBounty.sol";
+import "../extensions/EduBounty.sol";
+import "../extensions/Log.sol";
+import "../interfaces/ILD_EduProgram.sol";
 
-contract LDBounty is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, LDBountyEdu, Log, ILDBounty {
+contract LD_EduProgram is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, EduBounty, Log, ILD_EduProgram {
     function initialize(
         address initialOwner,
         uint256 programId_,
@@ -21,7 +21,7 @@ contract LDBounty is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, LDBou
         address eventLogger_
     ) public initializer {
         __Ownable_init(initialOwner);
-        __LDBountyEdu_init(programId_, feeRatio_, validator_, treasury_, prizeConfig, start, end);
+        __EduBounty_init(programId_, feeRatio_, validator_, treasury_, prizeConfig, start, end);
         __Log_init(eventLogger_);
     }
 

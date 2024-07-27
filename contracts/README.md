@@ -21,7 +21,7 @@ The Ludium treasury contract where the fees from bounty rewards are collected.
 ### EventLogger
 
 Contract that records various events such as bounty creation, bounty claiming, etc.
-By querying the Tracker, all events can be logged without the need to track events from multiple proxy contracts.
+By querying the EventLogger, all events can be logged without the need to track events from multiple proxy contracts.
 
 <br>
 

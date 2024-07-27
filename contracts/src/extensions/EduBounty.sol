@@ -5,14 +5,14 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract LDBountyEdu is Initializable {
-    string public constant CONTRACT_TYPE = "education";
+contract EduBounty is Initializable {
+    string public constant PROGRAM_TYPE = "education";
     string public constant VERSION = "0.1";
 
-    // keccak256(abi.encode(uint256(keccak256("ludium.storage.LDBountyEdu")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant StorageLocation = 0xa419b7f6ee91760ab22b2e802b2afe5f4c2332b9057019e99ee975ac82881300;
+    // keccak256(abi.encode(uint256(keccak256("ludium.storage.EduBounty")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant StorageLocation = 0xcd3e4d0b2227a4a3c69cdd698e5f185ac8bc5894ee60a71c2625ee6a02b4cd00;
 
-    struct LDBountyEduStorage {
+    struct EduBountyStorage {
         uint256 _programId;
         address _validator;
         address _treasury;
@@ -26,7 +26,7 @@ contract LDBountyEdu is Initializable {
         mapping(uint256 => mapping(uint256 => bool)) _submitted;
     }
 
-    function _getLDBountyEduStorage() private pure returns (LDBountyEduStorage storage $) {
+    function _getEduBountyStorage() private pure returns (EduBountyStorage storage $) {
         assembly {
             $.slot := StorageLocation
         }
@@ -35,7 +35,7 @@ contract LDBountyEdu is Initializable {
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
-    function __LDBountyEdu_init(
+    function __EduBounty_init(
         uint256 programId,
         uint256 feeRatio,
         address validator,
@@ -44,10 +44,10 @@ contract LDBountyEdu is Initializable {
         uint256 start,
         uint256 end
     ) internal onlyInitializing {
-        __LDBountyEdu_init_unchained(programId, feeRatio, validator, treasury, prizeConfig, start, end);
+        __EduBounty_init_unchained(programId, feeRatio, validator, treasury, prizeConfig, start, end);
     }
 
-    function __LDBountyEdu_init_unchained(
+    function __EduBounty_init_unchained(
         uint256 programId,
         uint256 feeRatio,
         address validator,
@@ -59,7 +59,7 @@ contract LDBountyEdu is Initializable {
         require(end > start, "End date must be after start date");
         require(end > block.timestamp, "End date must be in the future");
 
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         $._programId = programId;
         $._validator = validator;
         $._treasury = treasury;
@@ -79,7 +79,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the current program id.
      */
     function _programId() internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._programId;
     }
 
@@ -87,7 +87,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the current validator address.
      */
     function _validator() internal view returns (address) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._validator;
     }
 
@@ -95,7 +95,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the current treasury address.
      */
     function _treasury() internal view returns (address) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._treasury;
     }
 
@@ -104,7 +104,7 @@ contract LDBountyEdu is Initializable {
      * @param newValidator Address of the new validator
      */
     function _setValidator(address newValidator) internal returns (address) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         $._validator = newValidator;
 
         return newValidator;
@@ -114,7 +114,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the current fee ratio.
      */
     function _feeRatio() internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._feeRatio;
     }
 
@@ -122,7 +122,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the total number of chapters.
      */
     function _totalChapter() internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._totalChapter;
     }
 
@@ -130,7 +130,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the start time.
      */
     function _startDate() internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._start;
     }
 
@@ -138,7 +138,7 @@ contract LDBountyEdu is Initializable {
      * @dev Returns the end time.
      */
     function _endDate() internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._end;
     }
 
@@ -147,7 +147,7 @@ contract LDBountyEdu is Initializable {
      * @param chapterIndex Index of the chapter
      */
     function _reserve(uint256 chapterIndex) internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._reserve[chapterIndex];
     }
 
@@ -156,7 +156,7 @@ contract LDBountyEdu is Initializable {
      * @param chapterIndex Index of the chapter
      */
     function _prize(uint256 chapterIndex) internal view returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._prize[chapterIndex];
     }
 
@@ -166,7 +166,7 @@ contract LDBountyEdu is Initializable {
      * @param prize Prize for the new chapter
      */
     function _addChapter(uint256 reserve, uint256 prize) internal returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         uint256 newChapterIndex = $._totalChapter + 1;
         $._reserve[newChapterIndex] = reserve;
         $._prize[newChapterIndex] = prize;
@@ -181,7 +181,7 @@ contract LDBountyEdu is Initializable {
      * @param claimer Address of the claimer
      */
     function _hasClaimed(uint256 chapterIndex, address claimer) internal view returns (bool) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._claimed[chapterIndex][claimer];
     }
 
@@ -191,7 +191,7 @@ contract LDBountyEdu is Initializable {
      * @param submissionId Id of submission
      */
     function _isSubmitted(uint256 chapterIndex, uint256 submissionId) internal view returns (bool) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         return $._submitted[chapterIndex][submissionId];
     }
 
@@ -206,7 +206,7 @@ contract LDBountyEdu is Initializable {
         internal
         view
     {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         require(block.timestamp >= $._start && block.timestamp <= $._end, "Program is not within its active period");
         require(recipient == msg.sender, "Must be requested by the approved recipient address");
         require(programId == $._programId, "Invalid program id");
@@ -231,7 +231,7 @@ contract LDBountyEdu is Initializable {
         address recipient,
         bytes memory sig
     ) internal view {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
 
         bytes32 messageHash = keccak256(
             abi.encodePacked(
@@ -248,7 +248,7 @@ contract LDBountyEdu is Initializable {
      * @param recipient address to receive
      */
     function _withdraw(address recipient) internal returns (uint256) {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
         require($._end <= block.timestamp, "Withdrawals can only be made after the program has ended");
         uint256 contractBalance = address(this).balance;
         (bool success,) = payable(recipient).call{value: contractBalance}("");
@@ -267,7 +267,7 @@ contract LDBountyEdu is Initializable {
         internal
         returns (uint256, uint256)
     {
-        LDBountyEduStorage storage $ = _getLDBountyEduStorage();
+        EduBountyStorage storage $ = _getEduBountyStorage();
 
         uint256 prize = $._prize[chapterIndex];
         uint256 feeAmount = (prize * $._feeRatio) / 1 ether;

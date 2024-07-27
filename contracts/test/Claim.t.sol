@@ -2,12 +2,13 @@
 pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import "../src/LDBountyFactory.sol";
-import "../src/interfaces/ILDBounty.sol";
+import "../src/LD_ProgramFactory.sol";
+import "../src/programs/LD_EduProgram.sol";
+import "../src/interfaces/ILD_EduProgram.sol";
 
 contract Claim is Test {
     uint256 sepoliaFork;
-    LDBountyFactory public factory;
+    LD_ProgramFactory public factory;
     address payable public program;
     address public deployer = 0xeA4a5BA5b31D585116D6921A859F0c39707771B3;
 
@@ -37,8 +38,8 @@ contract Claim is Test {
     function setUp() public {
         sepoliaFork = vm.createSelectFork("https://ethereum-sepolia-rpc.publicnode.com");
         vm.startPrank(deployer);
-        LDBounty bounty = new LDBounty();
-        factory = new LDBountyFactory(address(bounty), 50000000000000000, treasury);
+        LD_EduProgram programImpl = new LD_EduProgram();
+        factory = new LD_ProgramFactory(address(programImpl), 50000000000000000, treasury);
         uint256[2][] memory prizeConfig = new uint256[2][](3);
         prizeConfig[0] = [uint256(20000000000000000), uint256(10000000000000000)];
         prizeConfig[1] = [uint256(40000000000000000), uint256(20000000000000000)];
@@ -51,7 +52,7 @@ contract Claim is Test {
         bytes memory sig = generateSig(1, 1, 1, user1);
         uint256 initialBalance = user1.balance;
         vm.startPrank(user1);
-        ILDBounty(program).claim(1, 1, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 1, 1, user1, sig);
         vm.stopPrank();
         uint256 afterBalance = user1.balance;
         uint256 feeAmount = (10000000000000000 * 50000000000000000) / 1 ether;
@@ -65,7 +66,7 @@ contract Claim is Test {
         bytes memory sig = generateSig(1, 1, 1, user1);
         vm.startPrank(user2);
         vm.expectRevert("Must be requested by the approved recipient address");
-        ILDBounty(program).claim(1, 1, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 1, 1, user1, sig);
         vm.stopPrank();
     }
 
@@ -73,7 +74,7 @@ contract Claim is Test {
         bytes memory sig = generateSig(2, 1, 1, user1);
         vm.startPrank(user1);
         vm.expectRevert("Invalid program id");
-        ILDBounty(program).claim(2, 1, 1, user1, sig);
+        ILD_EduProgram(program).claim(2, 1, 1, user1, sig);
         vm.stopPrank();
     }
 
@@ -81,7 +82,7 @@ contract Claim is Test {
         bytes memory sig = generateSig(1, 4, 1, user1);
         vm.startPrank(user1);
         vm.expectRevert("Invalid chapter");
-        ILDBounty(program).claim(1, 4, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 4, 1, user1, sig);
         vm.stopPrank();
     }
 
@@ -89,7 +90,7 @@ contract Claim is Test {
         bytes memory sig = generateSig(1, 1, 1, user1);
         vm.startPrank(user2);
         vm.expectRevert("Invalid signature");
-        ILDBounty(program).claim(1, 1, 1, user2, sig);
+        ILD_EduProgram(program).claim(1, 1, 1, user2, sig);
         vm.stopPrank();
     }
 
@@ -97,7 +98,7 @@ contract Claim is Test {
         bytes memory sig = generateSig(1, 1, 1, user1);
         vm.startPrank(user1);
         vm.expectRevert("Invalid signature");
-        ILDBounty(program).claim(1, 2, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 2, 1, user1, sig);
         vm.stopPrank();
     }
 
@@ -105,11 +106,11 @@ contract Claim is Test {
         bytes memory sig1 = generateSig(1, 1, 1, user1);
         bytes memory sig2 = generateSig(1, 1, 1, user2);
         vm.startPrank(user1);
-        ILDBounty(program).claim(1, 1, 1, user1, sig1);
+        ILD_EduProgram(program).claim(1, 1, 1, user1, sig1);
         vm.stopPrank();
         vm.startPrank(user2);
         vm.expectRevert("Already claimed submission");
-        ILDBounty(program).claim(1, 1, 1, user2, sig2);
+        ILD_EduProgram(program).claim(1, 1, 1, user2, sig2);
         vm.stopPrank();
     }
 
@@ -117,9 +118,9 @@ contract Claim is Test {
         bytes memory sig1 = generateSig(1, 1, 1, user1);
         bytes memory sig2 = generateSig(1, 1, 2, user1);
         vm.startPrank(user1);
-        ILDBounty(program).claim(1, 1, 1, user1, sig1);
+        ILD_EduProgram(program).claim(1, 1, 1, user1, sig1);
         vm.expectRevert("Already claimed recipient");
-        ILDBounty(program).claim(1, 1, 2, user1, sig2);
+        ILD_EduProgram(program).claim(1, 1, 2, user1, sig2);
         vm.stopPrank();
     }
 
@@ -129,16 +130,16 @@ contract Claim is Test {
         bytes memory sig3 = generateSig(1, 1, 33, user3);
 
         vm.startPrank(user1);
-        ILDBounty(program).claim(1, 1, 11, user1, sig1);
+        ILD_EduProgram(program).claim(1, 1, 11, user1, sig1);
         vm.stopPrank();
 
         vm.startPrank(user2);
-        ILDBounty(program).claim(1, 1, 22, user2, sig2);
+        ILD_EduProgram(program).claim(1, 1, 22, user2, sig2);
         vm.stopPrank();
 
         vm.startPrank(user3);
         vm.expectRevert("Insufficient reserve balance");
-        ILDBounty(program).claim(1, 1, 33, user3, sig3);
+        ILD_EduProgram(program).claim(1, 1, 33, user3, sig3);
         vm.stopPrank();
     }
 }

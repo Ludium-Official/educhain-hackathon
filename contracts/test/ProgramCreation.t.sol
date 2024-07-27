@@ -2,11 +2,12 @@
 pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import "../src/LDBountyFactory.sol";
+import "../src/LD_ProgramFactory.sol";
+import "../src/programs/LD_EduProgram.sol";
 
 contract ProgramCreation is Test {
     uint256 sepoliaFork;
-    LDBountyFactory public factory;
+    LD_ProgramFactory public factory;
     address public deployer = 0xeA4a5BA5b31D585116D6921A859F0c39707771B3;
     address public user1 = 0x1b2829d7c70ec264A6Ddb768fbF0CBbDe7f3ED83;
     address public user2 = 0x23614BA53Ef1cD835B7aaa0167413bc22c9B98cc;
@@ -20,8 +21,8 @@ contract ProgramCreation is Test {
         prizeConfig[2] = [uint256(300000000000000000), uint256(30000000000000000)];
         vm.deal(user1, 10 ether);
         vm.startPrank(deployer);
-        LDBounty bounty = new LDBounty();
-        factory = new LDBountyFactory(address(bounty), 50000000000000000, deployer);
+        LD_EduProgram programImpl = new LD_EduProgram();
+        factory = new LD_ProgramFactory(address(programImpl), 50000000000000000, deployer);
         vm.stopPrank();
     }
 
