@@ -5,27 +5,27 @@ import Wrapper from "@/components/Wrapper";
 import { PATH } from "@/constant/route";
 import { getConvertDeadline } from "@/functions/deadline-function";
 import { useUser } from "@/hooks/store/user";
-import { Announcements } from "@/types/announcement";
+import fetchData from "@/libs/fetchData";
+import { AnnouncementType } from "@/types/announcement";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import fetchData from "../libs/fetchData";
 import styles from "./page.module.scss";
 
 export default function Announcement() {
   const { user } = useUser();
-  const [announcements, setAnnouncements] = useState<Announcements[]>([]);
-  const [works, setWorks] = useState<Announcements[]>([]);
+  const [announcements, setAnnouncements] = useState<AnnouncementType[]>([]);
+  const [works, setWorks] = useState<AnnouncementType[]>([]);
 
   useEffect(() => {
     const callData = async () => {
       const manageResponse = (await fetchData("/announcements", "POST", {
         job: "manage",
-      })) as Announcements[];
+      })) as AnnouncementType[];
 
       const workResponse = (await fetchData("/announcements", "POST", {
         job: "work",
-      })) as Announcements[];
+      })) as AnnouncementType[];
 
       setAnnouncements(manageResponse);
       setWorks(workResponse);

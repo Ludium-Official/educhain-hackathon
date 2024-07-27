@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
 
-import { User } from "@/types/user";
+import { UserType } from "@/types/user";
 import { isNil } from "ramda";
 
-const userState = atom<User | null>({
+const userState = atom<UserType | null>({
   key: "User",
   default: null,
 });
 
-export const useUser = (initValue?: User) => {
+export const useUser = (initValue?: UserType) => {
   const [user, setUser] = useRecoilState(userState);
 
   useEffect(() => {

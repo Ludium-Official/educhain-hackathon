@@ -1,4 +1,4 @@
-export type User = {
+export type UserType = {
   walletId: string;
   auth: "0" | "1";
   created_at: string;

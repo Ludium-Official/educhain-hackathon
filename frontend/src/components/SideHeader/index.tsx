@@ -1,19 +1,19 @@
 "use client";
 
-import { sha256ToHex } from "@/app/libs/cryptoEncode";
-import fetchData from "@/app/libs/fetchData";
 import LudiumLogo from "@/assets/common/LudiumLogo.svg";
 import ActiveAnnouncementLogo from "@/assets/header/ActiveAnnouncementLogo.svg";
 import ActiveCommunityLogo from "@/assets/header/ActiveCommunityLogo.svg";
 import ActiveProfileLogo from "@/assets/header/ActiveProfileLogo.svg";
-import ActiveWorkLogo from "@/assets/header/ActiveWorkLogo.svg";
+import ActiveProgramLogo from "@/assets/header/ActiveProgramLogo.svg";
 import AnnouncementLogo from "@/assets/header/AnnouncementLogo.svg";
 import CommunityLogo from "@/assets/header/CommunityLogo.svg";
 import ProfileLogo from "@/assets/header/ProfileLogo.svg";
-import WorkLogo from "@/assets/header/WorkLogo.svg";
+import ProgramLogo from "@/assets/header/ProgramLogo.svg";
 import { PATH } from "@/constant/route";
 import { useUser } from "@/hooks/store/user";
-import { User } from "@/types/user";
+import { sha256ToHex } from "@/libs/cryptoEncode";
+import fetchData from "@/libs/fetchData";
+import { UserType } from "@/types/user";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import clsx from "clsx";
 import Image from "next/image";
@@ -33,7 +33,7 @@ const SideHeader = () => {
     async (addressKey: string) => {
       const response = (await fetchData("/user", "POST", {
         addressKey,
-      })) as User[];
+      })) as UserType[];
 
       if (response.length > 0) {
         setUser(response[0]);
@@ -115,14 +115,16 @@ const SideHeader = () => {
           </Link>
           <Link
             className={clsx(
-              currentPage === PATH.WORK ? styles.this : null,
+              currentPage === PATH.PROGRAM ? styles.this : null,
               styles.link
             )}
-            href={PATH.WORK}
+            href={PATH.PROGRAM}
           >
             <Image
               src={
-                currentPage === PATH.WORK ? ActiveWorkLogo.src : WorkLogo.src
+                currentPage === PATH.PROGRAM
+                  ? ActiveProgramLogo.src
+                  : ProgramLogo.src
               }
               alt="logo"
               width={24}
@@ -132,14 +134,14 @@ const SideHeader = () => {
           </Link>
           <Link
             className={clsx(
-              currentPage === PATH.PROGRAM ? styles.this : null,
+              currentPage === PATH.COMMUNITY ? styles.this : null,
               styles.link
             )}
-            href={PATH.PROGRAM}
+            href={PATH.COMMUNITY}
           >
             <Image
               src={clsx(
-                currentPage === PATH.PROGRAM
+                currentPage === PATH.COMMUNITY
                   ? ActiveCommunityLogo.src
                   : CommunityLogo.src
               )}

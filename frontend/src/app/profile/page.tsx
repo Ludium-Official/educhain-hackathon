@@ -4,12 +4,12 @@ import PhoneLogo from "@/assets/profile/PhoneLogo.svg";
 import ProfileLogo from "@/assets/profile/ProfileLogo.svg";
 import Wrapper from "@/components/Wrapper";
 import { useUser } from "@/hooks/store/user";
-import { User } from "@/types/user";
+import fetchData from "@/libs/fetchData";
+import { UserType } from "@/types/user";
 import Image from "next/image";
 import { useCallback } from "react";
 import { useAccount } from "wagmi";
-import { sha256ToHex } from "../libs/cryptoEncode";
-import fetchData from "../libs/fetchData";
+import { sha256ToHex } from "../../libs/cryptoEncode";
 import styles from "./page.module.scss";
 
 export default function Profile() {
@@ -27,7 +27,7 @@ export default function Profile() {
 
     const response = (await fetchData("/user", "POST", {
       addressKey,
-    })) as User[];
+    })) as UserType[];
 
     if (response.length > 0) {
       setUser(response[0]);

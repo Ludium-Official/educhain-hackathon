@@ -1,4 +1,4 @@
-export type Announcements = {
+export type AnnouncementType = {
   id: number;
   owner: string;
   title: string;

@@ -2,23 +2,24 @@ import { withAuth } from "@/middlewares/authMiddleware";
 
 import { DBAnnouncement } from "@/types/entities/announcement";
 import { NextResponse } from "next/server";
-import pool from "../db";
+import pool from "../../db";
 
 const handler = async (req: Request) => {
-  const { isDash, job } = await req.json();
+  const url = new URL(req.url);
+  const id = url.pathname.split("/").pop();
 
   try {
-    const query = isDash
-      ? `SELECT * FROM announcements WHERE job = ? ORDER BY created_at LIMIT 6`
-      : `SELECT * FROM announcements WHERE job = ?`;
-    const [rows] = await pool.query(query, [job]);
+    const [rows] = await pool.query(
+      "SELECT * FROM announcements WHERE id = ?",
+      [id]
+    );
 
     const announcements = rows as DBAnnouncement[];
 
-    return NextResponse.json(announcements);
+    return NextResponse.json(announcements[0]);
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
 
-export const POST = withAuth(handler);
+export const GET = withAuth(handler);

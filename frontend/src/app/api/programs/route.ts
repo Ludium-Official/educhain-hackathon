@@ -9,13 +9,13 @@ const handler = async (req: Request) => {
 
   try {
     const query = isDash
-      ? `SELECT * FROM announcements WHERE job = ? ORDER BY created_at LIMIT 6`
-      : `SELECT * FROM announcements WHERE job = ?`;
+      ? `SELECT * FROM programs ORDER BY created_at LIMIT 6`
+      : `SELECT * FROM programs`;
     const [rows] = await pool.query(query, [job]);
 
-    const announcements = rows as DBAnnouncement[];
+    const programs = rows as DBAnnouncement[];
 
-    return NextResponse.json(announcements);
+    return NextResponse.json(programs);
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }

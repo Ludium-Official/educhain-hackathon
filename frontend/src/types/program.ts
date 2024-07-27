@@ -1,9 +1,9 @@
-export type DBAnnouncement = {
+export type ProgramType = {
   id: number;
   owner: string;
   title: string;
-  job: "manage" | "work";
   guide: string | null;
+  missionCnt: string;
   end_at: string;
   created_at: string;
 };

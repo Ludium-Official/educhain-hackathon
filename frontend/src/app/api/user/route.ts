@@ -1,7 +1,7 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
 import { DBUser } from "@/types/entities/user";
-import { User } from "@/types/user";
+import { UserType } from "@/types/user";
 import { NextResponse } from "next/server";
 import pool from "../db";
 
@@ -15,7 +15,7 @@ const handler = async (req: Request) => {
 
     const users = rows as DBUser[];
 
-    const withoutId: User[] = users.map(({ id, ...rest }) => rest);
+    const withoutId: UserType[] = users.map(({ id, ...rest }) => rest);
 
     return NextResponse.json(withoutId);
   } catch (error) {
