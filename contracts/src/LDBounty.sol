@@ -31,13 +31,12 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "./bounty/LDBountyEdu.sol";
+import "./extensions/Log.sol";
+import "./interfaces/ILDBounty.sol";
 
-/**
- *  @title Ludium bounty contract factory
- *  @notice A new proxy is created every time a program(bounty) is generated.
- */
-contract LDBounty is OwnableUpgradeable, LDBountyEdu, ReentrancyGuard {
+contract LDBounty is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, LDBountyEdu, Log, ILDBounty {
     function initialize(
         address initialOwner,
         uint256 programId_,
@@ -46,13 +45,15 @@ contract LDBounty is OwnableUpgradeable, LDBountyEdu, ReentrancyGuard {
         address treasury_,
         uint256[2][] memory prizeConfig,
         uint256 start,
-        uint256 end
+        uint256 end,
+        address eventLogger_
     ) public initializer {
         __Ownable_init(initialOwner);
         __LDBountyEdu_init(programId_, feeRatio_, validator_, treasury_, prizeConfig, start, end);
-
-        // [Todo] event emit
+        __Log_init(eventLogger_);
     }
+
+    receive() external payable {}
 
     // =========================== View =========================== //
 
@@ -90,27 +91,34 @@ contract LDBounty is OwnableUpgradeable, LDBountyEdu, ReentrancyGuard {
         external
         nonReentrant
     {
-        require(recipient == msg.sender);
-
         _claimValidation(programId_, chapterIndex, submissionId, recipient);
         _sigValidation(programId_, chapterIndex, submissionId, recipient, sig);
 
-        _claim(chapterIndex, recipient, submissionId);
+        (uint256 remain, uint256 prize) = _claim(chapterIndex, recipient, submissionId);
 
-        // [Todo] event emit
+        _logPrizeClaimed(programId_, chapterIndex, recipient, remain, prize);
     }
 
     // =========================== Only Owner =========================== //
 
-    function addChapter(uint256 reserve, uint256 prize) external onlyOwner {
-        _addChapter(reserve, prize);
+    function _authorizeUpgrade(address newImplement) internal override onlyOwner {}
 
-        // [Todo] event emit
+    function withdraw() external onlyOwner {
+        uint256 amount = _withdraw(msg.sender);
+
+        _logWithdraw(_programId(), amount);
     }
 
-    function setValidator(address newValidator) external onlyOwner {
-        _setValidator(newValidator);
+    function addChapter(uint256 reserve, uint256 prize) external onlyOwner {
+        uint256 newChapterIndex = _addChapter(reserve, prize);
 
-        // [Todo] event emit
+        _logChapterAdded(_programId(), newChapterIndex, reserve, prize);
+    }
+
+    function setValidator(address newValidator_) external onlyOwner {
+        address oldValidator = _validator();
+        address newValidator = _setValidator(newValidator_);
+
+        _logValidatorChanged(oldValidator, newValidator);
     }
 }

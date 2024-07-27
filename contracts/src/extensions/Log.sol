@@ -29,85 +29,58 @@ pragma solidity ^0.8.20;
 
 // https://ludium.world/
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/ILDEventLogger.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "../interfaces/ILDEventLogger.sol";
 
-contract LDEventLogger is Ownable, ILDEventLogger {
-    mapping(address => bool) isProgram;
+contract Log is Initializable {
+    // keccak256(abi.encode(uint256(keccak256("ludium.storage.Log")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant StorageLocation = 0x0e975ef586bbae5d130e43abe105a5db164c2ce040370295e9a748cab6e3c600;
 
-    constructor(address factoryAddress) Ownable(factoryAddress) {}
+    struct LDLogStorage {
+        address _logger;
+    }
 
-    /**
-     * @dev Modifier to check if the caller is a valid program.
-     */
-    modifier onlyProgram() {
-        require(isProgram[msg.sender], "Caller is not a valid program");
-        _;
+    function _getLogStorage() private pure returns (LDLogStorage storage $) {
+        assembly {
+            $.slot := StorageLocation
+        }
     }
 
     /**
-     * @dev Adds a program address to the isProgram mapping.
-     * @param programId Id of the program
-     * @param programAddress Address of the program
-     * @param owner Address of the owner
-     * @param start Start time of the program
-     * @param end End time of the program
+     * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
-    function addProgram(uint256 programId, address programAddress, address owner, uint256 start, uint256 end)
-        external
-        onlyOwner
-    {
-        isProgram[programAddress] = true;
-        emit ProgramCreated(programId, programAddress, owner, start, end);
+    function __Log_init(address loggerAddress) internal onlyInitializing {
+        __Log_init_unchained(loggerAddress);
     }
 
-    /**
-     * @dev Emits the PrizeClaimed event.
-     * @param programId Id of the program
-     * @param chapterIndex Index of the chapter
-     * @param recipient Address of the recipient
-     * @param reserve Reserve amount
-     * @param amount Claimed amount
-     */
-    function logPrizeClaimed(
+    function __Log_init_unchained(address loggerAddress) internal onlyInitializing {
+        LDLogStorage storage $ = _getLogStorage();
+        $._logger = loggerAddress;
+    }
+
+    function _logPrizeClaimed(
         uint256 programId,
         uint256 chapterIndex,
         address recipient,
         uint256 reserve,
         uint256 amount
-    ) external onlyProgram {
-        emit PrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
+    ) internal {
+        LDLogStorage storage $ = _getLogStorage();
+        ILDEventLogger($._logger).logPrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
     }
 
-    /**
-     * @dev Emits the ChapterAdded event.
-     * @param programId Id of the program
-     * @param newChapterIndex Index of the new chapter
-     * @param reserve Reserve amount
-     * @param prize Prize amount
-     */
-    function logChapterAdded(uint256 programId, uint256 newChapterIndex, uint256 reserve, uint256 prize)
-        external
-        onlyProgram
-    {
-        emit ChapterAdded(programId, newChapterIndex, reserve, prize);
+    function _logChapterAdded(uint256 programId, uint256 newChapterIndex, uint256 reserve, uint256 prize) internal {
+        LDLogStorage storage $ = _getLogStorage();
+        ILDEventLogger($._logger).logChapterAdded(programId, newChapterIndex, reserve, prize);
     }
 
-    /**
-     * @dev Emits the ValidatorChanged event.
-     * @param oldValidator Address of the old validator
-     * @param newValidator Address of the new validator
-     */
-    function logValidatorChanged(address oldValidator, address newValidator) external onlyProgram {
-        emit ValidatorChanged(oldValidator, newValidator);
+    function _logValidatorChanged(address oldValidator, address newValidator) internal {
+        LDLogStorage storage $ = _getLogStorage();
+        ILDEventLogger($._logger).logValidatorChanged(oldValidator, newValidator);
     }
 
-    /**
-     * @dev Emits the Withdraw event.
-     * @param programId Id of the program
-     * @param amount Withdrawn amount
-     */
-    function logWithdraw(uint256 programId, uint256 amount) external onlyProgram {
-        emit Withdraw(programId, amount);
+    function _logWithdraw(uint256 programId, uint256 amount) internal {
+        LDLogStorage storage $ = _getLogStorage();
+        ILDEventLogger($._logger).logWithdraw(programId, amount);
     }
 }
