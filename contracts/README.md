@@ -1,6 +1,6 @@
 # 🤑 Ludium Bounty
 
-<br>
+Visit [Ludium World](https://ludium.world/)
 
 ## 📄 Contracts
 
@@ -25,11 +25,12 @@ By querying the Tracker, all events can be logged without the need to track even
 
 <br>
 
-## Documentation
+## Requirement
 
-TBD
-
-<br>
+```
+# foundry
+curl -L https://foundry.paradigm.xyz | bash
+```
 
 ## Usage
 
@@ -37,6 +38,14 @@ TBD
 
 ```shell
 forge install
+yarn install
+# or npm install
+```
+
+### Documentation
+
+```shell
+forge doc --open --serve --port 7878 --include-libraries
 ```
 
 ### Build
@@ -48,11 +57,17 @@ forge build
 ### Test
 
 ```shell
-forge test
+forge test -vvv --ffi
+
+# if you want gas report
+forge test -vvv --ffi --gas-report
+
+# if you want see all transaction trace
+forge test -vvvvv --ffi
 ```
 
 ### Deploy
 
 ```shell
-forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+forge script script/Deploy.s.sol:Deploy --rpc-url <your_rpc_url>
 ```
