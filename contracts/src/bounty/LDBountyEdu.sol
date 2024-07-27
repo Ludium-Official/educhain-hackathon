@@ -274,6 +274,10 @@ contract LDBountyEdu is Initializable {
         uint256 feeAmount = (prize * $._feeRatio) / 1 ether;
         uint256 recipientAmount = prize - feeAmount;
 
+        $._reserve[chapterIndex] -= $._prize[chapterIndex];
+        $._claimed[chapterIndex][recipient] = true;
+        $._submitted[chapterIndex][submissionId] = true;
+
         // Send fee to treasury
         (bool successTreasury,) = payable($._treasury).call{value: feeAmount}("");
         require(successTreasury, "Treasury transfer failed");
@@ -281,9 +285,5 @@ contract LDBountyEdu is Initializable {
         // Send remaining amount to recipient
         (bool successRecipient,) = payable(recipient).call{value: recipientAmount}("");
         require(successRecipient, "Recipient transfer failed");
-
-        $._reserve[chapterIndex] -= $._prize[chapterIndex];
-        $._claimed[chapterIndex][recipient] = true;
-        $._submitted[chapterIndex][submissionId] = true;
     }
 }

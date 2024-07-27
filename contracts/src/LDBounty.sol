@@ -30,13 +30,14 @@ pragma solidity ^0.8.20;
 // https://ludium.world/
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./bounty/LDBountyEdu.sol";
 
 /**
  *  @title Ludium bounty contract factory
  *  @notice A new proxy is created every time a program(bounty) is generated.
  */
-contract LDBounty is OwnableUpgradeable, LDBountyEdu {
+contract LDBounty is OwnableUpgradeable, LDBountyEdu, ReentrancyGuard {
     function initialize(
         address initialOwner,
         uint256 programId_,
@@ -87,6 +88,7 @@ contract LDBounty is OwnableUpgradeable, LDBountyEdu {
 
     function claim(uint256 programId_, uint256 chapterIndex, uint256 submissionId, address recipient, bytes memory sig)
         external
+        nonReentrant
     {
         require(recipient == msg.sender);
 
