@@ -3,7 +3,7 @@ export type DBProgram = {
   owner: string;
   title: string;
   guide: string | null;
-  missionCnt: string;
+  missionCnt: number;
   end_at: string;
   created_at: string;
 };

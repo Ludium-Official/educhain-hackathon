@@ -2,26 +2,26 @@
 
 import Wrapper from "@/components/Wrapper";
 import fetchData from "@/libs/fetchData";
-import { Announcements } from "@/types/announcement";
+import { AnnouncementType } from "@/types/announcement";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 
 export default function AnnouncementDetail() {
   const param = useParams();
-  const [task, setTask] = useState<Announcements>();
+  const [task, setTask] = useState<AnnouncementType>();
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData(
+      const announcementResponse = (await fetchData(
         `/announcements/${param.id}`
-      )) as Announcements;
+      )) as AnnouncementType;
 
-      setTask(response);
+      setTask(announcementResponse);
     };
 
     callData();
-  }, []);
+  }, [param.id]);
 
   return (
     <Wrapper>

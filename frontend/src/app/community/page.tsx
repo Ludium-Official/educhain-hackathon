@@ -35,7 +35,6 @@ export default function Community() {
                 const targetDate = dayjs(community.created_at);
                 const formatDate = targetDate.format("YYYY.MM.DD");
                 const isNew = now.diff(targetDate, "day") <= 7;
-                console.log(isNew);
 
                 return (
                   <Link

@@ -1,7 +1,9 @@
 "use client";
 
+import Comment from "@/components/Comment";
 import Wrapper from "@/components/Wrapper";
 import fetchData from "@/libs/fetchData";
+import { CommentType } from "@/types/comment";
 import { CommunityType } from "@/types/community";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -12,6 +14,15 @@ import styles from "./page.module.scss";
 export default function Community() {
   const param = useParams();
   const [community, setCommunity] = useState<CommunityType>();
+  const [comments, setComments] = useState<CommentType[]>();
+
+  const commentCallData = async () => {
+    const commentsResponse = (await fetchData(`/comments/${param.id}`, "POST", {
+      type: "community",
+    })) as CommentType[];
+
+    setComments(commentsResponse);
+  };
 
   useEffect(() => {
     const callData = async () => {
@@ -22,8 +33,9 @@ export default function Community() {
       setCommunity(response);
     };
 
+    commentCallData();
     callData();
-  }, []);
+  }, [param.id]);
 
   const formatDate = dayjs(community?.created_at).format("YYYY.MM.DD");
 
@@ -42,7 +54,11 @@ export default function Community() {
                 {community?.content}
               </div>
             </div>
-            <div>side text</div>
+            <Comment
+              type="community"
+              commentFuc={commentCallData}
+              comments={comments}
+            />
           </div>
         ),
       }}

@@ -44,7 +44,7 @@ export default function Announcement() {
             <div className={styles.table}>
               <div className={styles.tableHeader}>
                 공고 목록
-                {user?.auth === "0" && (
+                {user?.auth === 0 && (
                   <button>
                     <Image
                       className={styles.addBtn}
@@ -73,7 +73,7 @@ export default function Announcement() {
             <div className={styles.table}>
               <div className={styles.tableHeader}>
                 작업 목록
-                {user?.auth === "0" && (
+                {user?.auth === 0 && (
                   <button>
                     <Image
                       className={styles.addBtn}
