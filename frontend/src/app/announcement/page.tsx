@@ -61,7 +61,7 @@ export default function Announcement() {
                 <div key={announcement.id} className={styles.tableBody}>
                   <Link href={`${PATH.ANNOUNCEMENT}/${announcement.id}`}>
                     <div className={styles.endTime}>
-                      {getConvertDeadline(announcement.end_at)}
+                      마감 {getConvertDeadline(announcement.end_at)}일 전
                     </div>
                     <div className={styles.announceTitle}>
                       {announcement.title}
@@ -90,7 +90,7 @@ export default function Announcement() {
                 <div key={work.id} className={styles.tableBody}>
                   <Link href={`${PATH.ANNOUNCEMENT}/${work.id}`}>
                     <div className={styles.endTime}>
-                      {getConvertDeadline(work.end_at)}
+                      마감 {getConvertDeadline(work.end_at)}일 전
                     </div>
                     <div className={styles.announceTitle}>{work.title}</div>
                   </Link>

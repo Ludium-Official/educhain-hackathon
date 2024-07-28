@@ -44,7 +44,7 @@
       gap: 42px;
 
       padding: 25px 20px;
-      border-bottom: 1px solid var(--gray-02);
+      border-bottom: 1px solid var(--grey-02);
 
       &:last-child {
         border-bottom: 0;
@@ -93,7 +93,7 @@
           }
 
           .progressBar {
-            background-color: var(--gray-06);
+            background-color: var(--grey-06);
             width: 100%;
             height: 5px;
             margin-left: 16px;
@@ -103,7 +103,7 @@
       }
 
       .status {
-        background-color: var(--gray-06);
+        background-color: var(--grey-06);
         width: 80px;
         padding: 8px 16px;
         border-radius: 40px;

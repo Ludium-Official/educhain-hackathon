@@ -40,7 +40,7 @@
           align-items: center;
           gap: 8px;
 
-          color: var(--gray-04);
+          color: var(--grey-04);
           font-size: 16px;
           font-weight: normal;
         }
@@ -48,7 +48,7 @@
 
       .tableBody {
         padding: 20px 0;
-        border-bottom: 1px solid var(--gray-02);
+        border-bottom: 1px solid var(--grey-02);
 
         &:last-child {
           border-bottom: 0;

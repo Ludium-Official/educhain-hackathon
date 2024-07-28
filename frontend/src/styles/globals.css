@@ -115,7 +115,7 @@ section {
 
 body {
   line-height: 1;
-  color: var(--gray-02);
+  color: var(--grey-02);
 }
 
 ol,
@@ -452,7 +452,7 @@ button {
 a {
   text-decoration: none !important;
   outline: none;
-  color: var(--gray-02) !important;
+  color: var(--grey-02) !important;
 }
 
 :root {
@@ -469,11 +469,11 @@ a {
   --purple-04: #f8ecff;
   --purple-05: #fcf8ff;
 
-  --gray-01: #495057;
-  --gray-02: #666666;
-  --gray-03: #7c7c7c;
-  --gray-04: #9a9a9a;
-  --gray-05: #d9d9d9;
-  --gray-06: #e9e9e9;
-  --gray-07: #fbfbfb;
+  --grey-01: #495057;
+  --grey-02: #666666;
+  --grey-03: #7c7c7c;
+  --grey-04: #9a9a9a;
+  --grey-05: #d9d9d9;
+  --grey-06: #e9e9e9;
+  --grey-07: #fbfbfb;
 }

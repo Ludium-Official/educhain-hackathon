@@ -54,7 +54,7 @@ export default function Program() {
                     <div className={styles.tableRow}>
                       <Link href={`${PATH.PROGRAM}/${program.id}`}>
                         <div className={styles.endTime}>
-                          {getConvertDeadline(program.end_at)}
+                          마감 {getConvertDeadline(program.end_at)}일 전
                         </div>
                         <div className={styles.announceTitle}>
                           {program.title}

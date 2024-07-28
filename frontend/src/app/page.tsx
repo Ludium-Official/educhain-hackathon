@@ -110,7 +110,7 @@ export default function Home() {
                   <div key={announcement.id} className={styles.tableBody}>
                     <Link href={`${PATH.ANNOUNCEMENT}/${announcement.id}`}>
                       <div className={styles.endTime}>
-                        {getConvertDeadline(announcement.end_at)}
+                        마감 {getConvertDeadline(announcement.end_at)}일 전
                       </div>
                       <div className={styles.title}>{announcement.title}</div>
                     </Link>
