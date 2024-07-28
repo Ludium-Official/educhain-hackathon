@@ -1,7 +1,5 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
-import { DBUser } from "@/types/entities/user";
-import { UserType } from "@/types/user";
 import { NextResponse } from "next/server";
 import pool from "../db";
 
@@ -9,15 +7,9 @@ const handler = async (req: Request) => {
   const { addressKey } = await req.json();
 
   try {
-    const [rows] = await pool.query("SELECT * FROM users WHERE walletId = ?", [
-      addressKey,
-    ]);
+    await pool.query(`INSERT INTO users (walletId) VALUES (?)`, [addressKey]);
 
-    const users = rows as DBUser[];
-
-    const withoutId: UserType[] = users.map(({ id, ...rest }) => rest);
-
-    return NextResponse.json(withoutId);
+    return NextResponse.json({ success: true });
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }

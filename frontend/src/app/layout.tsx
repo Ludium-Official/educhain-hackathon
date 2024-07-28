@@ -1,13 +1,15 @@
 "use client";
 
+import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 
 import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RecoilRoot } from "recoil";
 import { WagmiProvider } from "wagmi";
 import { arbitrum, base, mainnet, optimism, polygon } from "wagmi/chains";
-import "./globals.css";
 
 const config = getDefaultConfig({
   appName: "EDUCHAIN HACKATHON",

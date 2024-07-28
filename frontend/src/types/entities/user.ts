@@ -1,4 +1,5 @@
-export type UserType = {
+export type DBUser = {
+  id: number;
   walletId: string;
   auth: "0" | "1";
   created_at: string;
