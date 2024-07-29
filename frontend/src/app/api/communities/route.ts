@@ -7,15 +7,17 @@ import pool from "../db";
 const handler = async () => {
   try {
     const query = `
-    SELECT 
+      SELECT 
         c.*, 
         u.name AS owner_name
-    FROM 
+      FROM 
         communities c
-    JOIN
+      JOIN
         users u
-    ON
+      ON
         c.owner = u.walletId
+      ORDER BY
+        c.created_at DESC
     `;
     const [rows] = await pool.query(query);
 

@@ -1,7 +1,7 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
 import { NextResponse } from "next/server";
-import pool from "../db";
+import pool from "../../db";
 
 const handler = async (req: Request) => {
   const { id, writer, message, type } = await req.json();

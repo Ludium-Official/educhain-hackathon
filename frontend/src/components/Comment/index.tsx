@@ -30,7 +30,7 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
         event.preventDefault();
         event.stopPropagation();
 
-        await fetchData("/postComment", "POST", {
+        await fetchData("/comments/postComment", "POST", {
           id: param.id,
           writer: user?.walletId,
           message: comment,

@@ -1,15 +1,21 @@
 "use client";
 
+import AddLogo from "@/assets/common/AddLogo.svg";
+import BackLink from "@/components/BackLink";
 import Wrapper from "@/components/Wrapper";
 import { PATH } from "@/constant/route";
+import { useUser } from "@/hooks/store/user";
 import fetchData from "@/libs/fetchData";
 import { CommunityType } from "@/types/community";
 import dayjs from "dayjs";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 
 export default function Community() {
+  const { user } = useUser();
+
   const [communities, setCommunities] = useState<CommunityType[]>([]);
 
   useEffect(() => {
@@ -25,7 +31,23 @@ export default function Community() {
   return (
     <Wrapper>
       {{
-        header: <div>Header</div>,
+        header: (
+          <div className={styles.headerWrapper}>
+            <BackLink path={PATH.HOME} />
+            {user?.auth === 0 && (
+              <Link className={styles.addLink} href={`${PATH.COMMUNITY}/add`}>
+                <Image
+                  className={styles.profileImg}
+                  src={AddLogo.src}
+                  alt="logo"
+                  width={24}
+                  height={24}
+                />
+                추가하기
+              </Link>
+            )}
+          </div>
+        ),
         body: (
           <div className={styles.container}>
             <div className={styles.title}>커뮤니티</div>

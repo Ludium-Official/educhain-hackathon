@@ -1,6 +1,8 @@
 "use client";
 
+import BackLink from "@/components/BackLink";
 import Wrapper from "@/components/Wrapper";
+import { PATH } from "@/constant/route";
 import { useUser } from "@/hooks/store/user";
 import fetchData from "@/libs/fetchData";
 import clsx from "clsx";
@@ -8,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 
-export default function Profile() {
+export default function EditProfile() {
   const route = useRouter();
 
   const { user } = useUser();
@@ -21,14 +23,14 @@ export default function Profile() {
     e.preventDefault();
 
     try {
-      await fetchData("/editAccount", "POST", {
+      await fetchData("/user/edit", "POST", {
         walletId,
         name,
         number,
         introduce,
       });
 
-      route.push("/profile");
+      route.push(PATH.PROFILE);
     } catch (err) {
       console.error(err);
     }
@@ -46,7 +48,11 @@ export default function Profile() {
   return (
     <Wrapper>
       {{
-        header: <div>Header</div>,
+        header: (
+          <div>
+            <BackLink path={PATH.PROFILE} />
+          </div>
+        ),
         body: (
           <div className={styles.container}>
             <div className={styles.title}>프로필 수정</div>

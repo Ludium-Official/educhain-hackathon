@@ -1,7 +1,9 @@
 "use client";
 
+import BackLink from "@/components/BackLink";
 import Comment from "@/components/Comment";
 import Wrapper from "@/components/Wrapper";
+import { PATH } from "@/constant/route";
 import fetchData from "@/libs/fetchData";
 import { CommentType } from "@/types/comment";
 import { CommunityType } from "@/types/community";
@@ -42,7 +44,11 @@ export default function Community() {
   return (
     <Wrapper>
       {{
-        header: <div>Header</div>,
+        header: (
+          <div>
+            <BackLink path={PATH.COMMUNITY} />
+          </div>
+        ),
         body: (
           <div className={styles.container}>
             <div className={styles.wrapper}>

@@ -2,6 +2,7 @@
 
 import PhoneLogo from "@/assets/profile/PhoneLogo.svg";
 import ProfileLogo from "@/assets/profile/ProfileLogo.svg";
+import BackLink from "@/components/BackLink";
 import Wrapper from "@/components/Wrapper";
 import { PATH } from "@/constant/route";
 import { useUser } from "@/hooks/store/user";
@@ -23,7 +24,7 @@ export default function Profile() {
       `${account.address}${process.env.NEXT_PUBLIC_ADDRESS_KEY}`
     );
 
-    await fetchData("/signIn", "POST", {
+    await fetchData("/user/signIn", "POST", {
       addressKey,
     });
 
@@ -42,7 +43,11 @@ export default function Profile() {
   return (
     <Wrapper>
       {{
-        header: <div>Header</div>,
+        header: (
+          <div>
+            <BackLink path={PATH.HOME} />
+          </div>
+        ),
         body: (
           <>
             {account.address && (
