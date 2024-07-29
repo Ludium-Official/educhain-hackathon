@@ -19,16 +19,12 @@ contract EventLogging is Test {
 
     address public validator = 0x37D734F42f4F861b2591b7cEAA1e261b7F12d550;
 
-    function generateSig(uint256 programId, uint256 chapterIndex, uint256 submissionId, address recipient)
-        public
-        returns (bytes memory)
-    {
+    function generateSig(uint256 programId, uint256 chapterIndex, address recipient) public returns (bytes memory) {
         string[] memory inputs = new string[](6);
         inputs[0] = "node";
         inputs[1] = "./tools/sig-gen.js";
         inputs[2] = vm.toString(programId);
         inputs[3] = vm.toString(chapterIndex);
-        inputs[4] = vm.toString(submissionId);
         inputs[5] = vm.toString(recipient);
         bytes memory sig = vm.ffi(inputs);
 

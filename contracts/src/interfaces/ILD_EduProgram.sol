@@ -22,8 +22,7 @@ interface ILD_EduProgram {
     function totalChapter() external view returns (uint256);
     function reserveAndPrize(uint256 chapterIndex) external view returns (uint256[2] memory);
 
-    function claim(uint256 programId_, uint256 chapterIndex, uint256 submissionId, address recipient, bytes memory sig)
-        external;
+    function claim(uint256 programId_, uint256 chapterIndex, address recipient, bytes memory sig) external;
     function withdraw() external;
     function addChapter(uint256 reserve, uint256 prize) external;
     function setValidator(address newValidator_) external;

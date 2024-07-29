@@ -19,17 +19,13 @@ contract Claim is Test {
 
     address public validator = 0x37D734F42f4F861b2591b7cEAA1e261b7F12d550;
 
-    function generateSig(uint256 programId, uint256 chapterIndex, uint256 submissionId, address recipient)
-        public
-        returns (bytes memory)
-    {
+    function generateSig(uint256 programId, uint256 chapterIndex, address recipient) public returns (bytes memory) {
         string[] memory inputs = new string[](6);
         inputs[0] = "node";
         inputs[1] = "./tools/sig-gen.js";
         inputs[2] = vm.toString(programId);
         inputs[3] = vm.toString(chapterIndex);
-        inputs[4] = vm.toString(submissionId);
-        inputs[5] = vm.toString(recipient);
+        inputs[4] = vm.toString(recipient);
         bytes memory sig = vm.ffi(inputs);
 
         return sig;
@@ -49,10 +45,10 @@ contract Claim is Test {
     }
 
     function test_Claim() public {
-        bytes memory sig = generateSig(1, 1, 1, user1);
+        bytes memory sig = generateSig(1, 1, user1);
         uint256 initialBalance = user1.balance;
         vm.startPrank(user1);
-        ILD_EduProgram(program).claim(1, 1, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 1, user1, sig);
         vm.stopPrank();
         uint256 afterBalance = user1.balance;
         uint256 feeAmount = (10000000000000000 * 50000000000000000) / 1 ether;
@@ -63,83 +59,71 @@ contract Claim is Test {
     }
 
     function test_Revert_Sender() public {
-        bytes memory sig = generateSig(1, 1, 1, user1);
+        bytes memory sig = generateSig(1, 1, user1);
         vm.startPrank(user2);
         vm.expectRevert("Must be requested by the approved recipient address");
-        ILD_EduProgram(program).claim(1, 1, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 1, user1, sig);
         vm.stopPrank();
     }
 
     function test_Revert_ProgramId() public {
-        bytes memory sig = generateSig(2, 1, 1, user1);
+        bytes memory sig = generateSig(2, 1, user1);
         vm.startPrank(user1);
         vm.expectRevert("Invalid program id");
-        ILD_EduProgram(program).claim(2, 1, 1, user1, sig);
+        ILD_EduProgram(program).claim(2, 1, user1, sig);
         vm.stopPrank();
     }
 
     function test_Revert_ChapterIndex() public {
-        bytes memory sig = generateSig(1, 4, 1, user1);
+        bytes memory sig = generateSig(1, 4, user1);
         vm.startPrank(user1);
         vm.expectRevert("Invalid chapter");
-        ILD_EduProgram(program).claim(1, 4, 1, user1, sig);
+        ILD_EduProgram(program).claim(1, 4, user1, sig);
         vm.stopPrank();
     }
 
     function test_Revert_Recipient() public {
-        bytes memory sig = generateSig(1, 1, 1, user1);
+        bytes memory sig = generateSig(1, 1, user1);
         vm.startPrank(user2);
         vm.expectRevert("Invalid signature");
-        ILD_EduProgram(program).claim(1, 1, 1, user2, sig);
+        ILD_EduProgram(program).claim(1, 1, user2, sig);
         vm.stopPrank();
     }
 
     function test_Revert_Chapter() public {
-        bytes memory sig = generateSig(1, 1, 1, user1);
+        bytes memory sig = generateSig(1, 1, user1);
         vm.startPrank(user1);
         vm.expectRevert("Invalid signature");
-        ILD_EduProgram(program).claim(1, 2, 1, user1, sig);
-        vm.stopPrank();
-    }
-
-    function test_Revert_ClaimTwiceWithSameSubmission() public {
-        bytes memory sig1 = generateSig(1, 1, 1, user1);
-        bytes memory sig2 = generateSig(1, 1, 1, user2);
-        vm.startPrank(user1);
-        ILD_EduProgram(program).claim(1, 1, 1, user1, sig1);
-        vm.stopPrank();
-        vm.startPrank(user2);
-        vm.expectRevert("Already claimed submission");
-        ILD_EduProgram(program).claim(1, 1, 1, user2, sig2);
+        ILD_EduProgram(program).claim(1, 2, user1, sig);
         vm.stopPrank();
     }
 
     function test_Revert_ClaimTwiceWithSameRecipient() public {
-        bytes memory sig1 = generateSig(1, 1, 1, user1);
-        bytes memory sig2 = generateSig(1, 1, 2, user1);
+        bytes memory sig1 = generateSig(1, 1, user1);
+        bytes memory sig2 = generateSig(1, 1, user1);
         vm.startPrank(user1);
-        ILD_EduProgram(program).claim(1, 1, 1, user1, sig1);
+        ILD_EduProgram(program).claim(1, 1, user1, sig1);
         vm.expectRevert("Already claimed recipient");
-        ILD_EduProgram(program).claim(1, 1, 2, user1, sig2);
+        ILD_EduProgram(program).claim(1, 1, user1, sig2);
         vm.stopPrank();
     }
 
     function test_Revert_InsufficientReserve() public {
-        bytes memory sig1 = generateSig(1, 1, 11, user1);
-        bytes memory sig2 = generateSig(1, 1, 22, user2);
-        bytes memory sig3 = generateSig(1, 1, 33, user3);
+        bytes memory sig1 = generateSig(1, 1, user1);
+        bytes memory sig2 = generateSig(1, 1, user2);
+        bytes memory sig3 = generateSig(1, 1, user3);
 
         vm.startPrank(user1);
-        ILD_EduProgram(program).claim(1, 1, 11, user1, sig1);
+        ILD_EduProgram(program).claim(1, 1, user1, sig1);
         vm.stopPrank();
 
         vm.startPrank(user2);
-        ILD_EduProgram(program).claim(1, 1, 22, user2, sig2);
+        ILD_EduProgram(program).claim(1, 1, user2, sig2);
         vm.stopPrank();
 
         vm.startPrank(user3);
         vm.expectRevert("Insufficient reserve balance");
-        ILD_EduProgram(program).claim(1, 1, 33, user3, sig3);
+        ILD_EduProgram(program).claim(1, 1, user3, sig3);
         vm.stopPrank();
     }
 }

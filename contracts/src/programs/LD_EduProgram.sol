@@ -59,14 +59,14 @@ contract LD_EduProgram is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, 
 
     // =========================== Write =========================== //
 
-    function claim(uint256 programId_, uint256 chapterIndex, uint256 submissionId, address recipient, bytes memory sig)
+    function claim(uint256 programId_, uint256 chapterIndex, address recipient, bytes memory sig)
         external
         nonReentrant
     {
-        _claimValidation(programId_, chapterIndex, submissionId, recipient);
-        _sigValidation(programId_, chapterIndex, submissionId, recipient, sig);
+        _claimValidation(programId_, chapterIndex, recipient);
+        _sigValidation(programId_, chapterIndex, recipient, sig);
 
-        (uint256 remain, uint256 prize) = _claim(chapterIndex, recipient, submissionId);
+        (uint256 remain, uint256 prize) = _claim(chapterIndex, recipient);
 
         _logPrizeClaimed(programId_, chapterIndex, recipient, remain, prize);
     }

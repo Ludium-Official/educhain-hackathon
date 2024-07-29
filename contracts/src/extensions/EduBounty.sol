@@ -23,7 +23,6 @@ contract EduBounty is Initializable {
         mapping(uint256 => uint256) _reserve;
         mapping(uint256 => uint256) _prize;
         mapping(uint256 => mapping(address => bool)) _claimed;
-        mapping(uint256 => mapping(uint256 => bool)) _submitted;
     }
 
     function _getEduBountyStorage() private pure returns (EduBountyStorage storage $) {
@@ -186,32 +185,17 @@ contract EduBounty is Initializable {
     }
 
     /**
-     * @dev Checks if a specific content has claimed the prize for a specific chapter.
-     * @param chapterIndex Index of the chapter
-     * @param submissionId Id of submission
-     */
-    function _isSubmitted(uint256 chapterIndex, uint256 submissionId) internal view returns (bool) {
-        EduBountyStorage storage $ = _getEduBountyStorage();
-        return $._submitted[chapterIndex][submissionId];
-    }
-
-    /**
      * @dev Validates the claim parameters for a specific submission.
      * @param programId Id of the program
      * @param chapterIndex Index of the chapter
-     * @param submissionId Id of the submission
      * @param recipient Address of the recipient
      */
-    function _claimValidation(uint256 programId, uint256 chapterIndex, uint256 submissionId, address recipient)
-        internal
-        view
-    {
+    function _claimValidation(uint256 programId, uint256 chapterIndex, address recipient) internal view {
         EduBountyStorage storage $ = _getEduBountyStorage();
         require(block.timestamp >= $._start && block.timestamp <= $._end, "Program is not within its active period");
         require(recipient == msg.sender, "Must be requested by the approved recipient address");
         require(programId == $._programId, "Invalid program id");
         require(chapterIndex > 0 && $._totalChapter >= chapterIndex, "Invalid chapter");
-        require(!_isSubmitted(chapterIndex, submissionId), "Already claimed submission");
         require(!_hasClaimed(chapterIndex, recipient), "Already claimed recipient");
         require($._reserve[chapterIndex] >= $._prize[chapterIndex], "Insufficient reserve balance");
     }
@@ -220,23 +204,18 @@ contract EduBounty is Initializable {
      * @dev Validates the signature for a specific submission.
      * @param programId Id of the program
      * @param chapterIndex Index of the chapter
-     * @param submissionId Id of the submission
      * @param recipient Address of the recipient
      * @param sig Signature to validate
      */
-    function _sigValidation(
-        uint256 programId,
-        uint256 chapterIndex,
-        uint256 submissionId,
-        address recipient,
-        bytes memory sig
-    ) internal view {
+    function _sigValidation(uint256 programId, uint256 chapterIndex, address recipient, bytes memory sig)
+        internal
+        view
+    {
         EduBountyStorage storage $ = _getEduBountyStorage();
 
         bytes32 messageHash = keccak256(
             abi.encodePacked(
-                "\x19Ethereum Signed Message:\n32",
-                keccak256(abi.encodePacked(programId, chapterIndex, submissionId, recipient))
+                "\x19Ethereum Signed Message:\n32", keccak256(abi.encodePacked(programId, chapterIndex, recipient))
             )
         );
         require(SignatureChecker.isValidSignatureNow($._validator, messageHash, sig), "Invalid signature");
@@ -261,12 +240,8 @@ contract EduBounty is Initializable {
      * @dev Claims the prize for a specific chapter.
      * @param chapterIndex Index of the chapter
      * @param recipient Address of the recipient
-     * @param submissionId Id of submission
      */
-    function _claim(uint256 chapterIndex, address recipient, uint256 submissionId)
-        internal
-        returns (uint256, uint256)
-    {
+    function _claim(uint256 chapterIndex, address recipient) internal returns (uint256, uint256) {
         EduBountyStorage storage $ = _getEduBountyStorage();
 
         uint256 prize = $._prize[chapterIndex];
@@ -275,7 +250,6 @@ contract EduBounty is Initializable {
 
         $._reserve[chapterIndex] -= $._prize[chapterIndex];
         $._claimed[chapterIndex][recipient] = true;
-        $._submitted[chapterIndex][submissionId] = true;
 
         // Send fee to treasury
         (bool successTreasury,) = payable($._treasury).call{value: feeAmount}("");
