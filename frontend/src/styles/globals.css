@@ -452,7 +452,7 @@ button {
 a {
   text-decoration: none !important;
   outline: none;
-  color: var(--grey-02) !important;
+  color: inherit !important;
 }
 
 :root {

@@ -8,7 +8,7 @@ import { CommunityType } from "@/types/community";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 
 export default function Community() {
@@ -16,13 +16,13 @@ export default function Community() {
   const [community, setCommunity] = useState<CommunityType>();
   const [comments, setComments] = useState<CommentType[]>();
 
-  const commentCallData = async () => {
+  const commentCallData = useCallback(async () => {
     const commentsResponse = (await fetchData(`/comments/${param.id}`, "POST", {
       type: "community",
     })) as CommentType[];
 
     setComments(commentsResponse);
-  };
+  }, [param.id]);
 
   useEffect(() => {
     const callData = async () => {
@@ -35,7 +35,7 @@ export default function Community() {
 
     commentCallData();
     callData();
-  }, [param.id]);
+  }, [commentCallData, param.id]);
 
   const formatDate = dayjs(community?.created_at).format("YYYY.MM.DD");
 

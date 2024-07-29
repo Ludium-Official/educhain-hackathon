@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useCallback, useState } from "react";
+import { useAccount } from "wagmi";
 import styles from "./index.module.scss";
 
 interface CommentProps {
@@ -20,6 +21,7 @@ interface CommentProps {
 const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
   const param = useParams();
   const { user } = useUser();
+  const account = useAccount();
   const [comment, setComment] = useState("");
 
   const SubmitComment = useCallback(
@@ -84,12 +86,16 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
           />
           코멘트 작성하기
         </div>
-        <input
-          type="text"
-          placeholder="코멘트 입력.."
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
+        {account.address ? (
+          <input
+            type="text"
+            placeholder="코멘트 입력.."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        ) : (
+          <div className={styles.notLogin}>로그인 하세요</div>
+        )}
       </form>
     </div>
   );

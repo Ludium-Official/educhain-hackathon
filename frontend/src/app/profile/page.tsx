@@ -3,10 +3,12 @@
 import PhoneLogo from "@/assets/profile/PhoneLogo.svg";
 import ProfileLogo from "@/assets/profile/ProfileLogo.svg";
 import Wrapper from "@/components/Wrapper";
+import { PATH } from "@/constant/route";
 import { useUser } from "@/hooks/store/user";
 import fetchData from "@/libs/fetchData";
 import { UserType } from "@/types/user";
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback } from "react";
 import { useAccount } from "wagmi";
 import { sha256ToHex } from "../../libs/cryptoEncode";
@@ -74,7 +76,12 @@ export default function Profile() {
                         </div>
                       </div>
                     </div>
-                    <button>프로필 수정</button>
+                    <Link
+                      className={styles.editBtn}
+                      href={`${PATH.PROFILE}/edit`}
+                    >
+                      프로필 수정
+                    </Link>
                   </div>
                 ) : (
                   <button onClick={signIn}>회원가입</button>

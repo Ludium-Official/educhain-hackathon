@@ -7,8 +7,13 @@ import ActiveProfileLogo from "@/assets/header/ActiveProfileLogo.svg";
 import ActiveProgramLogo from "@/assets/header/ActiveProgramLogo.svg";
 import AnnouncementLogo from "@/assets/header/AnnouncementLogo.svg";
 import CommunityLogo from "@/assets/header/CommunityLogo.svg";
+import DiscordLogo from "@/assets/header/DiscordLogo.svg";
+import LudiumSubLogo from "@/assets/header/LudiumSubLogo.svg";
 import ProfileLogo from "@/assets/header/ProfileLogo.svg";
 import ProgramLogo from "@/assets/header/ProgramLogo.svg";
+import TelLogo from "@/assets/header/TelLogo.svg";
+import XLogo from "@/assets/header/XLogo.svg";
+import YoutubeLogo from "@/assets/header/YoutubeLogo.svg";
 import { PATH } from "@/constant/route";
 import { useUser } from "@/hooks/store/user";
 import { sha256ToHex } from "@/libs/cryptoEncode";
@@ -153,7 +158,59 @@ const SideHeader = () => {
           </Link>
         </div>
       </div>
-      <div>address</div>
+      <div className={styles.footerWrapper}>
+        <Image
+          className={styles.subLogo}
+          src={LudiumSubLogo.src}
+          alt="logo"
+          width={52}
+          height={24}
+        />
+        <div className={styles.companyInfoWrapper}>
+          <div>(주) 루디움 | 대표자: 홍길동</div>
+          <div>개인정보처리방침 | 이용약관</div>
+          <div>개인정보보호책임자: 홍길동</div>
+        </div>
+        <div className={styles.contactWrapper}>
+          <strong>Contact us</strong>
+          <Link
+            href="https://twitter.com/ludium_official"
+            className={styles.contact}
+            target="_blank"
+          >
+            <Image src={XLogo.src} alt="logo" width={16} height={16} />
+            Twitter
+          </Link>
+          <Link
+            href="https://discord.com/invite/c8Snswayuw"
+            className={styles.contact}
+            target="_blank"
+          >
+            <Image src={DiscordLogo.src} alt="logo" width={16} height={16} />
+            Discord
+          </Link>
+          <Link
+            href="https://www.youtube.com/@Ludium"
+            className={styles.contact}
+            target="_blank"
+          >
+            <Image src={YoutubeLogo.src} alt="logo" width={16} height={16} />
+            Youtube
+          </Link>
+          <Link
+            href="mailto:contact@ludium.community?subject=디렉투스의 도움이 필요해"
+            className={styles.contact}
+            target="_blank"
+          >
+            <Image src={TelLogo.src} alt="logo" width={16} height={16} />
+            Customer Service
+          </Link>
+        </div>
+        <div>
+          &copy;2024 LUDIUM
+          <div>.ALL RIGHTS RESERVED.</div>
+        </div>
+      </div>
     </div>
   );
 };

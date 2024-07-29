@@ -94,5 +94,17 @@
         color: var(--grey-04);
       }
     }
+
+    .notLogin {
+      cursor: no-drop;
+
+      width: 100%;
+      margin-top: 8px;
+      border: 1px solid var(--grey-05);
+      border-radius: 8px;
+      padding: 11px 16px;
+
+      color: var(--grey-04);
+    }
   }
 }

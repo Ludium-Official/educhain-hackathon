@@ -8,7 +8,7 @@
 
   width: 247px;
   height: 100dvh;
-  padding: 20px 40px 20px 0;
+  padding: 20px 40px 40px 0;
 }
 
 .sideContent {
@@ -30,6 +30,8 @@
     font-weight: 500;
 
     .connectBtnWrapper {
+      padding-left: 6px;
+
       button {
         display: flex;
         align-items: center;
@@ -69,6 +71,42 @@
         border-top-right-radius: 40px;
         border-bottom-right-radius: 40px;
       }
+    }
+  }
+}
+
+.footerWrapper {
+  display: flex;
+  flex-direction: column;
+
+  padding-left: 20px;
+
+  color: var(--grey-04);
+  font-size: 12px;
+
+  .subLogo {
+    margin-bottom: 16px;
+  }
+
+  .companyInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-bottom: 12px;
+  }
+
+  .contactWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    margin-bottom: 12px;
+
+    .contact {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
   }
 }
