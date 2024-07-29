@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-interface ILDEventLogger {
+interface ILD_EventLogger {
     // Events
     event ProgramCreated(
         uint256 indexed programId, address indexed programAddress, address indexed owner, uint256 start, uint256 end

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-interface ILDBounty {
+interface ILD_EduProgram {
     function initialize(
         address initialOwner,
         uint256 programId_,
@@ -22,9 +22,10 @@ interface ILDBounty {
     function totalChapter() external view returns (uint256);
     function reserveAndPrize(uint256 chapterIndex) external view returns (uint256[2] memory);
 
-    function claim(uint256 programId_, uint256 chapterIndex, uint256 submissionId, address recipient, bytes memory sig)
-        external;
+    function claim(uint256 programId_, uint256 chapterIndex, address recipient, bytes memory sig) external;
     function withdraw() external;
-    function addChapter(uint256 reserve, uint256 prize) external;
+    function addChapter(uint256 reserve, uint256 prize) external payable;
     function setValidator(address newValidator_) external;
+
+    receive() external payable;
 }

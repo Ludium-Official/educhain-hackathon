@@ -4,24 +4,40 @@ Visit [Ludium World](https://ludium.world/)
 
 ## 📄 Contracts
 
-### BountyProxy
+### Main
 
-Proxy contract for each bounty program
-
-### Bounty
+#### LD_ProgramFactory.sol
 
 The implementation contract of the bounty proxy contract.
 There can be various types depending on the nature of the bounty.
 Currently, only the beta version, "education v0.1" is implemented.
 
-### Treasury
+#### LD_EduProgram.sol
+
+TBD.
+
+#### LD_Treasury.sol
 
 The Ludium treasury contract where the fees from bounty rewards are collected.
 
-### EventLogger
+#### LD_EventLogger.sol
 
 Contract that records various events such as bounty creation, bounty claiming, etc.
-By querying the Tracker, all events can be logged without the need to track events from multiple proxy contracts.
+By querying the EventLogger, all events can be logged without the need to track events from multiple proxy contracts.
+
+<br>
+
+### Extensions
+
+TBD.
+
+#### EduBounty.sol
+
+TBD.
+
+#### Log.sol
+
+TBD.
 
 <br>
 
@@ -69,5 +85,5 @@ forge test -vvvvv --ffi
 ### Deploy
 
 ```shell
-forge script script/Deploy.s.sol:Deploy --rpc-url <your_rpc_url>
+forge script script/Deploy.s.sol:Deploy --rpc-url https://rpc.open-campus-codex.gelato.digital
 ```

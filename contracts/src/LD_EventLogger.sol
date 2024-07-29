@@ -2,9 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/ILDEventLogger.sol";
+import "./interfaces/ILD_EventLogger.sol";
 
-contract LDEventLogger is Ownable, ILDEventLogger {
+contract LD_EventLogger is Ownable, ILD_EventLogger {
     mapping(address => bool) isProgram;
 
     constructor(address factoryAddress) Ownable(factoryAddress) {}
