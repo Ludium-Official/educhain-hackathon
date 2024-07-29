@@ -4,10 +4,14 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "doc" : "forge doc --open --serve --port 7878 --include-libraries",
     "test": "forge clean & clear & forge test -vvv --ffi",
     "build": "forge build",
     "deploy": "forge script script/Deploy.s.sol:Deploy --chain-id 656476 --rpc-url https://rpc.open-campus-codex.gelato.digital --broadcast --skip-simulation"
+=======
+    "test": "forge clean & clear & forge test -vvv --ffi"
+>>>>>>> main
   },
   "dependencies": {
     "viem": "^2.18.2"

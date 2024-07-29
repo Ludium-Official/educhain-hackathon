@@ -1,8 +1,9 @@
 export const PATH = {
   HOME: "/",
+  PROFILE: "/profile",
   ANNOUNCEMENT: "/announcement",
-  WORK: "/work",
   PROGRAM: "/program",
   PARTICIPATION: "/participation",
   MANAGEMENT: "/management",
+  COMMUNITY: "/community",
 } as const;
