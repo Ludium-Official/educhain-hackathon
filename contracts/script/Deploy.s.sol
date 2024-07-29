@@ -16,6 +16,5 @@ contract Deploy is Script {
             address(eduProgram), 50000000000000000, payable(address(0x1acDF5aa05372de83EEA17a2df300A0f1731317B))
         );
         vm.stopBroadcast();
-        // do something...
     }
 }
