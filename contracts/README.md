@@ -2,6 +2,12 @@
 
 Visit [Ludium World](https://ludium.world/)
 
+## Structure
+
+![image](https://github.com/user-attachments/assets/24095a6c-9414-47dc-a050-1aa1af8e26d2)
+
+<br>
+
 ## 📄 Contracts
 
 ### Main
