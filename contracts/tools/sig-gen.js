@@ -23,7 +23,7 @@ const programId = parseInt(args[0]);
 const chapterIndex = parseInt(args[1]);
 const recipient = args[2];
 
-if (args.length < 4) {
+if (args.length < 3) {
     console.error('Usage: node sig-gen.js <programId> <chapterIndex> <recipient>');
     process.exit(1);
 }

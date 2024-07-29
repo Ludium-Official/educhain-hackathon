@@ -20,7 +20,7 @@ contract Claim is Test {
     address public validator = 0x37D734F42f4F861b2591b7cEAA1e261b7F12d550;
 
     function generateSig(uint256 programId, uint256 chapterIndex, address recipient) public returns (bytes memory) {
-        string[] memory inputs = new string[](6);
+        string[] memory inputs = new string[](5);
         inputs[0] = "node";
         inputs[1] = "./tools/sig-gen.js";
         inputs[2] = vm.toString(programId);
@@ -41,7 +41,7 @@ contract Claim is Test {
         prizeConfig[1] = [uint256(40000000000000000), uint256(20000000000000000)];
         prizeConfig[2] = [uint256(60000000000000000), uint256(30000000000000000)];
         program =
-            payable(factory.createProgram{value: 120000000000000000}(1, validator, prizeConfig, 1722076816, 1722676816));
+            payable(factory.createProgram{value: 120000000000000000}(1, validator, prizeConfig, 1722076816, 1832676816));
     }
 
     function test_Claim() public {

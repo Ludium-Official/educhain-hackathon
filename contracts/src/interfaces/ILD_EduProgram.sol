@@ -24,6 +24,8 @@ interface ILD_EduProgram {
 
     function claim(uint256 programId_, uint256 chapterIndex, address recipient, bytes memory sig) external;
     function withdraw() external;
-    function addChapter(uint256 reserve, uint256 prize) external;
+    function addChapter(uint256 reserve, uint256 prize) external payable;
     function setValidator(address newValidator_) external;
+
+    receive() external payable;
 }

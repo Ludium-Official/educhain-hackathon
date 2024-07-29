@@ -85,5 +85,5 @@ forge test -vvvvv --ffi
 ### Deploy
 
 ```shell
-forge script script/Deploy.s.sol:Deploy --rpc-url <your_rpc_url>
+forge script script/Deploy.s.sol:Deploy --rpc-url https://rpc.open-campus-codex.gelato.digital
 ```

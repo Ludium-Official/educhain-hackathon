@@ -81,7 +81,8 @@ contract LD_EduProgram is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, 
         _logWithdraw(_programId(), amount);
     }
 
-    function addChapter(uint256 reserve, uint256 prize) external onlyOwner {
+    function addChapter(uint256 reserve, uint256 prize) external payable onlyOwner {
+        require(msg.value >= reserve, "Insufficient balance");
         uint256 newChapterIndex = _addChapter(reserve, prize);
 
         _logChapterAdded(_programId(), newChapterIndex, reserve, prize);

@@ -8,10 +8,13 @@ import "../src/programs/LD_EduProgram.sol";
 contract ProgramCreation is Test {
     uint256 sepoliaFork;
     LD_ProgramFactory public factory;
+    LD_EduProgram public programImpl;
     address public deployer = 0xeA4a5BA5b31D585116D6921A859F0c39707771B3;
     address public user1 = 0x1b2829d7c70ec264A6Ddb768fbF0CBbDe7f3ED83;
     address public user2 = 0x23614BA53Ef1cD835B7aaa0167413bc22c9B98cc;
     uint256[2][] prizeConfig;
+
+    event EventLogger(address indexed eventLogger);
 
     function setUp() public {
         sepoliaFork = vm.createSelectFork("https://ethereum-sepolia-rpc.publicnode.com");
@@ -21,8 +24,29 @@ contract ProgramCreation is Test {
         prizeConfig[2] = [uint256(300000000000000000), uint256(30000000000000000)];
         vm.deal(user1, 10 ether);
         vm.startPrank(deployer);
-        LD_EduProgram programImpl = new LD_EduProgram();
+        programImpl = new LD_EduProgram();
         factory = new LD_ProgramFactory(address(programImpl), 50000000000000000, deployer);
+        vm.stopPrank();
+    }
+
+    function test_Constructor() public view {
+        assertEq(factory.implementation(), address(programImpl));
+        assertEq(factory.feeRatio(), 50000000000000000);
+        assertEq(factory.treasury(), deployer);
+    }
+
+    function test_EventLoggerEmission() public {
+        LD_EduProgram newProgramImpl = new LD_EduProgram();
+        vm.expectEmit(false, false, false, false);
+        emit EventLogger(address(0));
+        new LD_ProgramFactory(address(newProgramImpl), 50000000000000000, deployer);
+    }
+
+    function test_CreateProgramReturnValue() public {
+        vm.startPrank(user1);
+        address proxyAddress =
+            factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1722076816, 1832676816);
+        assertNotEq(proxyAddress, address(0));
         vm.stopPrank();
     }
 
