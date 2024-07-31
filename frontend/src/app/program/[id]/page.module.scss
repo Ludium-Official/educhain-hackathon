@@ -1,0 +1,35 @@
+.container {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .tableWrapper {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 10px;
+
+    .table {
+      background-color: var(--white);
+      border-radius: 20px;
+      padding: 20px 40px;
+      margin-top: 24px;
+
+      .tableHeader {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .tableContent {
+        padding: 29px 0;
+      }
+    }
+  }
+}

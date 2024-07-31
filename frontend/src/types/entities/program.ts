@@ -1,11 +1,14 @@
+import { DBMission } from "./mission";
+
 export type DBProgram = {
   id: number;
   owner: string;
   is_private: boolean;
-  type: "announcement"; // TODO: 다른 것들도 추가
+  type: "manage" | "study";
   title: string;
   guide: string | null;
-  missionCnt: number;
+  prize: number;
   end_at: string;
   created_at: string;
+  missions?: DBMission[];
 };

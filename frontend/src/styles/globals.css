@@ -461,6 +461,7 @@ a {
   --alert: #ff4747;
   --info: #477bff;
   --beige: #f4eae2;
+  --green: rgb(59, 211, 115);
   --linear: linear-gradient(to right, #9536cc 0%, #a554d5 50%, #c996db 100%);
 
   --purple-01: #861cc4;
