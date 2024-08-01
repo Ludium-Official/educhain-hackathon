@@ -37,7 +37,7 @@ export default function Community() {
 
     commentCallData();
     callData();
-  }, [commentCallData, param.id]);
+  }, [param.id]);
 
   const formatDate = dayjs(community?.created_at).format("YYYY.MM.DD");
 

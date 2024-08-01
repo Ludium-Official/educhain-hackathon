@@ -9,6 +9,7 @@ import { missionChapterSubmissionParsing } from "@/functions/parsing-function";
 import fetchData from "@/libs/fetchData";
 import { ParsingMissionType } from "@/types/parsingMission";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
@@ -83,7 +84,6 @@ export default function MissionDetail() {
                 {mission.chapters && (
                   <div className={styles.contentWrapper}>
                     {mission.chapters?.map((chapter) => {
-                      console.log(chapter);
                       return (
                         <div key={chapter.id} className={styles.chapterWrapper}>
                           <div className={styles.chapterTitle}>
@@ -107,7 +107,11 @@ export default function MissionDetail() {
                                       {getConvertDeadline(submission.end_at)} 일
                                       전
                                     </span>
-                                    {submission.title}
+                                    <Link
+                                      href={`${PATH.SUBMISSION}/${submission.id}`}
+                                    >
+                                      {submission.title}
+                                    </Link>
                                   </div>
                                   {submission.type && (
                                     <div className={styles.working}>미진행</div>

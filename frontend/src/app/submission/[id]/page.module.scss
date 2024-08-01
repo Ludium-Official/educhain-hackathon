@@ -1,0 +1,51 @@
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+
+  width: 100%;
+
+  .card {
+    background-color: var(--white);
+    padding: 24px 40px;
+    border-radius: 20px;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    overflow: auto;
+
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      font-size: 18px;
+      font-weight: bold;
+
+      span {
+        color: var(--grey-04);
+        font-weight: normal;
+        font-size: 12px;
+      }
+    }
+
+    .content {
+      max-height: calc(100dvh - 251px);
+      overflow: auto;
+    }
+
+    .submitBtn {
+      background-color: var(--purple-01);
+      padding: 13px 30px;
+      border-radius: 40px;
+      margin-top: 24px;
+
+      color: var(--white) !important;
+      font-size: 16px;
+    }
+  }
+}
