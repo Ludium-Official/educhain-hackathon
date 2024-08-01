@@ -6,4 +6,5 @@ export const PATH = {
   PARTICIPATION: "/participation",
   MANAGEMENT: "/management",
   COMMUNITY: "/community",
+  SUBMISSION: "/submission",
 } as const;

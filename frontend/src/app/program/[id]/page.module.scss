@@ -12,8 +12,8 @@
   }
 
   .tableWrapper {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 
     .table {
@@ -22,13 +22,94 @@
       padding: 20px 40px;
       margin-top: 24px;
 
+      overflow: auto;
+
       .tableHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
         font-size: 18px;
         font-weight: bold;
+
+        .titleWrapper {
+          display: flex;
+          align-items: center;
+
+          span {
+            margin-left: 8px;
+
+            color: var(--info);
+          }
+        }
+
+        .makeDate {
+          color: var(--grey-04);
+          font-size: 14px;
+        }
       }
 
       .tableContent {
-        padding: 29px 0;
+        margin-top: 20px;
+      }
+
+      .tableBody {
+        .tableRow {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          font-size: 18px;
+
+          .missionHeader {
+            display: flex;
+            align-items: center;
+
+            .missionCategory {
+              margin-right: 20px;
+
+              color: var(--purple-01);
+            }
+
+            .missionPrize {
+              margin-left: 8px;
+
+              color: var(--info);
+            }
+          }
+
+          .collapseBtn {
+            background-color: inherit;
+            box-shadow: none;
+            width: fit-content;
+
+            &::after {
+              background-image: var(--bs-accordion-btn-icon);
+            }
+          }
+        }
+
+        .missionsWrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .missionOwner {
+            color: var(--purple-01);
+            font-weight: bold;
+          }
+
+          .chapterWrapper {
+            display: flex;
+            flex-direction: column;
+
+            .chapterTitle {
+              margin-bottom: 5px;
+
+              font-weight: bold;
+            }
+          }
+        }
       }
     }
   }

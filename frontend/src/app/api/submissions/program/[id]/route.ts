@@ -1,6 +1,6 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
-import { DBMission } from "@/types/entities/mission";
+import { DBSubmission } from "@/types/entities/submission";
 import { NextResponse } from "next/server";
 import pool from "../../../db";
 
@@ -9,22 +9,10 @@ const handler = async (req: Request) => {
   const id = url.pathname.split("/").pop();
 
   try {
-    const query = `
-      SELECT 
-        m.*, 
-        u.name AS owner_name
-      FROM 
-        missions m
-      LEFT JOIN
-        users u
-      ON
-        m.owner = u.walletId
-      WHERE
-        m.program_id = ?
-      `;
+    const query = `SELECT * FROM submissions WHERE program_id = ?`;
     const [rows] = await pool.query(query, [id]);
 
-    const request = rows as DBMission[];
+    const request = rows as DBSubmission[];
 
     return NextResponse.json(request);
   } catch (error) {
