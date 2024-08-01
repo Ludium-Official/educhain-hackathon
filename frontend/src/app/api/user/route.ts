@@ -1,9 +1,9 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
+import pool from "@/app/api/db";
 import { DBUser } from "@/types/entities/user";
 import { UserType } from "@/types/user";
 import { NextResponse } from "next/server";
-import pool from "../db";
 
 const handler = async (req: Request) => {
   const { addressKey } = await req.json();

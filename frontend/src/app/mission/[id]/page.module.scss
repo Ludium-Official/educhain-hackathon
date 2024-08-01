@@ -1,0 +1,133 @@
+.container {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .titleWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    .missionHeader {
+      display: flex;
+      align-items: center;
+
+      .missionCategory {
+        margin-right: 10px;
+
+        color: var(--purple-01);
+      }
+
+      .missionPrize {
+        margin-left: 8px;
+
+        color: var(--info);
+      }
+    }
+
+    .rightSide {
+      display: flex;
+      align-items: center;
+
+      font-size: 16px;
+
+      span {
+        margin-right: 15px;
+      }
+
+      .owner {
+        color: var(--purple-01);
+      }
+    }
+  }
+
+  .contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 20px 40px;
+    margin-top: 24px;
+
+    .chapterWrapper {
+      display: flex;
+      flex-direction: column;
+
+      .chapterTitle {
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--grey-03);
+
+        color: var(--purple-01);
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .submissionWrapper {
+        display: flex;
+        flex-direction: column;
+
+        .submissionContent {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+
+          padding: 10px;
+          border-bottom: 1px solid var(--grey-05);
+
+          &:last-child {
+            border-bottom: 0;
+          }
+
+          .leftSide {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .submissionType {
+              width: 45px;
+              margin-right: 10px;
+
+              font-weight: bold;
+            }
+
+            .endTime {
+              width: fit-content;
+              padding: 3px 8px;
+              border: 1px solid var(--purple-01);
+              border-radius: 4px;
+
+              color: var(--purple-01);
+              font-size: 12px;
+              font-weight: normal;
+            }
+          }
+
+          .working {
+            padding: 3px 8px;
+            border: 1px solid var(--grey-06);
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  .applyBtn {
+    background-color: var(--purple-01);
+    padding: 13px 30px;
+    border-radius: 40px;
+    margin-top: 24px;
+
+    color: var(--white) !important;
+    font-size: 16px;
+  }
+}

@@ -11,6 +11,7 @@ import { ParsingMissionType } from "@/types/parsingMission";
 import { ProgramType } from "@/types/program";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
@@ -111,7 +112,9 @@ export default function ProgramDetail() {
                                     ? "학습"
                                     : "공고"}
                                 </div>
-                                {mission.title}
+                                <Link href={`${PATH.MISSION}/${mission.id}`}>
+                                  {mission.title}
+                                </Link>
                                 <div className={styles.missionPrize}>
                                   (상금: {mission.prize})
                                 </div>
@@ -139,7 +142,12 @@ export default function ProgramDetail() {
                                 )}
                               >
                                 <div className={styles.missionOwner}>
-                                  담당자: {mission.owner_name}
+                                  담당자:{" "}
+                                  {mission.owner_name || (
+                                    <button className={styles.apply}>
+                                      지원하기
+                                    </button>
+                                  )}
                                 </div>
                                 {chapters ? (
                                   chapters?.map((chapter) => {

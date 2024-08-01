@@ -1,7 +1,7 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
+import pool from "@/app/api/db";
 import { NextResponse } from "next/server";
-import pool from "../../db";
 
 const handler = async (req: Request) => {
   const { walletId, name, number, introduce } = await req.json();

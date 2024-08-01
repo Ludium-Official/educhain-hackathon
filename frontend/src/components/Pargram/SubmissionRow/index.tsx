@@ -28,7 +28,7 @@ const SubmissionRow: React.FC<SubmissionRowProps> = ({ submissions }) => {
               </Link>
             </div>
             <div className={styles.rightSide}>
-              <div className={styles.working}>미진행</div>
+              {submission.type && <div className={styles.working}>미진행</div>}
             </div>
           </div>
         );

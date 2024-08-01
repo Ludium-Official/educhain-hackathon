@@ -111,7 +111,9 @@ export default function Program() {
                                     ? "학습"
                                     : "공고"}
                                 </div>
-                                {mission.title}
+                                <Link href={`${PATH.MISSION}/${mission.id}`}>
+                                  {mission.title}
+                                </Link>
                               </div>
                               <div className={styles.hasOwner}>
                                 {mission.owner ? "배정됨" : "배정안됨"}

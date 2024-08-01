@@ -1,8 +1,8 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
+import pool from "@/app/api/db";
 import { DBCommunity } from "@/types/entities/community";
 import { NextResponse } from "next/server";
-import pool from "../db";
 
 const handler = async () => {
   try {

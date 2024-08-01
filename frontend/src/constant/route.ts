@@ -7,4 +7,5 @@ export const PATH = {
   MANAGEMENT: "/management",
   COMMUNITY: "/community",
   SUBMISSION: "/submission",
+  MISSION: "/mission",
 } as const;

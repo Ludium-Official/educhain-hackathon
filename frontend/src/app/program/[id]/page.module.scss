@@ -97,6 +97,14 @@
           .missionOwner {
             color: var(--purple-01);
             font-weight: bold;
+
+            .apply {
+              padding: 3px 8px;
+              border: 1px solid var(--grey-06);
+              border-radius: 4px;
+
+              color: var(--black);
+            }
           }
 
           .chapterWrapper {

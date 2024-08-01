@@ -1,8 +1,8 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
+import pool from "@/app/api/db";
 import { DBSubmission } from "@/types/entities/submission";
 import { NextResponse } from "next/server";
-import pool from "../../../db";
 
 const handler = async (req: Request) => {
   const url = new URL(req.url);

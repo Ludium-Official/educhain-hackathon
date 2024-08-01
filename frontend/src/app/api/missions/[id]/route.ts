@@ -1,15 +1,27 @@
 import { withAuth } from "@/middlewares/authMiddleware";
 
+import pool from "@/app/api/db";
 import { DBMission } from "@/types/entities/mission";
 import { NextResponse } from "next/server";
-import pool from "../../db";
 
 const handler = async (req: Request) => {
   const url = new URL(req.url);
   const id = url.pathname.split("/").pop();
 
   try {
-    const query = `SELECT * FROM missions WHERE id = ?`;
+    const query = `
+      SELECT 
+        m.*, 
+        u.name AS owner_name
+      FROM 
+        missions m
+      LEFT JOIN
+        users u
+      ON
+        m.owner = u.walletId
+      WHERE
+        m.id = ?
+      `;
     const [rows] = await pool.query(query, [id]);
 
     const request = rows as DBMission[];
