@@ -6,15 +6,15 @@ import "../interfaces/ILD_EventLogger.sol";
 
 contract Log is Initializable {
     // keccak256(abi.encode(uint256(keccak256("ludium.storage.Log")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant StorageLocation = 0x0e975ef586bbae5d130e43abe105a5db164c2ce040370295e9a748cab6e3c600;
+    bytes32 private constant LDLogStorageLocation = 0x0e975ef586bbae5d130e43abe105a5db164c2ce040370295e9a748cab6e3c600;
 
     struct LDLogStorage {
         address _logger;
     }
 
-    function _getLogStorage() private pure returns (LDLogStorage storage $) {
+    function _getLDLogStorage() private pure returns (LDLogStorage storage $) {
         assembly {
-            $.slot := StorageLocation
+            $.slot := LDLogStorageLocation
         }
     }
 
@@ -26,7 +26,7 @@ contract Log is Initializable {
     }
 
     function __Log_init_unchained(address loggerAddress) internal onlyInitializing {
-        LDLogStorage storage $ = _getLogStorage();
+        LDLogStorage storage $ = _getLDLogStorage();
         $._logger = loggerAddress;
     }
 
@@ -37,22 +37,22 @@ contract Log is Initializable {
         uint256 reserve,
         uint256 amount
     ) internal {
-        LDLogStorage storage $ = _getLogStorage();
+        LDLogStorage storage $ = _getLDLogStorage();
         ILD_EventLogger($._logger).logPrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
     }
 
     function _logChapterAdded(uint256 programId, uint256 newChapterIndex, uint256 reserve, uint256 prize) internal {
-        LDLogStorage storage $ = _getLogStorage();
+        LDLogStorage storage $ = _getLDLogStorage();
         ILD_EventLogger($._logger).logChapterAdded(programId, newChapterIndex, reserve, prize);
     }
 
     function _logValidatorChanged(address oldValidator, address newValidator) internal {
-        LDLogStorage storage $ = _getLogStorage();
+        LDLogStorage storage $ = _getLDLogStorage();
         ILD_EventLogger($._logger).logValidatorChanged(oldValidator, newValidator);
     }
 
     function _logWithdraw(uint256 programId, uint256 amount) internal {
-        LDLogStorage storage $ = _getLogStorage();
+        LDLogStorage storage $ = _getLDLogStorage();
         ILD_EventLogger($._logger).logWithdraw(programId, amount);
     }
 }

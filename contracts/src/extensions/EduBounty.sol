@@ -7,7 +7,8 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract EduBounty is Initializable {
     // keccak256(abi.encode(uint256(keccak256("ludium.storage.EduBounty")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant StorageLocation = 0xcd3e4d0b2227a4a3c69cdd698e5f185ac8bc5894ee60a71c2625ee6a02b4cd00;
+    bytes32 private constant EduBountyStorageLocation =
+        0xcd3e4d0b2227a4a3c69cdd698e5f185ac8bc5894ee60a71c2625ee6a02b4cd00;
 
     struct EduBountyStorage {
         uint256 _programId;
@@ -24,7 +25,7 @@ contract EduBounty is Initializable {
 
     function _getEduBountyStorage() private pure returns (EduBountyStorage storage $) {
         assembly {
-            $.slot := StorageLocation
+            $.slot := EduBountyStorageLocation
         }
     }
 
