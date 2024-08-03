@@ -10,7 +10,7 @@ async function main(chainId, contractAddress, programId, chapterIndex, recipient
       name: "Ludium",
       version: "0.1",
       chainId,
-      verifyingContract: checksumAddress(contractAddress),
+      verifyingContract: contractAddress,
     },
     types: {
       Claim: [
