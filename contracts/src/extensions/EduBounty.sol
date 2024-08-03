@@ -6,9 +6,6 @@ import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract EduBounty is Initializable {
-    string public constant PROGRAM_TYPE = "education";
-    string public constant VERSION = "0.1";
-
     // keccak256(abi.encode(uint256(keccak256("ludium.storage.EduBounty")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant StorageLocation = 0xcd3e4d0b2227a4a3c69cdd698e5f185ac8bc5894ee60a71c2625ee6a02b4cd00;
 
@@ -202,23 +199,13 @@ contract EduBounty is Initializable {
 
     /**
      * @dev Validates the signature for a specific submission.
-     * @param programId Id of the program
-     * @param chapterIndex Index of the chapter
-     * @param recipient Address of the recipient
+     * @param digestHash bytes32: _hashTypedDataV4
      * @param sig Signature to validate
      */
-    function _sigValidation(uint256 programId, uint256 chapterIndex, address recipient, bytes memory sig)
-        internal
-        view
-    {
+    function _sigValidation(bytes32 digestHash, bytes memory sig) internal view {
+        // uint256 programId, uint256 chapterIndex, address recipient,
         EduBountyStorage storage $ = _getEduBountyStorage();
-
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(
-                "\x19Ethereum Signed Message:\n32", keccak256(abi.encodePacked(programId, chapterIndex, recipient))
-            )
-        );
-        require(SignatureChecker.isValidSignatureNow($._validator, messageHash, sig), "Invalid signature");
+        require(SignatureChecker.isValidSignatureNow($._validator, digestHash, sig), "Invalid signature");
     }
 
     /**

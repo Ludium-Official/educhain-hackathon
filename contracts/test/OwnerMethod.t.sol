@@ -25,12 +25,14 @@ contract OwnerMethod is Test {
     uint256[2][] prizeConfig;
 
     function generateSig(uint256 programId, uint256 chapterIndex, address recipient) public returns (bytes memory) {
-        string[] memory inputs = new string[](5);
+        string[] memory inputs = new string[](7);
         inputs[0] = "node";
         inputs[1] = "./tools/sig-gen.js";
-        inputs[2] = vm.toString(programId);
-        inputs[3] = vm.toString(chapterIndex);
-        inputs[4] = vm.toString(recipient);
+        inputs[2] = vm.toString(block.chainid);
+        inputs[3] = vm.toString(program);
+        inputs[4] = vm.toString(programId);
+        inputs[5] = vm.toString(chapterIndex);
+        inputs[6] = vm.toString(recipient);
         bytes memory sig = vm.ffi(inputs);
 
         return sig;
@@ -47,7 +49,7 @@ contract OwnerMethod is Test {
         prizeConfig[1] = [uint256(40000000000000000), uint256(20000000000000000)];
         prizeConfig[2] = [uint256(60000000000000000), uint256(30000000000000000)];
         program =
-            payable(factory.createProgram{value: 120000000000000000}(1, validator, prizeConfig, 1722076816, 1722676816));
+            payable(factory.createProgram{value: 120000000000000000}(1, validator, prizeConfig, 1722076816, 1832676816));
     }
 
     function test_AddChapter() public {

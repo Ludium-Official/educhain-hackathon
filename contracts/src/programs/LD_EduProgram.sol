@@ -2,13 +2,25 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../extensions/EduBounty.sol";
 import "../extensions/Log.sol";
 import "../interfaces/ILD_EduProgram.sol";
 
-contract LD_EduProgram is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, EduBounty, Log, ILD_EduProgram {
+contract LD_EduProgram is
+    UUPSUpgradeable,
+    OwnableUpgradeable,
+    EIP712Upgradeable,
+    ReentrancyGuard,
+    EduBounty,
+    Log,
+    ILD_EduProgram
+{
+    string public constant DOMAIN_NAME = "Ludium";
+    string public constant VERSION = "0.1";
+
     function initialize(
         address initialOwner,
         uint256 programId_,
@@ -23,6 +35,7 @@ contract LD_EduProgram is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, 
         __Ownable_init(initialOwner);
         __EduBounty_init(programId_, feeRatio_, validator_, treasury_, prizeConfig, start, end);
         __Log_init(eventLogger_);
+        __EIP712_init(DOMAIN_NAME, VERSION);
     }
 
     receive() external payable {}
@@ -64,7 +77,16 @@ contract LD_EduProgram is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard, 
         nonReentrant
     {
         _claimValidation(programId_, chapterIndex, recipient);
-        _sigValidation(programId_, chapterIndex, recipient, sig);
+
+        bytes32 structHash = keccak256(
+            abi.encode(
+                keccak256("Claim(uint256 programId,uint256 chapterIndex,address recipient)"),
+                programId_,
+                chapterIndex,
+                recipient
+            )
+        );
+        _sigValidation(_hashTypedDataV4(structHash), sig);
 
         (uint256 remain, uint256 prize) = _claim(chapterIndex, recipient);
 
