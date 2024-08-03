@@ -7,12 +7,12 @@ import { useUser } from "@/hooks/store/user";
 import fetchData from "@/libs/fetchData";
 import { UserType } from "@/types/user";
 import Image from "next/image";
-import { useCallback, useState } from "react";
-import { useAccount, useBalance, useSignTypedData, useSwitchChain } from "wagmi";
-import type { SignTypedDataData } from "wagmi/query";
+import { useCallback, useEffect, useState } from "react";
+import { useAccount, useBalance, useSendTransaction, useSignTypedData, useSwitchChain, useWaitForTransactionReceipt } from "wagmi";
+import type { SendTransactionData, SignTypedDataData } from "wagmi/query";
 import { sha256ToHex } from "../../libs/cryptoEncode";
 import styles from "./page.module.scss";
-import { formatEther } from "viem";
+import { formatEther, Hex, parseEther } from "viem";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -40,8 +40,11 @@ export default function Profile() {
   // <<-- 레퍼런스용 코드
   const { signTypedData } = useSignTypedData();
   const [sig, setSig] = useState<string>("");
+  const [hash, setHash] = useState<Hex | undefined>("0x");
   const { data: balance } = useBalance({ address: account.address });
   const { switchChain } = useSwitchChain();
+  const { sendTransaction } = useSendTransaction();
+  const { data: txResult } = useWaitForTransactionReceipt({ hash });
 
   const sign = () => {
     return signTypedData(
@@ -77,6 +80,29 @@ export default function Profile() {
       }
     );
   };
+
+  const sendEdu = () => {
+    return sendTransaction(
+      {
+        to: "0x1acDF5aa05372de83EEA17a2df300A0f1731317B",
+        value: parseEther("0.0001"),
+      },
+      {
+        onSuccess: async (data: SendTransactionData) => {
+          setHash(data);
+        },
+        onError: () => {
+          window.alert("실패");
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (txResult?.status === "success") {
+      window.alert("트랜잭션 전송 성공");
+    }
+  }, [txResult]);
   // -->>
 
   return (
@@ -117,9 +143,17 @@ export default function Profile() {
                 <div>
                   <span>{account.address}</span>
                 </div>
+              </div>
+              <div className={styles.profileWrapper}>
+                <div>
+                  <span>{balance?.value ? formatEther(balance?.value) : 0} EDU</span>
+                </div>
+              </div>
+              <div className={styles.profileWrapper}>
+                <span>테스트 서명</span>
                 {account.chainId === 656476 ? (
                   <button style={{ width: 150 }} onClick={sign}>
-                    암튼 서명하기
+                    서명하기
                   </button>
                 ) : (
                   <button style={{ width: 200 }} onClick={() => switchChain({ chainId: 656476 })}>
@@ -128,12 +162,13 @@ export default function Profile() {
                 )}
               </div>
               <div className={styles.profileWrapper}>
-                <span>
-                  Balance: {balance?.value ? formatEther(balance?.value) : 0} {balance?.symbol}
-                </span>
+                <div style={{ wordBreak: "break-all" }}>sig: {sig}</div>
               </div>
               <div className={styles.profileWrapper}>
-                <div style={{ wordBreak: "break-all" }}>sig: {sig}</div>
+                <div style={{ wordBreak: "break-all" }}>0.0001 EDU 짤짤이 보내기</div>
+                <button style={{ width: 150 }} onClick={sendEdu}>
+                  보내기
+                </button>
               </div>
             </div>
             {/** -->> */}

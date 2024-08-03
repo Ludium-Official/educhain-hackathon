@@ -3,6 +3,7 @@ import { defineChain } from "viem";
 export const opencampus = defineChain({
   id: 656476,
   name: "OpenCampus",
+  network: "open-campus",
   nativeCurrency: {
     decimals: 18,
     name: "Edu",
