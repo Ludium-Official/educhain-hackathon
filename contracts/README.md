@@ -14,16 +14,18 @@ Visit [Ludium World](https://ludium.world/)
 
 #### LD_ProgramFactory.sol
 
-Deployed Address : `0xb083002bfbfB442b2EBa2CDbCf770C34b5789267`
-BlockScout: [0xb083002bfbfB442b2EBa2CDbCf770C34b5789267](https://opencampus-codex.blockscout.com/address/0xb083002bfbfB442b2EBa2CDbCf770C34b5789267)
+Deployed Address : `0xD5595Cb547b4d071953d5E9f3De855D8AD5512dC`
+
+BlockScout: [0xD5595Cb547b4d071953d5E9f3De855D8AD5512dC](https://opencampus-codex.blockscout.com/address/0xD5595Cb547b4d071953d5E9f3De855D8AD5512dC)
 
 The implementation contract of the bounty proxy contract.
 There can be various types depending on the nature of the bounty.
 
 #### LD_EduProgram.sol
 
-Deployed Address : `0x676bE174Cc2958370508F2fF71f47bA12AcFd1F7`
-BlockScout: [0x676bE174Cc2958370508F2fF71f47bA12AcFd1F7](https://opencampus-codex.blockscout.com/address/0x676bE174Cc2958370508F2fF71f47bA12AcFd1F7)
+Deployed Address : `0x260089fe94760c6ac1f0edf792a61d879106e371`
+
+BlockScout: [0x260089fe94760c6ac1f0edf792a61d879106e371](https://opencampus-codex.blockscout.com/address/0x260089fe94760c6ac1f0edf792a61d879106e371)
 
 This contract corresponds 1:1 with the program.
 It is an implementation contract, and there may be other types besides Edu in the future.
@@ -35,8 +37,9 @@ The Ludium treasury contract where the fees from bounty rewards are collected.
 
 #### LD_EventLogger.sol
 
-Deployed Address : `0xCA838B081F08569293ea68F813567a73FD1F1ade`
-BlockScout: [0xCA838B081F08569293ea68F813567a73FD1F1ade](https://opencampus-codex.blockscout.com/address/0xCA838B081F08569293ea68F813567a73FD1F1ade)
+Deployed Address : `0xcf905320ce1bd7488f77627210903d69a3cb3a80`
+
+BlockScout: [0xcf905320ce1bd7488f77627210903d69a3cb3a80](https://opencampus-codex.blockscout.com/address/0xcf905320ce1bd7488f77627210903d69a3cb3a80)
 
 Contract that records various events such as bounty creation, bounty claiming, etc.
 By querying the EventLogger, all events can be logged without the need to track events from multiple proxy contracts.
