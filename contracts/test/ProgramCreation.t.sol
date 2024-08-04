@@ -4,91 +4,108 @@ pragma solidity ^0.8.20;
 import {Test, console} from "forge-std/Test.sol";
 import "../src/LD_ProgramFactory.sol";
 import "../src/programs/LD_EduProgram.sol";
+import "../src/interfaces/ILD_EduProgram.sol";
+import "./TestBase.t.sol";
 
-contract ProgramCreation is Test {
-    uint256 sepoliaFork;
-    LD_ProgramFactory public factory;
-    LD_EduProgram public programImpl;
-    address public deployer = 0xeA4a5BA5b31D585116D6921A859F0c39707771B3;
-    address public user1 = 0x1b2829d7c70ec264A6Ddb768fbF0CBbDe7f3ED83;
-    address public user2 = 0x23614BA53Ef1cD835B7aaa0167413bc22c9B98cc;
-    uint256[2][] prizeConfig;
-
-    event EventLogger(address indexed eventLogger);
-
-    function setUp() public {
-        sepoliaFork = vm.createSelectFork("https://ethereum-sepolia-rpc.publicnode.com");
-        prizeConfig = new uint256[2][](3);
-        prizeConfig[0] = [uint256(100000000000000000), uint256(10000000000000000)];
-        prizeConfig[1] = [uint256(200000000000000000), uint256(20000000000000000)];
-        prizeConfig[2] = [uint256(300000000000000000), uint256(30000000000000000)];
-        vm.deal(user1, 10 ether);
-        vm.startPrank(deployer);
-        programImpl = new LD_EduProgram();
-        factory = new LD_ProgramFactory(address(programImpl), 50000000000000000, deployer);
-        vm.stopPrank();
-    }
-
+contract ProgramCreation is Test, TestBase {
     function test_Constructor() public view {
         assertEq(factory.implementation(), address(programImpl));
-        assertEq(factory.feeRatio(), 50000000000000000);
-        assertEq(factory.treasury(), deployer);
+        assertEq(factory.feeRatio(), feeRatio);
+        assertEq(factory.treasury(), treasury);
     }
 
     function test_EventLoggerEmission() public {
         LD_EduProgram newProgramImpl = new LD_EduProgram();
         vm.expectEmit(false, false, false, false);
         emit EventLogger(address(0));
-        new LD_ProgramFactory(address(newProgramImpl), 50000000000000000, deployer);
-    }
-
-    function test_CreateProgramReturnValue() public {
-        vm.startPrank(user1);
-        address proxyAddress =
-            factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1722076816, 1832676816);
-        assertNotEq(proxyAddress, address(0));
-        vm.stopPrank();
+        new LD_ProgramFactory(address(newProgramImpl), feeRatio, deployer);
     }
 
     function test_MakeProgram() public {
+        uint256 totalPrize = 0;
+        EduBounty.PrizeConfig[] memory tempPrizeConfig = prizeConfig();
+        for (uint256 i = 0; i < tempPrizeConfig.length; i++) {
+            totalPrize += tempPrizeConfig[i].prize;
+        }
         vm.startPrank(user1);
-        factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1722076816, 1832676816);
+        address proxyAddress =
+            factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1832676816);
         vm.stopPrank();
+        assertNotEq(proxyAddress, address(0));
+        assertEq(ILD_EduProgram(proxyAddress).reserve(), reserveAmount - totalPrize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(1), tempPrizeConfig[0].prize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(2), tempPrizeConfig[1].prize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(3), tempPrizeConfig[2].prize);
+    }
+
+    function test_MakeProgram_AddMissions() public {
+        EduBounty.PrizeConfig[] memory empty;
+        EduBounty.PrizeConfig[] memory tempPrizeConfig = prizeConfig();
+
+        vm.startPrank(user1);
+        address proxyAddress = factory.createProgram{value: reserveAmount}(2, managers(), empty, 1722076816, 1832676816);
+        vm.stopPrank();
+        assertEq(ILD_EduProgram(proxyAddress).reserve(), reserveAmount);
+
+        vm.startPrank(manager1);
+        uint256 totalPrize = 0;
+        for (uint256 i = 0; i < tempPrizeConfig.length; i++) {
+            totalPrize += tempPrizeConfig[i].prize;
+            ILD_EduProgram(proxyAddress).addMission(auditor, tempPrizeConfig[i].prize);
+        }
+        vm.stopPrank();
+        assertEq(ILD_EduProgram(proxyAddress).reserve(), reserveAmount - totalPrize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(1), tempPrizeConfig[0].prize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(2), tempPrizeConfig[1].prize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(3), tempPrizeConfig[2].prize);
+    }
+
+    function test_MakeProgram_NoBalance_AddMissions() public {
+        EduBounty.PrizeConfig[] memory empty;
+        EduBounty.PrizeConfig[] memory tempPrizeConfig = prizeConfig();
+
+        vm.startPrank(user1);
+        address proxyAddress = factory.createProgram(2, managers(), empty, 1722076816, 1832676816);
+        vm.stopPrank();
+        assertEq(ILD_EduProgram(proxyAddress).reserve(), uint256(0));
+
+        vm.startPrank(manager1);
+        for (uint256 i = 0; i < tempPrizeConfig.length; i++) {
+            ILD_EduProgram(proxyAddress).addMissionWithDeposit{value: tempPrizeConfig[i].prize}(auditor);
+        }
+        vm.stopPrank();
+        assertEq(ILD_EduProgram(proxyAddress).reserve(), uint256(0));
+        assertEq(ILD_EduProgram(proxyAddress).prize(1), tempPrizeConfig[0].prize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(2), tempPrizeConfig[1].prize);
+        assertEq(ILD_EduProgram(proxyAddress).prize(3), tempPrizeConfig[2].prize);
     }
 
     function test_Revert_InsufficientAmount() public {
         vm.startPrank(user1);
         vm.expectRevert("Balance is less than the total reserve amount");
-        factory.createProgram{value: 500000000000000000}(1, user1, prizeConfig, 1722076816, 1832676816);
+        factory.createProgram{value: 0}(2, managers(), prizeConfig(), 1722076816, 1832676816);
         vm.stopPrank();
     }
 
     function test_Revert_InvalidTime() public {
         vm.startPrank(user1);
         vm.expectRevert("End date must be after start date");
-        factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1832676816, 1722076816);
+        factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1832676816, 1722076816);
         vm.stopPrank();
     }
 
     function test_Revert_ExpiredTime() public {
         vm.startPrank(user1);
         vm.expectRevert("End date must be in the future");
-        factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1722076816, 1722076820);
-        vm.stopPrank();
-    }
-
-    function test_Revert_ZeroAddressValidator() public {
-        vm.startPrank(user1);
-        vm.expectRevert("Validator address cannot be the zero address");
-        factory.createProgram{value: 600000000000000000}(1, address(0), prizeConfig, 1722076816, 1832676816);
+        factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1722076820);
         vm.stopPrank();
     }
 
     function test_Revert_MakeTwice() public {
         vm.startPrank(user1);
-        factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1722076816, 1832676816);
+        factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1832676816);
         vm.expectRevert("Already created program");
-        factory.createProgram{value: 600000000000000000}(1, user1, prizeConfig, 1722076816, 1832676816);
+        factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1832676816);
         vm.stopPrank();
     }
 }

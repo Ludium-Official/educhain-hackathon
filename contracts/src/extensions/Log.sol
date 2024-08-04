@@ -32,23 +32,30 @@ contract Log is Initializable {
 
     function _logPrizeClaimed(
         uint256 programId,
-        uint256 chapterIndex,
+        uint256 missionNumber,
         address recipient,
-        uint256 reserve,
+        uint256 prize,
         uint256 amount
     ) internal {
         LDLogStorage storage $ = _getLDLogStorage();
-        ILD_EventLogger($._logger).logPrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
+        ILD_EventLogger($._logger).logPrizeClaimed(programId, missionNumber, recipient, prize, amount);
     }
 
-    function _logChapterAdded(uint256 programId, uint256 newChapterIndex, uint256 reserve, uint256 prize) internal {
+    function _logMissionAdded(uint256 programId, uint256 newMissionNumber, uint256 prize) internal {
         LDLogStorage storage $ = _getLDLogStorage();
-        ILD_EventLogger($._logger).logChapterAdded(programId, newChapterIndex, reserve, prize);
+        ILD_EventLogger($._logger).logMissionAdded(programId, newMissionNumber, prize);
     }
 
-    function _logValidatorChanged(address oldValidator, address newValidator) internal {
+    function _logPrizeAdded(uint256 programId, uint256 missionNumber, uint256 amount, uint256 prize) internal {
         LDLogStorage storage $ = _getLDLogStorage();
-        ILD_EventLogger($._logger).logValidatorChanged(oldValidator, newValidator);
+        ILD_EventLogger($._logger).logPrizeAdded(programId, missionNumber, amount, prize);
+    }
+
+    function _logAuditorChanged(uint256 programId, uint256 missionNumber, address oldAuditor, address newAuditor)
+        internal
+    {
+        LDLogStorage storage $ = _getLDLogStorage();
+        ILD_EventLogger($._logger).logAuditorChanged(programId, missionNumber, oldAuditor, newAuditor);
     }
 
     function _logWithdraw(uint256 programId, uint256 amount) internal {

@@ -25,7 +25,7 @@ contract LD_EventLogger is Ownable, ILD_EventLogger {
      * @param start Start time of the program
      * @param end End time of the program
      */
-    function addProgram(uint256 programId, address programAddress, address owner, uint256 start, uint256 end)
+    function logProgramCreated(uint256 programId, address programAddress, address owner, uint256 start, uint256 end)
         external
         onlyOwner
     {
@@ -38,40 +38,50 @@ contract LD_EventLogger is Ownable, ILD_EventLogger {
      * @param programId Id of the program
      * @param chapterIndex Index of the chapter
      * @param recipient Address of the recipient
-     * @param reserve Reserve amount
+     * @param prize Remained prize amount
      * @param amount Claimed amount
      */
-    function logPrizeClaimed(
-        uint256 programId,
-        uint256 chapterIndex,
-        address recipient,
-        uint256 reserve,
-        uint256 amount
-    ) external onlyProgram {
-        emit PrizeClaimed(programId, chapterIndex, recipient, reserve, amount);
+    function logPrizeClaimed(uint256 programId, uint256 chapterIndex, address recipient, uint256 prize, uint256 amount)
+        external
+        onlyProgram
+    {
+        emit PrizeClaimed(programId, chapterIndex, recipient, prize, amount);
     }
 
     /**
      * @dev Emits the ChapterAdded event.
      * @param programId Id of the program
-     * @param newChapterIndex Index of the new chapter
-     * @param reserve Reserve amount
+     * @param newMissionNumber Index of the new Mission
      * @param prize Prize amount
      */
-    function logChapterAdded(uint256 programId, uint256 newChapterIndex, uint256 reserve, uint256 prize)
-        external
-        onlyProgram
-    {
-        emit ChapterAdded(programId, newChapterIndex, reserve, prize);
+    function logMissionAdded(uint256 programId, uint256 newMissionNumber, uint256 prize) external onlyProgram {
+        emit MissionAdded(programId, newMissionNumber, prize);
     }
 
     /**
-     * @dev Emits the ValidatorChanged event.
-     * @param oldValidator Address of the old validator
-     * @param newValidator Address of the new validator
+     * @dev Emits the PrizeAdded event.
+     * @param programId Id of the program
+     * @param missionNumber Index of the new Mission
+     * @param amount Added amount
+     * @param prize Updated prize amount
      */
-    function logValidatorChanged(address oldValidator, address newValidator) external onlyProgram {
-        emit ValidatorChanged(oldValidator, newValidator);
+    function logPrizeAdded(uint256 programId, uint256 missionNumber, uint256 amount, uint256 prize)
+        external
+        onlyProgram
+    {
+        emit PrizeAdded(programId, missionNumber, amount, prize);
+    }
+
+    /**
+     * @dev Emits the AuditorChanged event.
+     * @param oldAuditor Address of the old auditor
+     * @param newAuditor Address of the new auditor
+     */
+    function logAuditorChanged(uint256 programId, uint256 missionNumber, address oldAuditor, address newAuditor)
+        external
+        onlyProgram
+    {
+        emit AuditorChanged(programId, missionNumber, oldAuditor, newAuditor);
     }
 
     /**

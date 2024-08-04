@@ -18,94 +18,144 @@ contract LD_EduProgram is UUPSUpgradeable, EIP712Upgradeable, ReentrancyGuard, A
         address[] memory managers_,
         uint256 programId_,
         uint256 feeRatio_,
-        address validator_,
         address treasury_,
-        uint256[2][] memory prizeConfig,
+        EduBounty.PrizeConfig[] memory prizeConfig,
         uint256 start,
         uint256 end,
         address eventLogger_
-    ) public initializer {
+    ) public payable initializer {
         __Auth_init(initialOwner, managers_);
-        __EduBounty_init(programId_, feeRatio_, validator_, treasury_, prizeConfig, start, end);
+        __EduBounty_init(programId_, feeRatio_, treasury_, msg.value, prizeConfig, start, end);
         __Log_init(eventLogger_);
         __EIP712_init(DOMAIN_NAME, VERSION);
     }
 
-    receive() external payable {}
+    receive() external payable {
+        revert("To add contract balance, use the deposit()");
+    }
 
     // =========================== View =========================== //
 
-    function programId() public view returns (uint256) {
+    function programId() external view returns (uint256) {
         return _programId();
     }
 
-    function programDuration() public view returns (uint256[2] memory) {
+    function programDuration() external view returns (uint256[2] memory) {
         return [_startDate(), _endDate()];
     }
 
-    function feeRatio() public view returns (uint256) {
+    function feeRatio() external view returns (uint256) {
         return _feeRatio();
     }
 
-    function treasury() public view returns (address) {
+    function treasury() external view returns (address) {
         return _treasury();
     }
 
-    function validator() public view returns (address) {
-        return _validator();
+    function auditor(uint256 missionNumber) external view returns (address) {
+        return _auditor(missionNumber);
     }
 
-    function totalChapter() public view returns (uint256) {
-        return _totalChapter();
+    function totalMissions() external view returns (uint256) {
+        return _totalMissions();
     }
 
-    function reserveAndPrize(uint256 chapterIndex) public view returns (uint256[2] memory) {
-        return [_reserve(chapterIndex), _prize(chapterIndex)];
+    function reserve() external view returns (uint256) {
+        return _reserve();
+    }
+
+    function prize(uint256 missionNumber) external view returns (uint256) {
+        return _prize(missionNumber);
     }
 
     // =========================== Write =========================== //
 
-    function claim(uint256 programId_, uint256 chapterIndex, address recipient, bytes memory sig)
+    function deposit() external payable {
+        _deposit(msg.value);
+    }
+
+    function claim(uint256 programId_, uint256 missionNumber, address recipient, uint256 amount, bytes memory sig)
         external
         nonReentrant
     {
-        _claimValidation(programId_, chapterIndex, recipient);
+        _claimValidation(programId_, missionNumber, recipient, amount);
 
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("Claim(uint256 programId,uint256 chapterIndex,address recipient)"),
+                keccak256("Claim(uint256 programId,uint256 missionNumber,address recipient,uint256 amount)"),
                 programId_,
-                chapterIndex,
-                recipient
+                missionNumber,
+                recipient,
+                amount
             )
         );
-        _sigValidation(_hashTypedDataV4(structHash), sig);
+        _sigValidation(missionNumber, _hashTypedDataV4(structHash), sig);
 
-        (uint256 remain, uint256 prize) = _claim(chapterIndex, recipient);
+        (uint256 remain, uint256 recipientAmount) = _claim(missionNumber, recipient, amount);
 
-        _logPrizeClaimed(programId_, chapterIndex, recipient, remain, prize);
+        _logPrizeClaimed(programId_, missionNumber, recipient, remain, recipientAmount);
     }
 
-    // =========================== Only Owner =========================== //
+    // =========================== Manager =========================== //
+
+    /**
+     * @dev Adds a new manager to the program.
+     * @param newManager The address of the new manager to be added.
+     */
+    function addManager(address newManager) external ownerOrManager {
+        _addManager(newManager);
+    }
+
+    /**
+     * @dev Removes an existing manager from the program.
+     * @param manager The address of the manager to be removed.
+     */
+    function removeManager(address manager) external ownerOrManager {
+        _removeManager(manager);
+    }
+
+    function addMission(address auditor_, uint256 prize_) external ownerOrManager {
+        require(_reserve() >= prize_, "Insufficient balance");
+        uint256 newMissionNumber = _addMission(auditor_, prize_);
+
+        _logMissionAdded(_programId(), newMissionNumber, prize_);
+    }
+
+    function addPrize(uint256 missionNumber, uint256 amount) external ownerOrManager {
+        uint256 updatedPrize = _addPrize(missionNumber, amount);
+
+        _logPrizeAdded(_programId(), missionNumber, amount, updatedPrize);
+    }
+
+    function addMissionWithDeposit(address auditor_) external payable ownerOrManager {
+        require(msg.value > 0, "Invalid amount");
+        _deposit(msg.value);
+        uint256 newMissionNumber = _addMission(auditor_, msg.value);
+
+        _logMissionAdded(_programId(), newMissionNumber, msg.value);
+    }
+
+    function addPrizeWithDeposit(uint256 missionNumber) external payable ownerOrManager {
+        require(msg.value > 0, "Invalid amount");
+        _deposit(msg.value);
+        uint256 updatedPrize = _addPrize(missionNumber, msg.value);
+
+        _logPrizeAdded(_programId(), missionNumber, msg.value, updatedPrize);
+    }
+
+    function setAuditor(uint256 missionNumber, address newAuditor_) external ownerOrManager {
+        address oldValidator = _auditor(missionNumber);
+        address newAuditor = _setAuditor(missionNumber, newAuditor_);
+
+        _logAuditorChanged(_programId(), missionNumber, oldValidator, newAuditor);
+    }
+
+    // =========================== Owner =========================== //
 
     function withdraw() external onlyOwner {
         uint256 amount = _withdraw(msg.sender);
 
         _logWithdraw(_programId(), amount);
-    }
-
-    function addChapter(uint256 reserve, uint256 prize) external payable onlyOwner {
-        require(msg.value >= reserve, "Insufficient balance");
-        uint256 newChapterIndex = _addChapter(reserve, prize);
-
-        _logChapterAdded(_programId(), newChapterIndex, reserve, prize);
-    }
-
-    function setValidator(address newValidator_) external onlyOwner {
-        address oldValidator = _validator();
-        address newValidator = _setValidator(newValidator_);
-
-        _logValidatorChanged(oldValidator, newValidator);
     }
 
     // =========================== Internal =========================== //

@@ -14,6 +14,18 @@ contract Auth is Initializable, OwnableUpgradeable {
         mapping(address => bool) _isManager;
     }
 
+    /**
+     * @dev Emitted when a new manager is added.
+     * @param newManager Address of the new manager
+     */
+    event ManagerAdded(address indexed newManager);
+
+    /**
+     * @dev Emitted when a manager is removed.
+     * @param manager Address of the removed manager
+     */
+    event ManagerRemoved(address indexed manager);
+
     function _getLogStorage() private pure returns (AuthStorage storage $) {
         assembly {
             $.slot := AuthStorageLocation
@@ -55,6 +67,8 @@ contract Auth is Initializable, OwnableUpgradeable {
         require(!$._isManager[newManager], "Address is already a manager");
         $._managers.push(newManager);
         $._isManager[newManager] = true;
+
+        emit ManagerAdded(newManager);
     }
 
     /**
@@ -75,5 +89,7 @@ contract Auth is Initializable, OwnableUpgradeable {
 
         // Remove manager from the mapping
         $._isManager[manager] = false;
+
+        emit ManagerRemoved(manager);
     }
 }
