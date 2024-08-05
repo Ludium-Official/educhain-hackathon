@@ -7,24 +7,30 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract EduBounty is Initializable {
     // keccak256(abi.encode(uint256(keccak256("ludium.storage.EduBounty")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant StorageLocation = 0xcd3e4d0b2227a4a3c69cdd698e5f185ac8bc5894ee60a71c2625ee6a02b4cd00;
+    bytes32 private constant EduBountyStorageLocation =
+        0xcd3e4d0b2227a4a3c69cdd698e5f185ac8bc5894ee60a71c2625ee6a02b4cd00;
+
+    struct PrizeConfig {
+        address auditor;
+        uint256 prize;
+    }
 
     struct EduBountyStorage {
         uint256 _programId;
-        address _validator;
         address _treasury;
         uint256 _feeRatio;
-        uint256 _totalChapter;
+        uint256 _totalMissions;
+        uint256 _reserve;
         uint256 _start;
         uint256 _end;
-        mapping(uint256 => uint256) _reserve;
+        mapping(uint256 => address) _auditor;
         mapping(uint256 => uint256) _prize;
         mapping(uint256 => mapping(address => bool)) _claimed;
     }
 
     function _getEduBountyStorage() private pure returns (EduBountyStorage storage $) {
         assembly {
-            $.slot := StorageLocation
+            $.slot := EduBountyStorageLocation
         }
     }
 
@@ -34,21 +40,21 @@ contract EduBounty is Initializable {
     function __EduBounty_init(
         uint256 programId,
         uint256 feeRatio,
-        address validator,
         address treasury,
-        uint256[2][] memory prizeConfig,
+        uint256 initialReserve,
+        PrizeConfig[] memory prizeConfig,
         uint256 start,
         uint256 end
     ) internal onlyInitializing {
-        __EduBounty_init_unchained(programId, feeRatio, validator, treasury, prizeConfig, start, end);
+        __EduBounty_init_unchained(programId, feeRatio, treasury, initialReserve, prizeConfig, start, end);
     }
 
     function __EduBounty_init_unchained(
         uint256 programId,
         uint256 feeRatio,
-        address validator,
         address treasury,
-        uint256[2][] memory prizeConfig,
+        uint256 initialReserve,
+        PrizeConfig[] memory prizeConfig,
         uint256 start,
         uint256 end
     ) internal onlyInitializing {
@@ -57,19 +63,18 @@ contract EduBounty is Initializable {
 
         EduBountyStorage storage $ = _getEduBountyStorage();
         $._programId = programId;
-        $._validator = validator;
         $._treasury = treasury;
         $._feeRatio = feeRatio;
-        $._totalChapter = prizeConfig.length;
         $._start = start;
         $._end = end;
+        $._reserve = initialReserve;
 
         for (uint256 i = 0; i < prizeConfig.length; i++) {
-            uint256 chapterIndex = i + 1;
-            $._reserve[chapterIndex] = prizeConfig[i][0];
-            $._prize[chapterIndex] = prizeConfig[i][1];
+            _addMission(prizeConfig[i].auditor, prizeConfig[i].prize);
         }
     }
+
+    // =========================== View =========================== //
 
     /**
      * @dev Returns the current program id.
@@ -82,9 +87,9 @@ contract EduBounty is Initializable {
     /**
      * @dev Returns the current validator address.
      */
-    function _validator() internal view returns (address) {
+    function _auditor(uint256 missionNumber) internal view returns (address) {
         EduBountyStorage storage $ = _getEduBountyStorage();
-        return $._validator;
+        return $._auditor[missionNumber];
     }
 
     /**
@@ -96,17 +101,6 @@ contract EduBounty is Initializable {
     }
 
     /**
-     * @dev Sets a new validator.
-     * @param newValidator Address of the new validator
-     */
-    function _setValidator(address newValidator) internal returns (address) {
-        EduBountyStorage storage $ = _getEduBountyStorage();
-        $._validator = newValidator;
-
-        return newValidator;
-    }
-
-    /**
      * @dev Returns the current fee ratio.
      */
     function _feeRatio() internal view returns (uint256) {
@@ -115,11 +109,11 @@ contract EduBounty is Initializable {
     }
 
     /**
-     * @dev Returns the total number of chapters.
+     * @dev Returns the total number of missions.
      */
-    function _totalChapter() internal view returns (uint256) {
+    function _totalMissions() internal view returns (uint256) {
         EduBountyStorage storage $ = _getEduBountyStorage();
-        return $._totalChapter;
+        return $._totalMissions;
     }
 
     /**
@@ -139,62 +133,52 @@ contract EduBounty is Initializable {
     }
 
     /**
-     * @dev Returns the reserve for a specific chapter.
-     * @param chapterIndex Index of the chapter
+     * @dev Returns the reserve for a specific mission.
+     * @return reserve Reserve of program.
      */
-    function _reserve(uint256 chapterIndex) internal view returns (uint256) {
+    function _reserve() internal view returns (uint256) {
         EduBountyStorage storage $ = _getEduBountyStorage();
-        return $._reserve[chapterIndex];
+        return $._reserve;
     }
 
     /**
-     * @dev Returns the prize for a specific chapter.
-     * @param chapterIndex Index of the chapter
+     * @dev Returns the prize for a specific mission.
+     * @param missionNumber Index of the mission
      */
-    function _prize(uint256 chapterIndex) internal view returns (uint256) {
+    function _prize(uint256 missionNumber) internal view returns (uint256) {
         EduBountyStorage storage $ = _getEduBountyStorage();
-        return $._prize[chapterIndex];
+        return $._prize[missionNumber];
     }
 
-    /**
-     * @dev Adds a new chapter.
-     * @param reserve Reserve for the new chapter
-     * @param prize Prize for the new chapter
-     */
-    function _addChapter(uint256 reserve, uint256 prize) internal returns (uint256) {
-        EduBountyStorage storage $ = _getEduBountyStorage();
-        uint256 newChapterIndex = $._totalChapter + 1;
-        $._reserve[newChapterIndex] = reserve;
-        $._prize[newChapterIndex] = prize;
-        $._totalChapter = newChapterIndex;
-
-        return newChapterIndex;
-    }
+    // =========================== Validation =========================== //
 
     /**
-     * @dev Checks if a specific address has claimed the prize for a specific chapter.
-     * @param chapterIndex Index of the chapter
+     * @dev Checks if a specific address has claimed the prize for a specific mission.
+     * @param missionNumber Index of the mission
      * @param claimer Address of the claimer
      */
-    function _hasClaimed(uint256 chapterIndex, address claimer) internal view returns (bool) {
+    function _hasClaimed(uint256 missionNumber, address claimer) internal view returns (bool) {
         EduBountyStorage storage $ = _getEduBountyStorage();
-        return $._claimed[chapterIndex][claimer];
+        return $._claimed[missionNumber][claimer];
     }
 
     /**
      * @dev Validates the claim parameters for a specific submission.
      * @param programId Id of the program
-     * @param chapterIndex Index of the chapter
+     * @param missionNumber Index of the mission
      * @param recipient Address of the recipient
      */
-    function _claimValidation(uint256 programId, uint256 chapterIndex, address recipient) internal view {
+    function _claimValidation(uint256 programId, uint256 missionNumber, address recipient, uint256 amount)
+        internal
+        view
+    {
         EduBountyStorage storage $ = _getEduBountyStorage();
         require(block.timestamp >= $._start && block.timestamp <= $._end, "Program is not within its active period");
         require(recipient == msg.sender, "Must be requested by the approved recipient address");
         require(programId == $._programId, "Invalid program id");
-        require(chapterIndex > 0 && $._totalChapter >= chapterIndex, "Invalid chapter");
-        require(!_hasClaimed(chapterIndex, recipient), "Already claimed recipient");
-        require($._reserve[chapterIndex] >= $._prize[chapterIndex], "Insufficient reserve balance");
+        require(missionNumber > 0 && $._totalMissions >= missionNumber, "Invalid mission");
+        require(!_hasClaimed(missionNumber, recipient), "Already claimed recipient");
+        require($._prize[missionNumber] >= amount, "Insufficient prize balance");
     }
 
     /**
@@ -202,10 +186,36 @@ contract EduBounty is Initializable {
      * @param digestHash bytes32: _hashTypedDataV4
      * @param sig Signature to validate
      */
-    function _sigValidation(bytes32 digestHash, bytes memory sig) internal view {
-        // uint256 programId, uint256 chapterIndex, address recipient,
+    function _sigValidation(uint256 missionNumber, bytes32 digestHash, bytes memory sig) internal view {
+        // uint256 programId, uint256 missionNumber, address recipient,
         EduBountyStorage storage $ = _getEduBountyStorage();
-        require(SignatureChecker.isValidSignatureNow($._validator, digestHash, sig), "Invalid signature");
+        require(SignatureChecker.isValidSignatureNow($._auditor[missionNumber], digestHash, sig), "Invalid signature");
+    }
+
+    // =========================== Write =========================== //
+
+    /**
+     * @dev Sets a new validator.
+     * @param missionNumber Index of mission
+     * @param newAuditor Address of the new validator
+     */
+    function _setAuditor(uint256 missionNumber, address newAuditor) internal returns (address) {
+        EduBountyStorage storage $ = _getEduBountyStorage();
+        $._auditor[missionNumber] = newAuditor;
+
+        return newAuditor;
+    }
+
+    /**
+     * @dev deposit contract balance in reserve
+     * @param amount amount of deposit
+     * @return reserve reserve of specific mission
+     */
+    function _deposit(uint256 amount) internal returns (uint256) {
+        EduBountyStorage storage $ = _getEduBountyStorage();
+        $._reserve += amount;
+
+        return $._reserve;
     }
 
     /**
@@ -224,19 +234,51 @@ contract EduBounty is Initializable {
     }
 
     /**
-     * @dev Claims the prize for a specific chapter.
-     * @param chapterIndex Index of the chapter
+     * @dev Adds a new mission.
+     * @param prize Prize for the new mission
+     * @param auditor Auditor for the new mission
+     */
+    function _addMission(address auditor, uint256 prize) internal returns (uint256) {
+        EduBountyStorage storage $ = _getEduBountyStorage();
+        require($._reserve >= prize, "Insufficient reserve");
+        uint256 newMissionNumber = $._totalMissions + 1;
+        $._reserve -= prize;
+        $._prize[newMissionNumber] = prize;
+        $._auditor[newMissionNumber] = auditor;
+        $._totalMissions = newMissionNumber;
+
+        return newMissionNumber;
+    }
+
+    /**
+     * @dev deposit contract balance in specific mission
+     * @param missionNumber index of mission
+     * @param amount amount of deposit
+     * @return prize prize of specific mission
+     */
+    function _addPrize(uint256 missionNumber, uint256 amount) internal returns (uint256) {
+        EduBountyStorage storage $ = _getEduBountyStorage();
+        require(missionNumber > 0 && $._totalMissions >= missionNumber, "Invalid missionNumber");
+        require($._reserve >= amount, "Insufficient reserve");
+        $._prize[missionNumber] += amount;
+        $._reserve -= amount;
+
+        return $._prize[missionNumber];
+    }
+
+    /**
+     * @dev Claims the prize for a specific mission.
+     * @param missionNumber Index of the mission
      * @param recipient Address of the recipient
      */
-    function _claim(uint256 chapterIndex, address recipient) internal returns (uint256, uint256) {
+    function _claim(uint256 missionNumber, address recipient, uint256 amount) internal returns (uint256, uint256) {
         EduBountyStorage storage $ = _getEduBountyStorage();
 
-        uint256 prize = $._prize[chapterIndex];
-        uint256 feeAmount = (prize * $._feeRatio) / 1 ether;
-        uint256 recipientAmount = prize - feeAmount;
+        uint256 feeAmount = (amount * $._feeRatio) / 1 ether;
+        uint256 recipientAmount = amount - feeAmount;
 
-        $._reserve[chapterIndex] -= $._prize[chapterIndex];
-        $._claimed[chapterIndex][recipient] = true;
+        $._prize[missionNumber] -= amount;
+        $._claimed[missionNumber][recipient] = true;
 
         // Send fee to treasury
         (bool successTreasury,) = payable($._treasury).call{value: feeAmount}("");
@@ -246,6 +288,6 @@ contract EduBounty is Initializable {
         (bool successRecipient,) = payable(recipient).call{value: recipientAmount}("");
         require(successRecipient, "Recipient transfer failed");
 
-        return ($._reserve[chapterIndex], recipientAmount);
+        return ($._prize[missionNumber], recipientAmount);
     }
 }
