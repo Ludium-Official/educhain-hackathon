@@ -9,12 +9,14 @@ import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { WagmiProvider } from 'wagmi';
-import { arbitrum, base, mainnet, optimism, polygon } from 'wagmi/chains';
+import { opencampus } from '@/constant/educhain-rpc';
 
 const config = getDefaultConfig({
   appName: 'EDUCHAIN HACKATHON',
-  projectId: 'YOUR_PROJECT_ID',
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+  /// Wallet Connect 쓰려면 필요한데, 일단 내가 하나 팠음.
+  /// https://cloud.walletconnect.com/
+  projectId: 'c6e5adf89ebc72153b3f7f277aa41db9',
+  chains: [opencampus],
   ssr: true,
 });
 
