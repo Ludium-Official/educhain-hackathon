@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import PlusLogo from "@/assets/common/PlusLogo.svg";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import { getConvertDeadline } from "@/functions/deadline-function";
-import { useUser } from "@/hooks/store/user";
-import fetchData from "@/libs/fetchData";
-import { AnnouncementType } from "@/types/announcement";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import styles from "./page.module.scss";
+import PlusLogo from '@/assets/common/PlusLogo.svg';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import { getConvertDeadline } from '@/functions/deadline-function';
+import { useUser } from '@/hooks/store/user';
+import fetchData from '@/libs/fetchData';
+import { AnnouncementType } from '@/types/announcement';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function Announcement() {
   const { user } = useUser();
@@ -19,12 +19,12 @@ export default function Announcement() {
 
   useEffect(() => {
     const callData = async () => {
-      const manageResponse = (await fetchData("/announcements", "POST", {
-        job: "manage",
+      const manageResponse = (await fetchData('/announcements', 'POST', {
+        job: 'manage',
       })) as AnnouncementType[];
 
-      const workResponse = (await fetchData("/announcements", "POST", {
-        job: "work",
+      const workResponse = (await fetchData('/announcements', 'POST', {
+        job: 'work',
       })) as AnnouncementType[];
 
       setAnnouncements(manageResponse);
@@ -46,13 +46,7 @@ export default function Announcement() {
                 공고 목록
                 {user?.auth === 0 && (
                   <button>
-                    <Image
-                      className={styles.addBtn}
-                      src={PlusLogo.src}
-                      alt="logo"
-                      width={18}
-                      height={18}
-                    />
+                    <Image className={styles.addBtn} src={PlusLogo.src} alt="logo" width={18} height={18} />
                     공고 추가
                   </button>
                 )}
@@ -60,12 +54,8 @@ export default function Announcement() {
               {announcements.map((announcement) => (
                 <div key={announcement.id} className={styles.tableBody}>
                   <Link href={`${PATH.ANNOUNCEMENT}/${announcement.id}`}>
-                    <div className={styles.endTime}>
-                      마감 {getConvertDeadline(announcement.end_at)}일 전
-                    </div>
-                    <div className={styles.announceTitle}>
-                      {announcement.title}
-                    </div>
+                    <div className={styles.endTime}>마감 {getConvertDeadline(announcement.end_at)}일 전</div>
+                    <div className={styles.announceTitle}>{announcement.title}</div>
                   </Link>
                 </div>
               ))}
@@ -75,13 +65,7 @@ export default function Announcement() {
                 작업 목록
                 {user?.auth === 0 && (
                   <button>
-                    <Image
-                      className={styles.addBtn}
-                      src={PlusLogo.src}
-                      alt="logo"
-                      width={18}
-                      height={18}
-                    />
+                    <Image className={styles.addBtn} src={PlusLogo.src} alt="logo" width={18} height={18} />
                     작업 추가
                   </button>
                 )}
@@ -89,9 +73,7 @@ export default function Announcement() {
               {works.map((work) => (
                 <div key={work.id} className={styles.tableBody}>
                   <Link href={`${PATH.ANNOUNCEMENT}/${work.id}`}>
-                    <div className={styles.endTime}>
-                      마감 {getConvertDeadline(work.end_at)}일 전
-                    </div>
+                    <div className={styles.endTime}>마감 {getConvertDeadline(work.end_at)}일 전</div>
                     <div className={styles.announceTitle}>{work.title}</div>
                   </Link>
                 </div>

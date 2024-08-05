@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import BackLink from "@/components/BackLink";
-import MarkedHtml from "@/components/MarkedHtml";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import { getConvertDeadline } from "@/functions/deadline-function";
-import { missionChapterSubmissionParsing } from "@/functions/parsing-function";
-import fetchData from "@/libs/fetchData";
-import { ParsingMissionType } from "@/types/parsingMission";
-import dayjs from "dayjs";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import styles from "./page.module.scss";
+import BackLink from '@/components/BackLink';
+import MarkedHtml from '@/components/MarkedHtml';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import { getConvertDeadline } from '@/functions/deadline-function';
+import { missionChapterSubmissionParsing } from '@/functions/parsing-function';
+import fetchData from '@/libs/fetchData';
+import { ParsingMissionType } from '@/types/parsingMission';
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function MissionDetail() {
   const param = useParams();
@@ -21,41 +21,35 @@ export default function MissionDetail() {
   useEffect(() => {
     const callData = async () => {
       try {
-        const [missionResponse, chaptersResponse, submissionsResponse] =
-          await Promise.all([
-            fetchData(`/missions/${param.id}`),
-            fetchData(`/chapters/mission/${param.id}`),
-            fetchData(`/submissions/mission/${param.id}`),
-          ]);
+        const [missionResponse, chaptersResponse, submissionsResponse] = await Promise.all([
+          fetchData(`/missions/${param.id}`),
+          fetchData(`/chapters/mission/${param.id}`),
+          fetchData(`/submissions/mission/${param.id}`),
+        ]);
 
         const parsingMissionData = missionChapterSubmissionParsing(
           [missionResponse],
           chaptersResponse,
-          submissionsResponse
+          submissionsResponse,
         )[0] as ParsingMissionType;
 
         setMission(parsingMissionData);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
     callData();
   }, [param.id]);
 
-  const formatDate = dayjs(mission?.end_at).format("YYYY.MM.DD");
-  console.log(mission);
+  const formatDate = dayjs(mission?.end_at).format('YYYY.MM.DD');
 
   return (
     <Wrapper>
       {{
         header: (
           <div>
-            <BackLink
-              path={
-                mission ? `${PATH.PROGRAM}/${mission.program_id}` : PATH.PROGRAM
-              }
-            />
+            <BackLink path={mission ? `${PATH.PROGRAM}/${mission.program_id}` : PATH.PROGRAM} />
           </div>
         ),
         body: (
@@ -64,19 +58,13 @@ export default function MissionDetail() {
               <>
                 <div className={styles.titleWrapper}>
                   <div className={styles.missionHeader}>
-                    <div className={styles.missionCategory}>
-                      {mission.category === "study" ? "학습" : "공고"}
-                    </div>
+                    <div className={styles.missionCategory}>{mission.category === 'study' ? '학습' : '공고'}</div>
                     {mission.title}
-                    <div className={styles.missionPrize}>
-                      (상금: {mission.prize})
-                    </div>
+                    <div className={styles.missionPrize}>(상금: {mission.prize})</div>
                   </div>
                   <div className={styles.rightSide}>
                     <span>마감일: {formatDate}</span>
-                    <div className={styles.owner}>
-                      담당자: {mission.owner_name || "-"}
-                    </div>
+                    <div className={styles.owner}>담당자: {mission.owner_name || '-'}</div>
                   </div>
                 </div>
                 <div className={styles.contentWrapper}>
@@ -87,24 +75,12 @@ export default function MissionDetail() {
                     <div className={styles.submissionWrapper}>
                       {mission.submissions?.map((submission) => {
                         return (
-                          <div
-                            key={submission.id}
-                            className={styles.submissionContent}
-                          >
+                          <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>
-                              <span className={styles.endTime}>
-                                마감 {getConvertDeadline(submission.end_at)} 일
-                                전
-                              </span>
-                              <Link
-                                href={`${PATH.SUBMISSION}/${submission.id}`}
-                              >
-                                {submission.title}
-                              </Link>
+                              <span className={styles.endTime}>마감 {getConvertDeadline(submission.end_at)} 일 전</span>
+                              <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                             </div>
-                            {submission.type && (
-                              <div className={styles.working}>미진행</div>
-                            )}
+                            {submission.type && <div className={styles.working}>미진행</div>}
                           </div>
                         );
                       })}
@@ -116,36 +92,21 @@ export default function MissionDetail() {
                     {mission.chapters?.map((chapter) => {
                       return (
                         <div key={chapter.id} className={styles.chapterWrapper}>
-                          <div className={styles.chapterTitle}>
-                            {chapter.title}
-                          </div>
+                          <div className={styles.chapterTitle}>{chapter.title}</div>
                           <div className={styles.submissionWrapper}>
                             {chapter.submissions?.map((submission) => {
                               return (
-                                <div
-                                  key={submission.id}
-                                  className={styles.submissionContent}
-                                >
+                                <div key={submission.id} className={styles.submissionContent}>
                                   <div className={styles.leftSide}>
                                     <span className={styles.submissionType}>
-                                      {submission.type === "article"
-                                        ? "아티클"
-                                        : "미션"}
+                                      {submission.type === 'article' ? '아티클' : '미션'}
                                     </span>
                                     <span className={styles.endTime}>
-                                      마감{" "}
-                                      {getConvertDeadline(submission.end_at)} 일
-                                      전
+                                      마감 {getConvertDeadline(submission.end_at)} 일 전
                                     </span>
-                                    <Link
-                                      href={`${PATH.SUBMISSION}/${submission.id}`}
-                                    >
-                                      {submission.title}
-                                    </Link>
+                                    <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                                   </div>
-                                  {submission.type && (
-                                    <div className={styles.working}>미진행</div>
-                                  )}
+                                  {submission.type && <div className={styles.working}>미진행</div>}
                                 </div>
                               );
                             })}
@@ -155,9 +116,7 @@ export default function MissionDetail() {
                     })}
                   </div>
                 )}
-                {!mission.owner_name && (
-                  <button className={styles.applyBtn}>지원하기</button>
-                )}
+                {!mission.owner_name && <button className={styles.applyBtn}>지원하기</button>}
               </>
             ) : (
               <div>null</div>

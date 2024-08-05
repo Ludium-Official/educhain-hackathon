@@ -1,8 +1,8 @@
-import { withAuth } from "@/middlewares/authMiddleware";
+import { withAuth } from '@/middlewares/authMiddleware';
 
-import pool from "@/app/api/db";
-import { DBCommunity } from "@/types/entities/community";
-import { NextResponse } from "next/server";
+import pool from '@/app/api/db';
+import { DBCommunity } from '@/types/entities/community';
+import { NextResponse } from 'next/server';
 
 const handler = async () => {
   try {
@@ -25,7 +25,7 @@ const handler = async () => {
 
     return NextResponse.json(communities);
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 };
 

@@ -3,7 +3,7 @@ export type SubmissionType = {
   program_id: number;
   mission_id: number;
   chapter_id: number;
-  type: null | "article" | "mission";
+  type: null | 'article' | 'mission';
   title: string;
   content: string;
   end_at: string;

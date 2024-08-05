@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import BackLink from "@/components/BackLink";
-import Comment from "@/components/Comment";
-import MarkedHtml from "@/components/MarkedHtml";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import fetchData from "@/libs/fetchData";
-import { CommentType } from "@/types/comment";
-import { CommunityType } from "@/types/community";
-import clsx from "clsx";
-import dayjs from "dayjs";
-import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import styles from "./page.module.scss";
+import BackLink from '@/components/BackLink';
+import Comment from '@/components/Comment';
+import MarkedHtml from '@/components/MarkedHtml';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import fetchData from '@/libs/fetchData';
+import { CommentType } from '@/types/comment';
+import { CommunityType } from '@/types/community';
+import clsx from 'clsx';
+import dayjs from 'dayjs';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function Community() {
   const param = useParams();
@@ -20,8 +20,8 @@ export default function Community() {
   const [comments, setComments] = useState<CommentType[]>();
 
   const commentCallData = useCallback(async () => {
-    const commentsResponse = (await fetchData(`/comments/${param.id}`, "POST", {
-      type: "community",
+    const commentsResponse = (await fetchData(`/comments/${param.id}`, 'POST', {
+      type: 'community',
     })) as CommentType[];
 
     setComments(commentsResponse);
@@ -29,9 +29,7 @@ export default function Community() {
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData(
-        `/communities/${param.id}`
-      )) as CommunityType;
+      const response = (await fetchData(`/communities/${param.id}`)) as CommunityType;
 
       setCommunity(response);
     };
@@ -40,7 +38,7 @@ export default function Community() {
     callData();
   }, [param.id]);
 
-  const formatDate = dayjs(community?.created_at).format("YYYY.MM.DD");
+  const formatDate = dayjs(community?.created_at).format('YYYY.MM.DD');
 
   return (
     <Wrapper>
@@ -61,11 +59,7 @@ export default function Community() {
                 <MarkedHtml markdownString={community?.content} />
               </div>
             </div>
-            <Comment
-              type="community"
-              commentFuc={commentCallData}
-              comments={comments}
-            />
+            <Comment type="community" commentFuc={commentCallData} comments={comments} />
           </div>
         ),
       }}

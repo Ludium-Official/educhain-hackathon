@@ -1,6 +1,6 @@
-import { ChapterType } from "./chapter";
-import { MissionType } from "./mission";
-import { SubmissionType } from "./submission";
+import { ChapterType } from './chapter';
+import { MissionType } from './mission';
+import { SubmissionType } from './submission';
 
 interface ParsingChaptersType extends ChapterType {
   submissions?: SubmissionType[];

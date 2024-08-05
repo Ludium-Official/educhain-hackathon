@@ -4,6 +4,6 @@ export type CommentType = {
   name: string;
   writer: string;
   message: string;
-  type: "community" | "submission";
+  type: 'community' | 'submission';
   created_at: string;
 };

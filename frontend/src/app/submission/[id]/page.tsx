@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import BackLink from "@/components/BackLink";
-import Comment from "@/components/Comment";
-import MarkedHtml from "@/components/MarkedHtml";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import fetchData from "@/libs/fetchData";
-import { CommentType } from "@/types/comment";
-import { SubmissionType } from "@/types/submission";
-import clsx from "clsx";
-import dayjs from "dayjs";
-import { useParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import styles from "./page.module.scss";
+import BackLink from '@/components/BackLink';
+import Comment from '@/components/Comment';
+import MarkedHtml from '@/components/MarkedHtml';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import fetchData from '@/libs/fetchData';
+import { CommentType } from '@/types/comment';
+import { SubmissionType } from '@/types/submission';
+import clsx from 'clsx';
+import dayjs from 'dayjs';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function MissionDetail() {
   const param = useParams();
@@ -20,8 +20,8 @@ export default function MissionDetail() {
   const [comments, setComments] = useState<CommentType[]>();
 
   const commentCallData = useCallback(async () => {
-    const commentsResponse = (await fetchData(`/comments/${param.id}`, "POST", {
-      type: "submission",
+    const commentsResponse = (await fetchData(`/comments/${param.id}`, 'POST', {
+      type: 'submission',
     })) as CommentType[];
 
     setComments(commentsResponse);
@@ -30,13 +30,11 @@ export default function MissionDetail() {
   useEffect(() => {
     const callData = async () => {
       try {
-        const response = (await fetchData(
-          `/submissions/${param.id}`
-        )) as SubmissionType;
+        const response = (await fetchData(`/submissions/${param.id}`)) as SubmissionType;
 
         setSubmission(response);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
@@ -44,17 +42,17 @@ export default function MissionDetail() {
     callData();
   }, [param.id]);
 
-  const formatDate = dayjs(submission?.end_at).format("YYYY.MM.DD");
+  const formatDate = dayjs(submission?.end_at).format('YYYY.MM.DD');
   const buttonTitle = useMemo(() => {
     if (submission?.type) {
-      if (submission.type === "article") {
-        return "아티클 완료하기";
+      if (submission.type === 'article') {
+        return '아티클 완료하기';
       }
 
-      return "제출하기";
+      return '제출하기';
     }
 
-    return "지원하기";
+    return '지원하기';
   }, [submission]);
 
   return (
@@ -62,13 +60,7 @@ export default function MissionDetail() {
       {{
         header: (
           <div>
-            <BackLink
-              path={
-                submission
-                  ? `${PATH.MISSION}/${submission.mission_id}`
-                  : PATH.PROGRAM
-              }
-            />
+            <BackLink path={submission ? `${PATH.MISSION}/${submission.mission_id}` : PATH.PROGRAM} />
           </div>
         ),
         body: (
@@ -87,11 +79,7 @@ export default function MissionDetail() {
                   </div>
                   <button className={styles.submitBtn}>{buttonTitle}</button>
                 </div>
-                <Comment
-                  type="submission"
-                  commentFuc={commentCallData}
-                  comments={comments}
-                />
+                <Comment type="submission" commentFuc={commentCallData} comments={comments} />
               </>
             ) : (
               <div>null</div>

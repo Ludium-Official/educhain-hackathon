@@ -1,8 +1,8 @@
-import { withAuth } from "@/middlewares/authMiddleware";
+import { withAuth } from '@/middlewares/authMiddleware';
 
-import pool from "@/app/api/db";
-import { DBProgram } from "@/types/entities/program";
-import { NextResponse } from "next/server";
+import pool from '@/app/api/db';
+import { DBProgram } from '@/types/entities/program';
+import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
   const { isDash, job } = await req.json();
@@ -28,16 +28,14 @@ const handler = async (req: Request) => {
       missions m ON p.id = m.program_id
     GROUP BY 
       p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.prize, p.end_at, p.created_at`;
-    const query = isDash
-      ? `${defaultQuery} ORDER BY p.created_at LIMIT 6`
-      : `${defaultQuery}`;
+    const query = isDash ? `${defaultQuery} ORDER BY p.created_at LIMIT 6` : `${defaultQuery}`;
     const [rows] = await pool.query(query, [job]);
 
     const programs = rows as DBProgram[];
 
     return NextResponse.json(programs);
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 };
 

@@ -1,7 +1,7 @@
-import { withAuth } from "@/middlewares/authMiddleware";
+import { withAuth } from '@/middlewares/authMiddleware';
 
-import pool from "@/app/api/db";
-import { NextResponse } from "next/server";
+import pool from '@/app/api/db';
+import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
   const { addressKey } = await req.json();
@@ -11,7 +11,7 @@ const handler = async (req: Request) => {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 };
 

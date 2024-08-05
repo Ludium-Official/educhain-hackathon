@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import AddLogo from "@/assets/common/AddLogo.svg";
-import BackLink from "@/components/BackLink";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import { useUser } from "@/hooks/store/user";
-import fetchData from "@/libs/fetchData";
-import { CommunityType } from "@/types/community";
-import dayjs from "dayjs";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import styles from "./page.module.scss";
+import AddLogo from '@/assets/common/AddLogo.svg';
+import BackLink from '@/components/BackLink';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import { useUser } from '@/hooks/store/user';
+import fetchData from '@/libs/fetchData';
+import { CommunityType } from '@/types/community';
+import dayjs from 'dayjs';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function Community() {
   const { user } = useUser();
@@ -20,7 +20,7 @@ export default function Community() {
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData("/communities")) as CommunityType[];
+      const response = (await fetchData('/communities')) as CommunityType[];
 
       setCommunities(response);
     };
@@ -36,13 +36,7 @@ export default function Community() {
             <BackLink path={PATH.HOME} />
             {user?.auth === 0 && (
               <Link className={styles.addLink} href={`${PATH.COMMUNITY}/add`}>
-                <Image
-                  className={styles.profileImg}
-                  src={AddLogo.src}
-                  alt="logo"
-                  width={24}
-                  height={24}
-                />
+                <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
                 추가하기
               </Link>
             )}
@@ -55,15 +49,11 @@ export default function Community() {
               {communities.map((community) => {
                 const now = dayjs();
                 const targetDate = dayjs(community.created_at);
-                const formatDate = targetDate.format("YYYY.MM.DD");
-                const isNew = now.diff(targetDate, "day") <= 7;
+                const formatDate = targetDate.format('YYYY.MM.DD');
+                const isNew = now.diff(targetDate, 'day') <= 7;
 
                 return (
-                  <Link
-                    key={community.id}
-                    className={styles.row}
-                    href={`${PATH.COMMUNITY}/${community.id}`}
-                  >
+                  <Link key={community.id} className={styles.row} href={`${PATH.COMMUNITY}/${community.id}`}>
                     <div className={styles.rowTitle}>
                       {isNew && <span>N</span>}
                       {community.title}

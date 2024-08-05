@@ -4,7 +4,7 @@ export type DBMission = {
   owner: string | null;
   owner_name: string;
   program_id: number;
-  category: "announcement" | "study";
+  category: 'announcement' | 'study';
   title: string;
   content: string;
   missionCnt: number;

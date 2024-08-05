@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import BackLink from "@/components/BackLink";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import { useUser } from "@/hooks/store/user";
-import fetchData from "@/libs/fetchData";
-import clsx from "clsx";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import styles from "./page.module.scss";
+import BackLink from '@/components/BackLink';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import { useUser } from '@/hooks/store/user';
+import fetchData from '@/libs/fetchData';
+import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import styles from './page.module.scss';
 
 export default function AddCommunity() {
   const route = useRouter();
   const { user } = useUser();
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const addCommunity = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await fetchData("/communities/add", "POST", {
+      await fetchData('/communities/add', 'POST', {
         auth: user?.auth,
         owner: user?.walletId,
         title,
