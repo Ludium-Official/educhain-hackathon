@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js';
 
 export function sha256ToHex(input: string): string {
   // Generate sha256 hash

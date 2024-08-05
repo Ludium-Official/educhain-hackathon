@@ -1,21 +1,23 @@
-import { withAuth } from "@/middlewares/authMiddleware";
+import { withAuth } from '@/middlewares/authMiddleware';
 
-import { DBCommunity } from "@/types/entities/community";
-import { NextResponse } from "next/server";
-import pool from "../db";
+import pool from '@/app/api/db';
+import { DBCommunity } from '@/types/entities/community';
+import { NextResponse } from 'next/server';
 
 const handler = async () => {
   try {
     const query = `
-    SELECT 
+      SELECT 
         c.*, 
         u.name AS owner_name
-    FROM 
+      FROM 
         communities c
-    JOIN
+      JOIN
         users u
-    ON
+      ON
         c.owner = u.walletId
+      ORDER BY
+        c.created_at DESC
     `;
     const [rows] = await pool.query(query);
 
@@ -23,7 +25,7 @@ const handler = async () => {
 
     return NextResponse.json(communities);
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 };
 

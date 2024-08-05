@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import SideHeader from "../SideHeader";
-import styles from "./index.module.scss";
+import SideHeader from '../SideHeader';
+import styles from './index.module.scss';
 
 interface WrapperProps {
   children: {
@@ -16,9 +16,7 @@ const Wrapper: React.FC<WrapperProps> = ({ children }) => {
       <SideHeader />
       <div className={styles.wrapper}>
         <div className={styles.body}>
-          {children.header && (
-            <div className={styles.header}>{children.header}</div>
-          )}
+          {children.header && <div className={styles.header}>{children.header}</div>}
           <div className={styles.content}>{children.body}</div>
         </div>
       </div>

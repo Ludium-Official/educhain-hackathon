@@ -1,3 +1,15 @@
+.headerWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .addLink {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
 .container {
   position: relative;
 

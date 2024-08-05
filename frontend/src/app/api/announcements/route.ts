@@ -1,8 +1,8 @@
-import { withAuth } from "@/middlewares/authMiddleware";
+import { withAuth } from '@/middlewares/authMiddleware';
 
-import { DBAnnouncement } from "@/types/entities/announcement";
-import { NextResponse } from "next/server";
-import pool from "../db";
+import pool from '@/app/api/db';
+import { DBAnnouncement } from '@/types/entities/announcement';
+import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
   const { isDash, job } = await req.json();
@@ -17,7 +17,7 @@ const handler = async (req: Request) => {
 
     return NextResponse.json(announcements);
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 };
 

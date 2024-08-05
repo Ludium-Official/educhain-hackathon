@@ -1,13 +1,13 @@
-import axios from "axios";
-import { getApiServerHost } from "./getApiHost";
+import axios from 'axios';
+import { getApiServerHost } from './getApiHost';
 
 const makeUrl = (url: string) => {
   return `${getApiServerHost()}${url}`;
 };
 
-const fetchData = async (url: string, method = "GET", data?: any) => {
+const fetchData = async (url: string, method = 'GET', data?: any) => {
   const callUrl = makeUrl(url);
-  const params = method.toLowerCase() === "post" ? undefined : data;
+  const params = method.toLowerCase() === 'post' ? undefined : data;
 
   try {
     const result = await axios({
@@ -17,8 +17,8 @@ const fetchData = async (url: string, method = "GET", data?: any) => {
       params,
       timeout: 5 * 1000,
       headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.NEXT_PUBLIC_LUDIUM_SECRET_KEY || "",
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.NEXT_PUBLIC_LUDIUM_SECRET_KEY || '',
       },
     });
 
