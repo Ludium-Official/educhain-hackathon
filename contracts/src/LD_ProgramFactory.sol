@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import "./programs/LD_EduProgram.sol";
 import "./LD_EventLogger.sol";
 import "./interfaces/ILD_EventLogger.sol";
+import "./interfaces/ILD_EduProgram.sol";
+import "./extensions/EduBounty.sol";
 
 contract LD_ProgramFactory {
     address public immutable implementation;
@@ -24,40 +26,32 @@ contract LD_ProgramFactory {
         emit EventLogger(eventLogger);
     }
 
+    receive() external payable {
+        revert("Ether not accepted directly");
+    }
+
     function createProgram(
         uint256 programId,
-        address validator,
-        uint256[2][] memory prizeConfig,
+        address[] memory managers,
+        EduBounty.PrizeConfig[] memory prizeConfig,
         uint256 start,
         uint256 end
     ) external payable returns (address) {
-        require(validator != address(0), "Validator address cannot be the zero address");
         require(!created[programId], "Already created program");
-        uint256 totalReserve = 0;
+        uint256 totalPrize = 0;
         for (uint256 i = 0; i < prizeConfig.length; i++) {
-            totalReserve += prizeConfig[i][0];
+            totalPrize += prizeConfig[i].prize;
         }
-        require(msg.value >= totalReserve, "Balance is less than the total reserve amount");
+        require(msg.value >= totalPrize, "Balance is less than the total reserve amount");
 
-        bytes memory initializeData = abi.encodeWithSelector(
-            LD_EduProgram.initialize.selector,
-            msg.sender,
-            programId,
-            feeRatio,
-            validator,
-            treasury,
-            prizeConfig,
-            start,
-            end,
-            eventLogger
+        ERC1967Proxy proxy = new ERC1967Proxy(implementation, "");
+        ILD_EduProgram(address(proxy)).initialize{value: msg.value}(
+            msg.sender, managers, programId, feeRatio, treasury, prizeConfig, start, end, eventLogger
         );
-
-        ERC1967Proxy proxy = new ERC1967Proxy(implementation, initializeData);
         created[programId] = true;
 
-        (bool success,) = address(proxy).call{value: msg.value}("");
-        require(success, "Failed to send Ether to proxy");
-        ILD_EventLogger(eventLogger).addProgram(programId, address(proxy), msg.sender, start, end);
+        // ILD_EduProgram(address(proxy)).deposit();
+        ILD_EventLogger(eventLogger).logProgramCreated(programId, address(proxy), msg.sender, start, end);
 
         return address(proxy);
     }

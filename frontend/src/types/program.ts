@@ -1,9 +1,14 @@
+import { DBMission } from './entities/mission';
+
 export type ProgramType = {
   id: number;
   owner: string;
+  is_private: boolean;
+  type: 'manage' | 'study';
   title: string;
   guide: string | null;
-  missionCnt: string;
+  prize: number;
   end_at: string;
   created_at: string;
+  missions?: DBMission[];
 };

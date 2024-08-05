@@ -16,6 +16,8 @@
     flex-direction: column;
     gap: 24px;
 
+    overflow: auto;
+
     .title {
       display: flex;
       align-items: center;
@@ -32,7 +34,8 @@
     }
 
     .content {
-      height: calc(100dvh - 251px);
+      max-height: calc(100dvh - 251px);
+      overflow: auto;
     }
   }
 }

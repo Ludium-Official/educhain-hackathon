@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { atom, useRecoilState } from "recoil";
+import { useEffect } from 'react';
+import { atom, useRecoilState } from 'recoil';
 
-import { UserType } from "@/types/user";
-import { isNil } from "ramda";
+import { UserType } from '@/types/user';
+import { isNil } from 'ramda';
 
 const userState = atom<UserType | null>({
-  key: "User",
+  key: 'User',
   default: null,
 });
 

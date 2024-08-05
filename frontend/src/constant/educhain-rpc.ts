@@ -1,22 +1,22 @@
-import { defineChain } from "viem";
+import { defineChain } from 'viem';
 
 export const opencampus = defineChain({
   id: 656476,
-  name: "OpenCampus",
-  network: "open-campus",
+  name: 'OpenCampus',
+  network: 'open-campus',
   nativeCurrency: {
     decimals: 18,
-    name: "Edu",
-    symbol: "EDU",
+    name: 'Edu',
+    symbol: 'EDU',
   },
   rpcUrls: {
     default: {
-      http: ["https://rpc.open-campus-codex.gelato.digital"],
-      webSocket: ["wss://open-campus-codex-sepolia.drpc.org"],
+      http: ['https://rpc.open-campus-codex.gelato.digital'],
+      webSocket: ['wss://open-campus-codex-sepolia.drpc.org'],
     },
   },
   blockExplorers: {
-    default: { name: "Explorer", url: "https://opencampus-codex.blockscout.com/" },
+    default: { name: 'Explorer', url: 'https://opencampus-codex.blockscout.com/' },
   },
   contracts: {
     // multicall3: {

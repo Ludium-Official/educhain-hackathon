@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import ArrowLogo from "@/assets/common/ArrowLogo.svg";
-import Banner from "@/assets/main/Banner.png";
-import Wrapper from "@/components/Wrapper";
-import { PATH } from "@/constant/route";
-import { getConvertDeadline } from "@/functions/deadline-function";
-import fetchData from "@/libs/fetchData";
-import { AnnouncementType } from "@/types/announcement";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import styles from "./page.module.scss";
+import ArrowLogo from '@/assets/common/ArrowLogo.svg';
+import Banner from '@/assets/main/Banner.png';
+import Wrapper from '@/components/Wrapper';
+import { PATH } from '@/constant/route';
+import { getConvertDeadline } from '@/functions/deadline-function';
+import fetchData from '@/libs/fetchData';
+import { AnnouncementType } from '@/types/announcement';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function Home() {
   const [announcements, setAnnouncements] = useState<AnnouncementType[]>([]);
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData("/announcements", "POST", {
+      const response = (await fetchData('/announcements', 'POST', {
         isDash: true,
-        job: "manage",
+        job: 'manage',
       })) as AnnouncementType[];
 
       setAnnouncements(response);

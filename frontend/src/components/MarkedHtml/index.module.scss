@@ -1,0 +1,28 @@
+.container {
+  overflow: auto;
+
+  code {
+    display: flex;
+
+    background-color: var(--purple-05);
+    padding: 10px;
+    border-radius: 4px;
+
+    color: var(--purple-01) !important;
+  }
+
+  ol,
+  ul {
+    list-style: initial;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
+
+  a {
+    color: var(--bs-link-color) !important;
+    text-decoration: underline !important;
+  }
+}
