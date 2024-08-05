@@ -44,6 +44,7 @@ export default function MissionDetail() {
   }, [param.id]);
 
   const formatDate = dayjs(mission?.end_at).format("YYYY.MM.DD");
+  console.log(mission);
 
   return (
     <Wrapper>
@@ -81,6 +82,35 @@ export default function MissionDetail() {
                 <div className={styles.contentWrapper}>
                   <MarkedHtml markdownString={mission.content} height={600} />
                 </div>
+                {mission.submissions && (
+                  <div className={styles.contentWrapper}>
+                    <div className={styles.submissionWrapper}>
+                      {mission.submissions?.map((submission) => {
+                        return (
+                          <div
+                            key={submission.id}
+                            className={styles.submissionContent}
+                          >
+                            <div className={styles.leftSide}>
+                              <span className={styles.endTime}>
+                                마감 {getConvertDeadline(submission.end_at)} 일
+                                전
+                              </span>
+                              <Link
+                                href={`${PATH.SUBMISSION}/${submission.id}`}
+                              >
+                                {submission.title}
+                              </Link>
+                            </div>
+                            {submission.type && (
+                              <div className={styles.working}>미진행</div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 {mission.chapters && (
                   <div className={styles.contentWrapper}>
                     {mission.chapters?.map((chapter) => {

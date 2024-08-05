@@ -2,6 +2,7 @@
 
 import BackLink from "@/components/BackLink";
 import Comment from "@/components/Comment";
+import MarkedHtml from "@/components/MarkedHtml";
 import Wrapper from "@/components/Wrapper";
 import { PATH } from "@/constant/route";
 import fetchData from "@/libs/fetchData";
@@ -57,7 +58,7 @@ export default function Community() {
                 <span>작성일: {formatDate}</span>
               </div>
               <div className={clsx(styles.card, styles.content)}>
-                {community?.content}
+                <MarkedHtml markdownString={community?.content} />
               </div>
             </div>
             <Comment

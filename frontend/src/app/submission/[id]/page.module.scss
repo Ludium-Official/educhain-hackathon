@@ -34,7 +34,7 @@
     }
 
     .content {
-      max-height: calc(100dvh - 251px);
+      max-height: calc(100dvh - 300px);
       overflow: auto;
     }
 
@@ -42,7 +42,6 @@
       background-color: var(--purple-01);
       padding: 13px 30px;
       border-radius: 40px;
-      margin-top: 24px;
 
       color: var(--white) !important;
       font-size: 16px;

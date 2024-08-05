@@ -11,7 +11,7 @@ import { SubmissionType } from "@/types/submission";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./page.module.scss";
 
 export default function MissionDetail() {
@@ -45,6 +45,17 @@ export default function MissionDetail() {
   }, [param.id]);
 
   const formatDate = dayjs(submission?.end_at).format("YYYY.MM.DD");
+  const buttonTitle = useMemo(() => {
+    if (submission?.type) {
+      if (submission.type === "article") {
+        return "아티클 완료하기";
+      }
+
+      return "제출하기";
+    }
+
+    return "지원하기";
+  }, [submission]);
 
   return (
     <Wrapper>
@@ -65,18 +76,16 @@ export default function MissionDetail() {
             {submission ? (
               <>
                 <div className={styles.wrapper}>
-                  <div className={clsx(styles.card, styles.title)}>
-                    {submission.title}
-                    <span>마감일: {formatDate}</span>
+                  <div>
+                    <div className={clsx(styles.card, styles.title)}>
+                      {submission.title}
+                      <span>마감일: {formatDate}</span>
+                    </div>
+                    <div className={clsx(styles.card, styles.content)}>
+                      <MarkedHtml markdownString={submission.content} />
+                    </div>
                   </div>
-                  <div className={clsx(styles.card, styles.content)}>
-                    <MarkedHtml markdownString={submission.content} />
-                  </div>
-                  <button className={styles.submitBtn}>
-                    {submission.type === "article"
-                      ? "아티클 완료하기"
-                      : "제출하기"}
-                  </button>
+                  <button className={styles.submitBtn}>{buttonTitle}</button>
                 </div>
                 <Comment
                   type="submission"
