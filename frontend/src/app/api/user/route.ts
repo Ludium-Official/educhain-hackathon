@@ -6,10 +6,14 @@ import { UserType } from '@/types/user';
 import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
+  let connection;
+
   const { addressKey } = await req.json();
 
   try {
-    const [rows] = await pool.query('SELECT * FROM users WHERE walletId = ?', [addressKey]);
+    connection = await pool.getConnection();
+
+    const [rows] = await connection.query('SELECT * FROM users WHERE walletId = ?', [addressKey]);
 
     const users = rows as DBUser[];
 
@@ -18,6 +22,8 @@ const handler = async (req: Request) => {
     return NextResponse.json(withoutId);
   } catch (error) {
     return new NextResponse('Internal Server Error', { status: 500 });
+  } finally {
+    if (connection) connection.release();
   }
 };
 

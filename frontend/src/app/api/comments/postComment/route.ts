@@ -4,10 +4,14 @@ import pool from '@/app/api/db';
 import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
+  let connection;
+
   const { id, writer, message, type } = await req.json();
 
   try {
-    await pool.query(`INSERT INTO comments (submission_id, writer, message, type) VALUES (?, ?, ?, ?)`, [
+    connection = await pool.getConnection();
+
+    await connection.query(`INSERT INTO comments (submission_id, writer, message, type) VALUES (?, ?, ?, ?)`, [
       id,
       writer,
       message,
@@ -17,6 +21,8 @@ const handler = async (req: Request) => {
     return NextResponse.json({ success: true });
   } catch (error) {
     return new NextResponse('Internal Server Error', { status: 500 });
+  } finally {
+    if (connection) connection.release();
   }
 };
 

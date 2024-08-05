@@ -5,7 +5,11 @@ import { DBCommunity } from '@/types/entities/community';
 import { NextResponse } from 'next/server';
 
 const handler = async () => {
+  let connection;
+
   try {
+    connection = await pool.getConnection();
+
     const query = `
       SELECT 
         c.*, 
@@ -19,13 +23,15 @@ const handler = async () => {
       ORDER BY
         c.created_at DESC
     `;
-    const [rows] = await pool.query(query);
+    const [rows] = await connection.query(query);
 
     const communities = rows as DBCommunity[];
 
     return NextResponse.json(communities);
   } catch (error) {
     return new NextResponse('Internal Server Error', { status: 500 });
+  } finally {
+    if (connection) connection.release();
   }
 };
 

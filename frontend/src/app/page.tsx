@@ -6,23 +6,22 @@ import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { getConvertDeadline } from '@/functions/deadline-function';
 import fetchData from '@/libs/fetchData';
-import { AnnouncementType } from '@/types/announcement';
+import { ProgramType } from '@/types/program';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Home() {
-  const [announcements, setAnnouncements] = useState<AnnouncementType[]>([]);
+  const [programs, setPrograms] = useState<ProgramType[]>([]);
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData('/announcements', 'POST', {
+      const response = (await fetchData('/programs', 'POST', {
         isDash: true,
-        job: 'manage',
-      })) as AnnouncementType[];
+      })) as ProgramType[];
 
-      setAnnouncements(response);
+      setPrograms(response);
     };
 
     callData();
@@ -73,16 +72,16 @@ export default function Home() {
               <div className={styles.table}>
                 <div className={styles.tableHeader}>
                   공고 목록
-                  <Link className={styles.link} href={PATH.ANNOUNCEMENT}>
+                  <Link className={styles.link} href={PATH.PROGRAM}>
                     모두 보기
                     <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                   </Link>
                 </div>
-                {announcements.map((announcement) => (
-                  <div key={announcement.id} className={styles.tableBody}>
-                    <Link href={`${PATH.ANNOUNCEMENT}/${announcement.id}`}>
-                      <div className={styles.endTime}>마감 {getConvertDeadline(announcement.end_at)}일 전</div>
-                      <div className={styles.title}>{announcement.title}</div>
+                {programs.map((program) => (
+                  <div key={program.id} className={styles.tableBody}>
+                    <Link href={`${PATH.PROGRAM}/${program.id}`}>
+                      <div className={styles.endTime}>마감 {getConvertDeadline(program.end_at)}일 전</div>
+                      <div className={styles.title}>{program.title}</div>
                     </Link>
                   </div>
                 ))}

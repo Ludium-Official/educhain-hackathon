@@ -5,9 +5,13 @@ import { DBProgram } from '@/types/entities/program';
 import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
+  let connection;
+
   const { isDash, job } = await req.json();
 
   try {
+    connection = await pool.getConnection();
+
     const defaultQuery = `SELECT 
       p.*,
       COALESCE(
@@ -29,13 +33,15 @@ const handler = async (req: Request) => {
     GROUP BY 
       p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.prize, p.end_at, p.created_at`;
     const query = isDash ? `${defaultQuery} ORDER BY p.created_at LIMIT 6` : `${defaultQuery}`;
-    const [rows] = await pool.query(query, [job]);
+    const [rows] = await connection.query(query, [job]);
 
     const programs = rows as DBProgram[];
 
     return NextResponse.json(programs);
   } catch (error) {
     return new NextResponse('Internal Server Error', { status: 500 });
+  } finally {
+    if (connection) connection.release();
   }
 };
 
