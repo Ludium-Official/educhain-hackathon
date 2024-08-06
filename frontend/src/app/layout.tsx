@@ -3,10 +3,10 @@
 import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import { WagmiProvider } from 'wagmi';
 import { opencampus } from '@/constant/educhain-rpc';
@@ -26,6 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const queryClient = new QueryClient();
+
+  useEffect(() => {
+    import('bootstrap/dist/js/bootstrap.bundle.min')
+      .then((module) => {
+        console.log('Bootstrap JavaScript loaded');
+      })
+      .catch((error) => {
+        console.error('Failed to load Bootstrap JavaScript', error);
+      });
+  }, []);
 
   return (
     <html lang="en">

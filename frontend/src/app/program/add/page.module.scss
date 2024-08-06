@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .table {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 20px 40px;
+    margin-top: 24px;
+
+    input,
+    textarea {
+      border: 1px solid var(--grey-05);
+      border-radius: 8px;
+
+      color: var(--grey-04);
+    }
+
+    button {
+      color: var(--grey-04);
+    }
+  }
+}

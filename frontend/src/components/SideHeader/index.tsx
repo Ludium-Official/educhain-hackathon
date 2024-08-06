@@ -1,11 +1,9 @@
 'use client';
 
 import LudiumLogo from '@/assets/common/LudiumLogo.svg';
-import ActiveAnnouncementLogo from '@/assets/header/ActiveAnnouncementLogo.svg';
 import ActiveCommunityLogo from '@/assets/header/ActiveCommunityLogo.svg';
 import ActiveProfileLogo from '@/assets/header/ActiveProfileLogo.svg';
 import ActiveProgramLogo from '@/assets/header/ActiveProgramLogo.svg';
-import AnnouncementLogo from '@/assets/header/AnnouncementLogo.svg';
 import CommunityLogo from '@/assets/header/CommunityLogo.svg';
 import DiscordLogo from '@/assets/header/DiscordLogo.svg';
 import LudiumSubLogo from '@/assets/header/LudiumSubLogo.svg';
@@ -82,18 +80,6 @@ const SideHeader = () => {
               <ConnectButton chainStatus="none" showBalance={false} accountStatus="address" label="로그인" />
             </div>
           )}
-          <Link
-            className={clsx(currentPage === PATH.ANNOUNCEMENT ? styles.this : null, styles.link)}
-            href={PATH.ANNOUNCEMENT}
-          >
-            <Image
-              src={currentPage === PATH.ANNOUNCEMENT ? ActiveAnnouncementLogo.src : AnnouncementLogo.src}
-              alt="logo"
-              width={24}
-              height={24}
-            />
-            공고 수행
-          </Link>
           <Link className={clsx(currentPage === PATH.PROGRAM ? styles.this : null, styles.link)} href={PATH.PROGRAM}>
             <Image
               src={currentPage === PATH.PROGRAM ? ActiveProgramLogo.src : ProgramLogo.src}
@@ -101,7 +87,7 @@ const SideHeader = () => {
               width={24}
               height={24}
             />
-            학습 참여
+            프로그램
           </Link>
           <Link
             className={clsx(currentPage === PATH.COMMUNITY ? styles.this : null, styles.link)}

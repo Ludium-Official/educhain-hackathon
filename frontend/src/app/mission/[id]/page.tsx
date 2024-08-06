@@ -74,6 +74,7 @@ export default function MissionDetail() {
                   <div className={styles.contentWrapper}>
                     <div className={styles.submissionWrapper}>
                       {mission.submissions?.map((submission) => {
+                        console.log(submission);
                         return (
                           <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>

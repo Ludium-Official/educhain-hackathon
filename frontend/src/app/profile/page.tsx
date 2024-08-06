@@ -72,7 +72,9 @@ export default function Profile() {
                     </Link>
                   </div>
                 ) : (
-                  <button onClick={signIn}>회원가입</button>
+                  <button className={styles.addBtn} onClick={signIn}>
+                    회원가입
+                  </button>
                 )}
               </div>
             )}
