@@ -25,7 +25,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "node",
     "jsx": "preserve",
-    "typeRoots": ["./src/types"],
+    "typeRoots": ["./src/types/*"],
     "paths": {
       "@/*": ["./src/*"]
     },

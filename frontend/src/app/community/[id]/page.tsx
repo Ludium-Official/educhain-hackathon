@@ -36,6 +36,7 @@ export default function Community() {
 
     commentCallData();
     callData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param.id]);
 
   const formatDate = dayjs(community?.created_at).format('YYYY.MM.DD');

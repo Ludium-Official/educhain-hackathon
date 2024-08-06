@@ -14,6 +14,7 @@ export const useUser = (initValue?: UserType) => {
 
   useEffect(() => {
     !isNil(initValue) && setUser(initValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initValue]);
 
   return {

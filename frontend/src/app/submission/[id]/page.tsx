@@ -40,6 +40,7 @@ export default function MissionDetail() {
 
     commentCallData();
     callData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param.id]);
 
   const formatDate = dayjs(submission?.end_at).format('YYYY.MM.DD');
