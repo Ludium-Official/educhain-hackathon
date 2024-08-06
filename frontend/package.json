@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "cross-env RUN_MODE=local next dev",
-    "dev:production": "cross-env RUN_MODE=production next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:production": "cross-env RUN_MODE=production next dev",
+    "build:production": "cross-env RUN_MODE=production next build",
+    "start:production": "cross-env RUN_MODE=production next start"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.1.3",
