@@ -21,7 +21,9 @@ const SubmissionRow: React.FC<SubmissionRowProps> = ({ submissions }) => {
               <span className={styles.endTime}>마감 {getConvertDeadline(submission.end_at)}일 전</span>
               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
             </div>
-            <div className={styles.rightSide}>{submission.type && <div className={styles.working}>미진행</div>}</div>
+            <div className={styles.rightSide}>
+              {submission.type && <div className={styles.working}>{submission.submitStatus ? '완료' : '미진행'}</div>}
+            </div>
           </div>
         );
       })}

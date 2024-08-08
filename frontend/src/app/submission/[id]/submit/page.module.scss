@@ -1,0 +1,25 @@
+.container {
+  .input {
+    width: 400px;
+    padding: 11px 16px;
+    border: 1px solid var(--grey-05);
+    border-radius: 8px;
+    margin-top: 4px;
+
+    color: var(--grey-04);
+  }
+
+  .submitBtn {
+    background-color: var(--purple-01);
+    padding: 13px 30px;
+    border-radius: 40px;
+
+    color: var(--white) !important;
+    font-size: 16px;
+
+    &.isSubmit {
+      cursor: no-drop;
+      filter: brightness(0.7);
+    }
+  }
+}

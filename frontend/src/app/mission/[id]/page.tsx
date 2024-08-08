@@ -6,6 +6,7 @@ import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { getConvertDeadline } from '@/functions/deadline-function';
 import { missionChapterSubmissionParsing } from '@/functions/parsing-function';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { ParsingMissionType } from '@/types/parsingMission';
 import dayjs from 'dayjs';
@@ -16,6 +17,8 @@ import styles from './page.module.scss';
 
 export default function MissionDetail() {
   const param = useParams();
+
+  const { user } = useUser();
   const [mission, setMission] = useState<ParsingMissionType>();
 
   useEffect(() => {
@@ -24,7 +27,9 @@ export default function MissionDetail() {
         const [missionResponse, chaptersResponse, submissionsResponse] = await Promise.all([
           fetchData(`/missions/${param.id}`),
           fetchData(`/chapters/mission/${param.id}`),
-          fetchData(`/submissions/mission/${param.id}`),
+          fetchData(`/submissions/mission/${param.id}`, 'POST', {
+            wallet_id: user?.walletId,
+          }),
         ]);
 
         const parsingMissionData = missionChapterSubmissionParsing(
@@ -40,7 +45,7 @@ export default function MissionDetail() {
     };
 
     callData();
-  }, [param.id]);
+  }, [param.id, user?.walletId]);
 
   const formatDate = dayjs(mission?.end_at).format('YYYY.MM.DD');
 
@@ -74,14 +79,15 @@ export default function MissionDetail() {
                   <div className={styles.contentWrapper}>
                     <div className={styles.submissionWrapper}>
                       {mission.submissions?.map((submission) => {
-                        console.log(submission);
                         return (
                           <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>
                               <span className={styles.endTime}>마감 {getConvertDeadline(submission.end_at)} 일 전</span>
                               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                             </div>
-                            {submission.type && <div className={styles.working}>미진행</div>}
+                            {submission.type && (
+                              <div className={styles.working}>{submission.submitStatus ? '완료' : '미진행'}</div>
+                            )}
                           </div>
                         );
                       })}
@@ -107,7 +113,9 @@ export default function MissionDetail() {
                                     </span>
                                     <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                                   </div>
-                                  {submission.type && <div className={styles.working}>미진행</div>}
+                                  {submission.type && (
+                                    <div className={styles.working}>{submission.submitStatus ? '완료' : '미진행'}</div>
+                                  )}
                                 </div>
                               );
                             })}
