@@ -3,20 +3,27 @@
 import BackLink from '@/components/BackLink';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { SubmissionType } from '@/types/submission';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import { useParams, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function SubmissionSubmit() {
+  const route = useRouter();
   const param = useParams();
+
+  const { user } = useUser();
   const [submission, setSubmission] = useState<SubmissionType>();
 
   useEffect(() => {
     const callData = async () => {
       try {
-        const response = (await fetchData(`/submissions/${param.id}`)) as SubmissionType;
+        const response = (await fetchData(`/submissions/${param.id}`, 'POST', {
+          wallet_id: user?.walletId,
+        })) as SubmissionType;
 
         setSubmission(response);
       } catch (error) {
@@ -25,7 +32,20 @@ export default function SubmissionSubmit() {
     };
 
     callData();
-  }, [param.id]);
+  }, [param.id, user?.walletId]);
+
+  const submissionSubmit = useCallback(async () => {
+    if (submission?.submitStatus) {
+      return null;
+    }
+
+    await fetchData(`/submissions/submit/${param.id}`, 'POST', {
+      submission,
+      wallet_id: user?.walletId,
+    });
+
+    route.push(`${PATH.SUBMISSION}/${param.id}`);
+  }, [param.id, route, submission, user?.walletId]);
 
   return (
     <Wrapper>
@@ -39,7 +59,13 @@ export default function SubmissionSubmit() {
           <div className={styles.container}>
             {submission ? (
               <>
-                <div>good</div>
+                <input className={styles.input} placeholder="submit anything" />
+                <button
+                  className={clsx(styles.submitBtn, submission?.submitStatus ? styles.isSubmit : null)}
+                  onClick={submissionSubmit}
+                >
+                  submit
+                </button>
               </>
             ) : (
               <div>null</div>
