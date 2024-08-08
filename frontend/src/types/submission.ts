@@ -8,4 +8,5 @@ export type SubmissionType = {
   content: string;
   end_at: string;
   created_at: string;
+  submitStatus?: boolean;
 };

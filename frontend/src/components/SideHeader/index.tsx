@@ -2,11 +2,13 @@
 
 import LudiumLogo from '@/assets/common/LudiumLogo.svg';
 import ActiveCommunityLogo from '@/assets/header/ActiveCommunityLogo.svg';
+import ActiveMissionLogo from '@/assets/header/ActiveMissionLogo.svg';
 import ActiveProfileLogo from '@/assets/header/ActiveProfileLogo.svg';
 import ActiveProgramLogo from '@/assets/header/ActiveProgramLogo.svg';
 import CommunityLogo from '@/assets/header/CommunityLogo.svg';
 import DiscordLogo from '@/assets/header/DiscordLogo.svg';
 import LudiumSubLogo from '@/assets/header/LudiumSubLogo.svg';
+import MissionLogo from '@/assets/header/MissionLogo.svg';
 import ProfileLogo from '@/assets/header/ProfileLogo.svg';
 import ProgramLogo from '@/assets/header/ProgramLogo.svg';
 import TelLogo from '@/assets/header/TelLogo.svg';
@@ -73,7 +75,7 @@ const SideHeader = () => {
                 width={24}
                 height={24}
               />
-              프로필
+              Profile
             </Link>
           ) : (
             <div className={styles.connectBtnWrapper}>
@@ -87,7 +89,16 @@ const SideHeader = () => {
               width={24}
               height={24}
             />
-            프로그램
+            Program
+          </Link>
+          <Link className={clsx(currentPage === PATH.MISSION ? styles.this : null, styles.link)} href={PATH.MISSION}>
+            <Image
+              src={currentPage === PATH.MISSION ? ActiveMissionLogo.src : MissionLogo.src}
+              alt="logo"
+              width={24}
+              height={24}
+            />
+            Mission
           </Link>
           <Link
             className={clsx(currentPage === PATH.COMMUNITY ? styles.this : null, styles.link)}
@@ -99,7 +110,7 @@ const SideHeader = () => {
               width={24}
               height={24}
             />
-            커뮤니티
+            Community
           </Link>
         </div>
       </div>

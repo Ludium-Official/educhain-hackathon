@@ -5,17 +5,21 @@ import Comment from '@/components/Comment';
 import MarkedHtml from '@/components/MarkedHtml';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { CommentType } from '@/types/comment';
 import { SubmissionType } from '@/types/submission';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
 
-export default function MissionDetail() {
+export default function SubmissionDetail() {
+  const route = useRouter();
   const param = useParams();
+
+  const { user } = useUser();
   const [submission, setSubmission] = useState<SubmissionType>();
   const [comments, setComments] = useState<CommentType[]>();
 
@@ -27,24 +31,26 @@ export default function MissionDetail() {
     setComments(commentsResponse);
   }, [param.id]);
 
+  const submissionCallData = useCallback(async () => {
+    const response = (await fetchData(`/submissions/${param.id}`, 'POST', {
+      wallet_id: user?.walletId,
+    })) as SubmissionType;
+
+    setSubmission(response);
+  }, [param.id, user?.walletId]);
+
   useEffect(() => {
-    const callData = async () => {
-      try {
-        const response = (await fetchData(`/submissions/${param.id}`)) as SubmissionType;
-
-        setSubmission(response);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
     commentCallData();
-    callData();
+    submissionCallData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param.id]);
+  }, [param.id, user]);
 
   const formatDate = dayjs(submission?.end_at).format('YYYY.MM.DD');
   const buttonTitle = useMemo(() => {
+    if (submission?.submitStatus) {
+      return '완료';
+    }
+
     if (submission?.type) {
       if (submission.type === 'article') {
         return '아티클 완료하기';
@@ -55,6 +61,25 @@ export default function MissionDetail() {
 
     return '지원하기';
   }, [submission]);
+
+  const submissionSubmit = useCallback(async () => {
+    if (submission?.submitStatus) {
+      return null;
+    }
+
+    if (submission?.type === 'article') {
+      await fetchData(`/submissions/submit/${param.id}`, 'POST', {
+        submission,
+        wallet_id: user?.walletId,
+      });
+
+      submissionCallData();
+      return null;
+    }
+
+    route.push(`${PATH.SUBMISSION}/${param.id}/submit`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [param.id, route, submission, user?.walletId]);
 
   return (
     <Wrapper>
@@ -78,7 +103,12 @@ export default function MissionDetail() {
                       <MarkedHtml markdownString={submission.content} />
                     </div>
                   </div>
-                  <button className={styles.submitBtn}>{buttonTitle}</button>
+                  <button
+                    className={clsx(styles.submitBtn, submission?.submitStatus ? styles.isSubmit : null)}
+                    onClick={submissionSubmit}
+                  >
+                    {buttonTitle}
+                  </button>
                 </div>
                 <Comment type="submission" commentFuc={commentCallData} comments={comments} />
               </>

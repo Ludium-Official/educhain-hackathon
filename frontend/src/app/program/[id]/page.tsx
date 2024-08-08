@@ -6,6 +6,7 @@ import SubmissionRow from '@/components/Pargram/SubmissionRow';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { missionChapterSubmissionParsing } from '@/functions/parsing-function';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { ParsingMissionType } from '@/types/parsingMission';
 import { ProgramType } from '@/types/program';
@@ -18,6 +19,8 @@ import styles from './page.module.scss';
 
 export default function ProgramDetail() {
   const param = useParams();
+
+  const { user } = useUser();
   const [program, setProgram] = useState<ProgramType>();
   const [missions, setMissions] = useState<ParsingMissionType[]>([]);
 
@@ -28,7 +31,9 @@ export default function ProgramDetail() {
           fetchData(`/programs/${param.id}`),
           fetchData(`/missions/program/${param.id}`),
           fetchData(`/chapters/program/${param.id}`),
-          fetchData(`/submissions/program/${param.id}`),
+          fetchData(`/submissions/program/${param.id}`, 'POST', {
+            wallet_id: user?.walletId,
+          }),
         ]);
 
         const parsingMissionData = missionChapterSubmissionParsing(
@@ -45,7 +50,7 @@ export default function ProgramDetail() {
     };
 
     callData();
-  }, [param.id]);
+  }, [param.id, user?.walletId]);
 
   const formatDate = dayjs(program?.created_at).format('YYYY.MM.DD');
 
