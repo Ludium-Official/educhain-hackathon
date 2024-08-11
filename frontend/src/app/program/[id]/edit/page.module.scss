@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .tableWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .table {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      background-color: var(--white);
+      border-radius: 20px;
+      padding: 20px 40px;
+      margin-top: 24px;
+
+      .missionTable {
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--grey-05);
+
+        &:last-child {
+          padding-bottom: 0;
+          border-bottom: 0;
+        }
+
+        .inputWrapper {
+          display: flex;
+          align-items: center;
+
+          color: var(--grey-03);
+          font-size: 16px;
+          font-weight: 500;
+
+          .input {
+            width: 400px;
+            padding: 11px 16px;
+            border: 1px solid var(--grey-05);
+            border-radius: 8px;
+            margin-top: 4px;
+
+            color: var(--grey-04);
+          }
+        }
+      }
+    }
+  }
+}

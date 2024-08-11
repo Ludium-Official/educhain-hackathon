@@ -8,7 +8,7 @@ export type ProgramType = {
   title: string;
   guide: string | null;
   prize: number;
-  end_at: string;
+  end_at: string | null;
   created_at: string;
   missions?: DBMission[];
 };

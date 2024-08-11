@@ -79,7 +79,7 @@ const SideHeader = () => {
             </Link>
           ) : (
             <div className={styles.connectBtnWrapper}>
-              <ConnectButton chainStatus="none" showBalance={false} accountStatus="address" label="로그인" />
+              <ConnectButton chainStatus="none" showBalance={false} accountStatus="address" label="Sign In" />
             </div>
           )}
           <Link className={clsx(currentPage === PATH.PROGRAM ? styles.this : null, styles.link)} href={PATH.PROGRAM}>

@@ -19,7 +19,7 @@ export default function Program() {
   useEffect(() => {
     const callData = async () => {
       const response = (await fetchData('/programs', 'POST', {
-        isDash: true,
+        isDash: false,
       })) as ProgramType[];
 
       setPrograms(response);
@@ -36,15 +36,15 @@ export default function Program() {
             <BackLink path={PATH.HOME} />
             <Link className={styles.addLink} href={`${PATH.PROGRAM}/add`}>
               <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
-              추가하기
+              Add program
             </Link>
           </div>
         ),
         body: (
           <div className={styles.container}>
-            <div className={styles.title}>프로그램</div>
+            <div className={styles.title}>Program</div>
             <div className={clsx(styles.table, 'accordion accordion-flush')} id="accordionFlush">
-              <div className={styles.tableHeader}>프로그램 목록</div>
+              <div className={styles.tableHeader}>Program list</div>
               {programs.map((program) => {
                 const missions = sortBy(prop('id'), program.missions || []);
 
@@ -77,7 +77,7 @@ export default function Program() {
                             <div key={mission.id} className={styles.missionWrapper}>
                               <div className={styles.titleWrapper}>
                                 <div className={styles.missionCategory}>
-                                  {mission.category === 'study' ? '학습' : '공고'}
+                                  {mission.category === 'study' ? 'Study' : 'Announcement'}
                                 </div>
                                 <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
                               </div>

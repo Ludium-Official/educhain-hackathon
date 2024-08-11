@@ -5,27 +5,41 @@ import Banner from '@/assets/main/Banner.png';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { getConvertDeadline } from '@/functions/deadline-function';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
+import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Home() {
+  const { user } = useUser();
   const [programs, setPrograms] = useState<ProgramType[]>([]);
+  const [notOwnerMissions, setNotOwnerMissions] = useState<MissionType[]>([]);
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData('/programs', 'POST', {
-        isDash: true,
-      })) as ProgramType[];
+      const [programs, notOwnerMissions] = await Promise.all([
+        fetchData('/programs', 'POST', {
+          isDash: true,
+        }),
+        fetchData('/missions/not_owner', 'POST', {
+          walletId: user?.walletId,
+        }),
+      ]);
 
-      setPrograms(response);
+      setPrograms(programs);
+      setNotOwnerMissions(notOwnerMissions);
     };
 
     callData();
-  }, []);
+  }, [user?.walletId]);
+
+  const sumRestAmount = useMemo(() => {
+    return notOwnerMissions.reduce((result, mission) => (result += mission.prize), 0);
+  }, [notOwnerMissions]);
 
   return (
     <Wrapper>
@@ -68,6 +82,18 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            <div className={styles.missMissionContainer}>
+              <div className={styles.table}>
+                <div className={styles.tableHeader}>
+                  Missed mission!
+                  <Link className={styles.link} href={PATH.MISSION}>
+                    모두 보기
+                    <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                  </Link>
+                </div>
+                <div>{sumRestAmount} 놓치는 중</div>
+              </div>
+            </div>
             <div className={styles.tableList}>
               <div className={styles.table}>
                 <div className={styles.tableHeader}>
@@ -80,7 +106,11 @@ export default function Home() {
                 {programs.map((program) => (
                   <div key={program.id} className={styles.tableBody}>
                     <Link href={`${PATH.PROGRAM}/${program.id}`}>
-                      <div className={styles.endTime}>마감 {getConvertDeadline(program.end_at)}일 전</div>
+                      <div className={styles.endTime}>
+                        {program.end_at
+                          ? `${getConvertDeadline(program.end_at)} days before deadline`
+                          : 'Deadline not set'}
+                      </div>
                       <div className={styles.title}>{program.title}</div>
                     </Link>
                   </div>

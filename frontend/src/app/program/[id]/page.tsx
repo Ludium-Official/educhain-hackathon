@@ -1,5 +1,6 @@
 'use client';
 
+import AddLogo from '@/assets/common/AddLogo.svg';
 import BackLink from '@/components/BackLink';
 import MarkedHtml from '@/components/MarkedHtml';
 import SubmissionRow from '@/components/Pargram/SubmissionRow';
@@ -12,6 +13,7 @@ import { ParsingMissionType } from '@/types/parsingMission';
 import { ProgramType } from '@/types/program';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -58,8 +60,14 @@ export default function ProgramDetail() {
     <Wrapper>
       {{
         header: (
-          <div>
+          <div className={styles.headerWrapper}>
             <BackLink path={PATH.PROGRAM} />
+            {user && user.walletId === program?.owner && (
+              <Link className={styles.addLink} href={`${PATH.PROGRAM}/${param.id}/edit`}>
+                <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
+                Edit
+              </Link>
+            )}
           </div>
         ),
         body: (
