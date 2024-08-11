@@ -92,6 +92,30 @@
         font-size: 18px;
         font-weight: bold;
       }
+
+      .rows {
+        margin-top: 10px;
+
+        .row {
+          padding: 10px 0;
+          border-bottom: 1px solid var(--grey-06);
+
+          &:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          .rowTitle {
+            display: block;
+
+            max-width: 450px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
     }
   }
 }

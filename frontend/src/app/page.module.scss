@@ -13,9 +13,37 @@
   }
 
   .missMissionContainer {
-    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: radial-gradient(circle at 30% 50%, rgba(106, 103, 255, 0.5), transparent 60%),
+      radial-gradient(circle at 70% 50%, rgba(242, 113, 227, 0.5), transparent 60%);
     margin-top: 40px;
     border-radius: 20px;
+    padding: 20px 40px;
+
+    color: var(--purple-05);
+
+    .missedContainer {
+      width: 100%;
+
+      text-align: center;
+      font-size: 24px;
+
+      .missionLink {
+        .missedAmount {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+
+          color: var(--purple-01);
+          font-size: 35px;
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   .tableList {
@@ -24,61 +52,61 @@
     gap: 24px;
 
     margin-top: 20px;
-  }
 
-  .table {
-    background-color: var(--white);
-    border-radius: 20px;
-    padding: 20px 40px;
+    .table {
+      background-color: var(--white);
+      border-radius: 20px;
+      padding: 20px 40px;
 
-    .tableHeader {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      margin-bottom: 20px;
-
-      color: var(--black);
-      font-size: 18px;
-      font-weight: 500;
-
-      .link {
+      .tableHeader {
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: space-between;
 
-        color: var(--grey-04);
-        font-size: 16px;
-        font-weight: normal;
-      }
-    }
+        margin-bottom: 20px;
 
-    .tableBody {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--grey-02);
+        color: var(--black);
+        font-size: 18px;
+        font-weight: 500;
 
-      &:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
-      }
+        .link {
+          display: flex;
+          align-items: center;
+          gap: 8px;
 
-      .endTime {
-        width: fit-content;
-        padding: 3px 8px;
-        border: 1px solid var(--purple-01);
-        border-radius: 4px;
-
-        font-size: 14px;
-        color: var(--purple-01);
+          color: var(--grey-04);
+          font-size: 16px;
+          font-weight: normal;
+        }
       }
 
-      .title {
-        margin-top: 8px;
-        max-width: 400px;
+      .tableBody {
+        padding: 20px 0;
+        border-bottom: 1px solid var(--grey-02);
 
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        &:last-child {
+          border-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .endTime {
+          width: fit-content;
+          padding: 3px 8px;
+          border: 1px solid var(--purple-01);
+          border-radius: 4px;
+
+          font-size: 14px;
+          color: var(--purple-01);
+        }
+
+        .title {
+          margin-top: 8px;
+          max-width: 400px;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
     }
   }

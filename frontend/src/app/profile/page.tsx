@@ -118,33 +118,57 @@ export default function Profile() {
                     <div className={styles.userStatusContainer}>
                       <div className={styles.userStatusWrapper}>
                         <div className={styles.title}>Owned programs</div>
-                        <div>
+                        <div className={styles.rows}>
                           {programs.map((program) => {
-                            return <div key={program.id}>{program.title}</div>;
+                            return (
+                              <div key={program.id} className={styles.row}>
+                                <Link href={`${PATH.PROGRAM}/${program.id}`} className={styles.rowTitle}>
+                                  {program.title}
+                                </Link>
+                              </div>
+                            );
                           })}
                         </div>
                       </div>
                       <div className={styles.userStatusWrapper}>
                         <div className={styles.title}>Missions in validate</div>
-                        <div>
+                        <div className={styles.rows}>
                           {validateMissions.map((mission) => {
-                            return <div key={mission.id}>{mission.title}</div>;
+                            return (
+                              <div key={mission.id} className={styles.row}>
+                                <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
+                                  {mission.title}
+                                </Link>
+                              </div>
+                            );
                           })}
                         </div>
                       </div>
                       <div className={styles.userStatusWrapper}>
                         <div className={styles.title}>Owned Missions</div>
-                        <div>
+                        <div className={styles.rows}>
                           {ownerMissions.map((mission) => {
-                            return <div key={mission.id}>{mission.title}</div>;
+                            return (
+                              <div key={mission.id} className={styles.row}>
+                                <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
+                                  {mission.title}
+                                </Link>
+                              </div>
+                            );
                           })}
                         </div>
                       </div>
                       <div className={styles.userStatusWrapper}>
                         <div className={styles.title}>Participate Missions</div>
-                        <div>
+                        <div className={styles.rows}>
                           {statusMissions.map((mission) => {
-                            return <div key={mission.id}>{mission.title}</div>;
+                            return (
+                              <div key={mission.id} className={styles.row}>
+                                <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
+                                  {mission.title}
+                                </Link>
+                              </div>
+                            );
                           })}
                         </div>
                       </div>
