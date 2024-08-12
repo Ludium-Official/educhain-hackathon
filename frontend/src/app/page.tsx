@@ -5,27 +5,63 @@ import Banner from '@/assets/main/Banner.png';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { getConvertDeadline } from '@/functions/deadline-function';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
+import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function Home() {
+  const { user } = useUser();
   const [programs, setPrograms] = useState<ProgramType[]>([]);
+  const [notOwnerMissions, setNotOwnerMissions] = useState<MissionType[]>([]);
+
+  const sumRestAmount = useMemo(() => {
+    return notOwnerMissions.reduce((result, mission) => (result += mission.prize), 0);
+  }, [notOwnerMissions]);
 
   useEffect(() => {
     const callData = async () => {
-      const response = (await fetchData('/programs', 'POST', {
-        isDash: true,
-      })) as ProgramType[];
+      const [programs, notOwnerMissions] = await Promise.all([
+        fetchData('/programs', 'POST', {
+          isDash: true,
+        }),
+        fetchData('/missions/not_owner', 'POST', {
+          walletId: user?.walletId,
+        }),
+      ]);
 
-      setPrograms(response);
+      setPrograms(programs);
+      setNotOwnerMissions(notOwnerMissions);
     };
 
     callData();
-  }, []);
+    animateCounter('counter', 0, sumRestAmount, 1000);
+  }, [sumRestAmount, user?.walletId]);
+
+  function animateCounter(id: string, start: number, end: number, duration: number): void {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const range = end - start;
+    let startTime: number | null = null;
+
+    function step(timestamp: number) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      element!.innerText = Math.floor(progress * range + start).toString();
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        element!.innerText = end.toString();
+      }
+    }
+
+    window.requestAnimationFrame(step);
+  }
 
   return (
     <Wrapper>
@@ -33,7 +69,7 @@ export default function Home() {
         header: <div>Header</div>,
         body: (
           <div className={styles.container}>
-            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="true">
+            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
               <div className={`carousel-indicators ${styles.carouselButtons}`}>
                 <button
                   type="button"
@@ -68,6 +104,17 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            <div className={styles.missMissionContainer}>
+              <div className={styles.missedContainer}>
+                <Link className={styles.missionLink} href={PATH.MISSION}>
+                  <div>Missed Mission</div>
+                  <div className={styles.missedAmount}>
+                    <div id="counter">0</div>EDU
+                  </div>
+                  <div>Is Waiting For You</div>
+                </Link>
+              </div>
+            </div>
             <div className={styles.tableList}>
               <div className={styles.table}>
                 <div className={styles.tableHeader}>
@@ -80,7 +127,11 @@ export default function Home() {
                 {programs.map((program) => (
                   <div key={program.id} className={styles.tableBody}>
                     <Link href={`${PATH.PROGRAM}/${program.id}`}>
-                      <div className={styles.endTime}>마감 {getConvertDeadline(program.end_at)}일 전</div>
+                      <div className={styles.endTime}>
+                        {program.end_at
+                          ? `${getConvertDeadline(program.end_at)} days before deadline`
+                          : 'Deadline not set'}
+                      </div>
                       <div className={styles.title}>{program.title}</div>
                     </Link>
                   </div>

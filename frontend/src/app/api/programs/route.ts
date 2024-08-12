@@ -7,33 +7,44 @@ import { NextResponse } from 'next/server';
 const handler = async (req: Request) => {
   let connection;
 
-  const { isDash, job } = await req.json();
+  const { isDash, walletId } = await req.json();
 
   try {
     connection = await pool.getConnection();
 
-    const defaultQuery = `SELECT 
-      p.*,
-      COALESCE(
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'id', m.id,
-            'owner', m.owner,
-            'category', m.category,
-            'title', m.title,
-            'created_at', m.created_at
-          )
-        ),
-      JSON_ARRAY()
-    ) AS missions
-    FROM 
-      programs p
-    LEFT JOIN 
-      missions m ON p.id = m.program_id
-    GROUP BY 
-      p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.prize, p.end_at, p.created_at`;
-    const query = isDash ? `${defaultQuery} ORDER BY p.created_at LIMIT 6` : `${defaultQuery}`;
-    const [rows] = await connection.query(query, [job]);
+    const defaultQuery = `
+      SELECT 
+        p.*,
+        COALESCE(
+          JSON_ARRAYAGG(
+            JSON_OBJECT(
+              'id', m.id,
+              'owner', m.owner,
+              'category', m.category,
+              'title', m.title,
+              'created_at', m.created_at
+            )
+          ),
+        JSON_ARRAY()
+      ) AS missions
+      FROM 
+        programs p
+      LEFT JOIN 
+        missions m ON p.id = m.program_id
+    `;
+
+    const whereClause = walletId ? `WHERE p.owner = ?` : '';
+
+    const queryWithConditions = `
+      ${defaultQuery}
+      ${whereClause}
+      GROUP BY 
+        p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.prize, p.end_at, p.created_at
+    `;
+
+    const query = isDash ? `${queryWithConditions} ORDER BY p.created_at LIMIT 6` : queryWithConditions;
+
+    const [rows] = walletId ? await connection.query(query, [walletId]) : await connection.query(query);
 
     const programs = rows as DBProgram[];
 

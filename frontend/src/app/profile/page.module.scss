@@ -3,8 +3,18 @@
 
   display: flex;
   flex-direction: column;
+  gap: 10px;
 
   width: 100%;
+
+  .addBtn {
+    background-color: var(--purple-01);
+    padding: 13px 30px;
+    border-radius: 40px;
+
+    color: var(--white) !important;
+    font-size: 16px;
+  }
 
   .profileWrapper {
     display: flex;
@@ -33,7 +43,7 @@
           font-size: 28px;
 
           span {
-            margin-left: 10px;
+            margin: 0 10px;
 
             font-weight: bold;
           }
@@ -68,12 +78,44 @@
     font-size: 16px;
   }
 
-  .addBtn {
-    background-color: var(--purple-01);
-    padding: 13px 30px;
-    border-radius: 40px;
+  .userStatusContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 
-    color: var(--white) !important;
-    font-size: 16px;
+    .userStatusWrapper {
+      background-color: var(--white);
+      padding: 24px;
+      border-radius: 20px;
+
+      .title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .rows {
+        margin-top: 10px;
+
+        .row {
+          padding: 10px 0;
+          border-bottom: 1px solid var(--grey-06);
+
+          &:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          .rowTitle {
+            display: block;
+
+            max-width: 450px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
   }
 }

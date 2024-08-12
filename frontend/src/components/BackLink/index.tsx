@@ -13,7 +13,7 @@ const BackLink: React.FC<BackLinkProps> = ({ path }) => {
   return (
     <Link className={styles.backPage} href={path}>
       <Image className={styles.profileImg} src={BackArrowLogo.src} alt="logo" width={24} height={24} />
-      돌아가기
+      Back
     </Link>
   );
 };
