@@ -34,9 +34,9 @@ export default function Program() {
         header: (
           <div className={styles.headerWrapper}>
             <BackLink path={PATH.HOME} />
-            <Link className={styles.addLink} href={`${PATH.PROGRAM}/add`}>
+            <Link className={styles.addLink} href={`${PATH.PROGRAM}/create`}>
               <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
-              Add program
+              Create program
             </Link>
           </div>
         ),
@@ -47,7 +47,6 @@ export default function Program() {
               <div className={styles.tableHeader}>Program list</div>
               {programs.map((program) => {
                 const missions = sortBy(prop('id'), program.missions || []);
-
                 return (
                   <div key={program.id} className={clsx(styles.tableBody, 'accordion-item')}>
                     <h2 className={clsx(styles.tableRow, 'accordion-header')}>

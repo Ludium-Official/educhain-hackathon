@@ -53,7 +53,7 @@ export default function AddProgram() {
     }
 
     try {
-      await fetchData('/programs/add', 'POST', {
+      await fetchData('/programs/create', 'POST', {
         programData: {
           owner: user.walletId,
           type: 'manage',
