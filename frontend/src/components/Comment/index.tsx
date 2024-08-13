@@ -46,7 +46,7 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
   return (
     <div className={styles.commentsWrapper}>
       <div className={clsx(styles.card, styles.comments)}>
-        <div className={styles.title}>코멘트</div>
+        <div className={styles.title}>Comment</div>
         <div className={styles.contentWrapper}>
           {comments?.map((comment) => {
             const now = dayjs();
@@ -57,7 +57,7 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
                 <div className={styles.header}>
                   <Image className={styles.userImg} src={ProfileLogo.src} alt="logo" width={36} height={36} />
                   {comment.name}
-                  <span>{beforeDate}일 전</span>
+                  <span>{beforeDate}days before</span>
                 </div>
                 <div className={styles.commentContent}>{comment.message}</div>
               </div>
@@ -68,12 +68,17 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
       <form className={clsx(styles.card, styles.inputComment)} onSubmit={SubmitComment}>
         <div className={styles.header}>
           <Image className={styles.userImg} src={ProfileLogo.src} alt="logo" width={36} height={36} />
-          코멘트 작성하기
+          Add Comment
         </div>
         {account.address ? (
-          <input type="text" placeholder="코멘트 입력.." value={comment} onChange={(e) => setComment(e.target.value)} />
+          <input
+            type="text"
+            placeholder="push comment.."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
         ) : (
-          <div className={styles.notLogin}>로그인 하세요</div>
+          <div className={styles.notLogin}>Login first</div>
         )}
       </form>
     </div>

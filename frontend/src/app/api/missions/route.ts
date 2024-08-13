@@ -38,6 +38,7 @@ const handler = async (req: Request) => {
         users u 
       ON 
         m.owner = u.walletId
+      WHERE m.is_confirm
       GROUP BY
         m.id, u.name
       ORDER BY m.created_at DESC

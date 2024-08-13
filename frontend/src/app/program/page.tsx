@@ -74,7 +74,11 @@ export default function Program() {
                       data-bs-parent="#accordionFlush"
                     >
                       <div className={clsx(styles.missionsWrapper, 'accordion-body')}>
-                        {isEmpty(missions) && <Link href={`${PATH.PROGRAM}/${program.id}/edit`}>Make Missions</Link>}
+                        {isEmpty(missions) && (
+                          <Link className={styles.makeMissionBtn} href={`${PATH.PROGRAM}/${program.id}/edit`}>
+                            Make Missions
+                          </Link>
+                        )}
                         {!isEmpty(missions) &&
                           missions?.map((mission) => {
                             return (

@@ -1,12 +1,14 @@
 'use client';
 
 import BackLink from '@/components/BackLink';
+import MarkedHtml from '@/components/MarkedHtml';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { SubmissionType } from '@/types/submission';
 import clsx from 'clsx';
+import dayjs from 'dayjs';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import styles from './page.module.scss';
@@ -47,6 +49,8 @@ export default function SubmissionSubmit() {
     route.push(`${PATH.SUBMISSION}/${param.id}`);
   }, [param.id, route, submission, user?.walletId]);
 
+  const formatDate = dayjs(submission?.end_at).format('YYYY.MM.DD');
+
   return (
     <Wrapper>
       {{
@@ -59,12 +63,21 @@ export default function SubmissionSubmit() {
           <div className={styles.container}>
             {submission ? (
               <>
-                <input className={styles.input} placeholder="submit anything" />
+                <div className={styles.card}>
+                  <div className={styles.title}>
+                    {submission.title}
+                    <span>Deadline: {formatDate}</span>
+                  </div>
+                  <div className={styles.content}>
+                    <MarkedHtml markdownString={submission.content} />
+                  </div>
+                </div>
+                <textarea className={styles.input} placeholder="input your answer" />
                 <button
                   className={clsx(styles.submitBtn, submission?.submitStatus ? styles.isSubmit : null)}
                   onClick={submissionSubmit}
                 >
-                  submit
+                  Submit
                 </button>
               </>
             ) : (

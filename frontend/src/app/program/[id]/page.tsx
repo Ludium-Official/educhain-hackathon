@@ -81,9 +81,9 @@ export default function ProgramDetail() {
                   <div className={styles.table}>
                     <div className={styles.tableHeader}>
                       <div className={styles.titleWrapper}>
-                        Program<span>(총상금: {program.prize})</span>
+                        Program<span>(Total prize: {program.prize})</span>
                       </div>
-                      <span className={styles.makeDate}>작성일: {formatDate}</span>
+                      <span className={styles.makeDate}>Date: {formatDate}</span>
                     </div>
                     <div className={styles.tableContent}>
                       <MarkedHtml markdownString={program?.guide} height={500} />
@@ -119,7 +119,7 @@ export default function ProgramDetail() {
                                   )}
                                 </div>
                                 <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
-                                <div className={styles.missionPrize}>(상금: {mission.prize})</div>
+                                <div className={styles.missionPrize}>(Prize: {mission.prize})</div>
                               </div>
                               <button
                                 className={clsx(styles.collapseBtn, 'accordion-button collapsed')}

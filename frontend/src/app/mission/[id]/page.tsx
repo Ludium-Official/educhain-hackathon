@@ -80,11 +80,11 @@ export default function MissionDetail() {
                       )}
                     </div>
                     {mission.title}
-                    <div className={styles.missionPrize}>(상금: {mission.prize})</div>
+                    <div className={styles.missionPrize}>(Prize: {mission.prize})</div>
                   </div>
                   <div className={styles.rightSide}>
-                    <span>마감일: {formatDate}</span>
-                    <div className={styles.owner}>담당자: {mission.owner_name || '-'}</div>
+                    <span>Deadline: {formatDate}</span>
+                    <div className={styles.owner}>Manager: {mission.owner_name || '-'}</div>
                   </div>
                 </div>
                 <div className={styles.contentWrapper}>
@@ -97,7 +97,9 @@ export default function MissionDetail() {
                         return (
                           <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>
-                              <span className={styles.endTime}>마감 {getConvertDeadline(submission.end_at)} 일 전</span>
+                              <span className={styles.endTime}>
+                                {getConvertDeadline(submission.end_at)} days before deadline
+                              </span>
                               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                             </div>
                             {submission.type && (
@@ -121,15 +123,17 @@ export default function MissionDetail() {
                                 <div key={submission.id} className={styles.submissionContent}>
                                   <div className={styles.leftSide}>
                                     <span className={styles.submissionType}>
-                                      {submission.type === 'article' ? '아티클' : '미션'}
+                                      {submission.type === 'article' ? 'Article' : 'Mission'}
                                     </span>
                                     <span className={styles.endTime}>
-                                      마감 {getConvertDeadline(submission.end_at)} 일 전
+                                      {getConvertDeadline(submission.end_at)} days before deadline
                                     </span>
                                     <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                                   </div>
                                   {submission.type && (
-                                    <div className={styles.working}>{submission.submitStatus ? '완료' : '미진행'}</div>
+                                    <div className={styles.working}>
+                                      {submission.submitStatus ? 'Success' : 'Not process'}
+                                    </div>
                                   )}
                                 </div>
                               );

@@ -25,6 +25,8 @@ const handler = async (req: Request) => {
         m.owner = u.walletId
       WHERE
         m.id = ?
+      AND
+        m.is_confirm
       `;
     const [rows] = await connection.query(query, [id]);
 

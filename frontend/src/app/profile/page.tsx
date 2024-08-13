@@ -1,5 +1,6 @@
 'use client';
 
+import ArrowLogo from '@/assets/common/ArrowLogo.svg';
 import PhoneLogo from '@/assets/profile/PhoneLogo.svg';
 import ProfileLogo from '@/assets/profile/ProfileLogo.svg';
 import BackLink from '@/components/BackLink';
@@ -56,12 +57,9 @@ export default function Profile() {
           fetchData('/missions/validators', 'POST', {
             walletId: user?.walletId,
           }),
-          // mission에 지원한 것
-          // mission owner인 경우
           fetchData('/missions/owner', 'POST', {
             walletId: user?.walletId,
           }),
-          // submission 하고 있는 것들
           fetchData('/user_submission_status/missions', 'POST', {
             walletId: user?.walletId,
           }),
@@ -117,7 +115,13 @@ export default function Profile() {
                     </div>
                     <div className={styles.userStatusContainer}>
                       <div className={styles.userStatusWrapper}>
-                        <div className={styles.title}>Owned programs</div>
+                        <div className={styles.title}>
+                          Owned programs
+                          <Link className={styles.link} href={`${PATH.PROFILE}/program`}>
+                            Manage
+                            <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                          </Link>
+                        </div>
                         <div className={styles.rows}>
                           {programs.map((program) => {
                             return (
@@ -153,6 +157,7 @@ export default function Profile() {
                                 <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
                                   {mission.title}
                                 </Link>
+                                <div>{mission.is_confirm ? 'YES' : 'NO'}</div>
                               </div>
                             );
                           })}
