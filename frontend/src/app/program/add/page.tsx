@@ -5,7 +5,11 @@ import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
+import { isEmpty } from 'ramda';
 import { useState } from 'react';
 import styles from './page.module.scss';
 
@@ -19,36 +23,49 @@ interface Mission {
   endAt: string | null;
 }
 
-const initMission = {
-  prize: '',
-  validators: '',
-  owner: '',
-  title: '',
-  guide: '',
-  category: '', // announcement, mission
-  endAt: null,
-};
+// const initMission = {
+//   prize: '',
+//   validators: '',
+//   owner: '',
+//   title: '',
+//   guide: '',
+//   category: '', // announcement, mission
+//   endAt: null,
+// };
 
 export default function AddProgram() {
   const route = useRouter();
   const { user } = useUser();
 
-  const [missions, setMissions] = useState<Mission[]>([initMission]);
+  // const [missions, setMissions] = useState<Mission[]>([initMission]);
 
   const [programPrize, setProgramPrize] = useState('');
   const [programTitle, setProgramTitle] = useState('');
   const [programGuide, setProgramGuide] = useState('');
   const [programEndTime, setProgramEndTime] = useState<string | null>(null);
+  const [programType, setProgramType] = useState('');
 
-  const handleMissionChange = (index: number, field: keyof Mission, value: string) => {
-    const newMissions = missions.map((mission, i) => (i === index ? { ...mission, [field]: value } : mission));
-    setMissions(newMissions);
-  };
+  // const handleMissionChange = (index: number, field: keyof Mission, value: string) => {
+  //   const newMissions = missions.map((mission, i) => (i === index ? { ...mission, [field]: value } : mission));
+  //   setMissions(newMissions);
+  // };
 
   const addProgram = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!user) {
+      alert('Login first!!');
+      return;
+    } else if (isEmpty(programPrize) || isEmpty(programTitle) || isEmpty(programType)) {
+      if (isEmpty(programTitle)) {
+        alert('Fill in title');
+        return;
+      } else if (isEmpty(programType)) {
+        alert('Fill in type');
+        return;
+      }
+
+      alert('Fill in prize');
       return;
     }
 
@@ -56,16 +73,17 @@ export default function AddProgram() {
       await fetchData('/programs/add', 'POST', {
         programData: {
           owner: user.walletId,
-          type: 'manage',
+          type: programType,
           title: programTitle,
           guide: programGuide,
           prize: Number(programPrize),
           end_at: programEndTime,
         },
-        missionData: missions,
+        missionData: [],
       });
 
-      //   route.push(PATH.PROGRAM);
+      alert('Success to make program!');
+      route.push(PATH.PROGRAM);
     } catch (err) {
       console.error(err);
     }
@@ -77,45 +95,57 @@ export default function AddProgram() {
         header: <BackLink path={PATH.PROGRAM} />,
         body: (
           <div className={styles.container}>
-            <div className={styles.title}>프로그램 만들기</div>
+            <div className={styles.title}>Make Program</div>
             <div className={styles.table}>
-              <div>
-                <div>
-                  1. 프로그램만 만들고 나머지는 다른 사람들한테 시키기 - 프로그램 만들고 미션, 서브미션은 안만듦
-                </div>
-                <div>여기까지만 적으면 그냥 프로그램만 만든 것</div>
-                <div>type은 알아서 지정 (manage, study)</div>
-                <div>
-                  상금:{' '}
-                  <input
-                    type="text"
-                    placeholder="프로그램 상금 적어줭"
-                    onChange={(e) => setProgramPrize(e.target.value)}
-                  />
-                </div>
-                <div>
-                  타이틀:{' '}
-                  <input
-                    type="text"
-                    placeholder="프로그램 타이틀 적어줭"
-                    onChange={(e) => setProgramTitle(e.target.value)}
-                  />
-                </div>
-                <div>
-                  설명:{' '}
-                  <textarea placeholder="프로글매 설명 적어줭" onChange={(e) => setProgramGuide(e.target.value)} />
-                </div>
-                <div>
-                  마감 시간:{' '}
-                  <input
-                    type="date"
-                    placeholder="프로그램 마감시간 적어줭"
-                    onChange={(e) => setProgramEndTime(e.target.value || null)}
-                  />
-                </div>
-                <hr />
+              <div className={styles.inputWrapper}>
+                Title
+                <input
+                  className={styles.input}
+                  placeholder="Title of program"
+                  onChange={(e) => setProgramTitle(e.target.value)}
+                />
               </div>
-              {missions.map((mission, index) => {
+              <div className={styles.inputWrapper}>
+                Description
+                <textarea
+                  className={styles.input}
+                  placeholder="Guide of program"
+                  onChange={(e) => setProgramGuide(e.target.value)}
+                />
+              </div>
+              <div className={styles.inputWrapper}>
+                Prize
+                <input
+                  className={styles.input}
+                  placeholder="Prize of program"
+                  onChange={(e) => setProgramPrize(e.target.value)}
+                />
+              </div>
+              <div className={styles.inputWrapper}>
+                Deadline
+                <DatePicker
+                  onChange={(value) => {
+                    const formatValue = dayjs(value).format('YYYY-MM-DD HH:mm:ss');
+                    setProgramEndTime(formatValue);
+                  }}
+                />
+              </div>
+              <div className={styles.inputWrapper}>
+                Program Type
+                <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                  <FormControlLabel
+                    value="manage"
+                    control={<Radio onChange={(e) => setProgramType(e.target.value)} />}
+                    label="Manage"
+                  />
+                  <FormControlLabel
+                    value="study"
+                    control={<Radio onChange={(e) => setProgramType(e.target.value)} />}
+                    label="Study"
+                  />
+                </RadioGroup>
+              </div>
+              {/* {missions.map((mission, index) => {
                 return (
                   <div key={index}>
                     <input
@@ -163,8 +193,10 @@ export default function AddProgram() {
                   </div>
                 );
               })}
-              <button onClick={() => setMissions([...missions, initMission])}>Add Mission</button>
-              <button onClick={addProgram}>add!!!!!</button>
+              <button onClick={() => setMissions([...missions, initMission])}>Add Mission</button> */}
+              <button className={styles.addBtn} onClick={addProgram}>
+                Make Program
+              </button>
             </div>
           </div>
         ),

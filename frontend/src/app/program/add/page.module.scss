@@ -17,16 +17,58 @@
     padding: 20px 40px;
     margin-top: 24px;
 
-    input,
-    textarea {
-      border: 1px solid var(--grey-05);
-      border-radius: 8px;
+    .inputWrapper {
+      display: flex;
+      flex-direction: column;
 
-      color: var(--grey-04);
+      margin-top: 20px;
+
+      color: var(--grey-03);
+      font-size: 16px;
+      font-weight: 500;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      fieldset {
+        border-color: var(--grey-05);
+        border-width: 1px;
+
+        &:hover {
+          border-color: var(--grey-05);
+        }
+      }
+
+      input {
+        color: var(--grey-04);
+      }
+
+      .input {
+        width: 100%;
+        padding: 11px 16px;
+        border: 1px solid var(--grey-05);
+        border-radius: 4px;
+        margin-top: 4px;
+
+        color: var(--grey-04);
+
+        &textarea {
+          resize: none;
+          height: 180px;
+        }
+      }
     }
 
-    button {
-      color: var(--grey-04);
+    .addBtn {
+      width: 100%;
+      background-color: var(--purple-01);
+      padding: 16px 0;
+      border-radius: 40px;
+      margin-top: 24px;
+
+      color: var(--white);
+      font-size: 16px;
     }
   }
 }

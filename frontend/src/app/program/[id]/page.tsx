@@ -1,6 +1,8 @@
 'use client';
 
 import AddLogo from '@/assets/common/AddLogo.svg';
+import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
+import StudyLogo from '@/assets/common/StudyLogo.svg';
 import BackLink from '@/components/BackLink';
 import MarkedHtml from '@/components/MarkedHtml';
 import SubmissionRow from '@/components/Pargram/SubmissionRow';
@@ -62,10 +64,10 @@ export default function ProgramDetail() {
         header: (
           <div className={styles.headerWrapper}>
             <BackLink path={PATH.PROGRAM} />
-            {user && user.walletId === program?.owner && (
+            {user && (
               <Link className={styles.addLink} href={`${PATH.PROGRAM}/${param.id}/edit`}>
                 <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
-                Edit
+                Manage
               </Link>
             )}
           </div>
@@ -98,7 +100,23 @@ export default function ProgramDetail() {
                             <h2 className={clsx(styles.tableRow, 'accordion-header')}>
                               <div className={styles.missionHeader}>
                                 <div className={styles.missionCategory}>
-                                  {mission.category === 'study' ? '학습' : '공고'}
+                                  {mission.category === 'study' ? (
+                                    <Image
+                                      className={styles.categoryLogo}
+                                      src={StudyLogo.src}
+                                      alt="logo"
+                                      width={24}
+                                      height={24}
+                                    />
+                                  ) : (
+                                    <Image
+                                      className={styles.categoryLogo}
+                                      src={AnnouncementLogo.src}
+                                      alt="logo"
+                                      width={24}
+                                      height={24}
+                                    />
+                                  )}
                                 </div>
                                 <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
                                 <div className={styles.missionPrize}>(상금: {mission.prize})</div>
@@ -115,7 +133,7 @@ export default function ProgramDetail() {
                             <div id={`accordion-${mission.id}`} className="accordion-collapse collapse">
                               <div className={clsx(styles.missionsWrapper, 'accordion-body')}>
                                 <div className={styles.missionOwner}>
-                                  담당자: {mission.owner_name || <button className={styles.apply}>지원하기</button>}
+                                  Manager: {mission.owner_name || <button className={styles.apply}>Apply</button>}
                                 </div>
                                 {chapters ? (
                                   chapters?.map((chapter) => {

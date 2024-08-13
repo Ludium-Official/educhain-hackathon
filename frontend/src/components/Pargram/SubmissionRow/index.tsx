@@ -4,6 +4,7 @@ import { PATH } from '@/constant/route';
 import { getConvertDeadline } from '@/functions/deadline-function';
 import { SubmissionType } from '@/types/submission';
 import Link from 'next/link';
+import { isEmpty } from 'ramda';
 import styles from './index.module.scss';
 
 interface SubmissionRowProps {
@@ -11,6 +12,10 @@ interface SubmissionRowProps {
 }
 
 const SubmissionRow: React.FC<SubmissionRowProps> = ({ submissions }) => {
+  if (isEmpty(submissions)) {
+    return null;
+  }
+
   return (
     <div className={styles.container}>
       {submissions?.map((submission) => {

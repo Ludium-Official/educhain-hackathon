@@ -4,6 +4,7 @@ export type DBMission = {
   owner: string | null;
   owner_name: string;
   program_id: number;
+  is_confirm: 0 | 1;
   category: 'announcement' | 'study';
   title: string;
   content: string;

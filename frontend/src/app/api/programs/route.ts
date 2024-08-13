@@ -15,18 +15,20 @@ const handler = async (req: Request) => {
     const defaultQuery = `
       SELECT 
         p.*,
-        COALESCE(
-          JSON_ARRAYAGG(
-            JSON_OBJECT(
-              'id', m.id,
-              'owner', m.owner,
-              'category', m.category,
-              'title', m.title,
-              'created_at', m.created_at
-            )
-          ),
-        JSON_ARRAY()
-      ) AS missions
+        CASE 
+          WHEN COUNT(m.id) = 0 THEN NULL
+          ELSE COALESCE(
+            JSON_ARRAYAGG(
+              JSON_OBJECT(
+                'id', m.id,
+                'owner', m.owner,
+                'category', m.category,
+                'title', m.title,
+                'created_at', m.created_at
+              )
+            ),
+          JSON_ARRAY())
+        END AS missions
       FROM 
         programs p
       LEFT JOIN 
@@ -44,6 +46,7 @@ const handler = async (req: Request) => {
     `;
 
     const query = isDash ? `${queryWithConditions} LIMIT 6` : queryWithConditions;
+    console.log(query);
 
     const [rows] = walletId ? await connection.query(query, [walletId]) : await connection.query(query);
 
