@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 const handler = async (req: Request) => {
   let connection;
 
-  const { isDash, walletId } = await req.json();
+  const { isDash, walletId, isConfirm } = await req.json();
 
   try {
     connection = await pool.getConnection();
@@ -15,22 +15,27 @@ const handler = async (req: Request) => {
     const defaultQuery = `
       SELECT 
         p.*,
-        COALESCE(
-          JSON_ARRAYAGG(
-            JSON_OBJECT(
-              'id', m.id,
-              'owner', m.owner,
-              'category', m.category,
-              'title', m.title,
-              'created_at', m.created_at
-            )
-          ),
-        JSON_ARRAY()
-      ) AS missions
+        CASE 
+          WHEN COUNT(m.id) = 0 THEN NULL
+          ELSE COALESCE(
+            JSON_ARRAYAGG(
+              JSON_OBJECT(
+                'id', m.id,
+                'owner', m.owner,
+                'category', m.category,
+                'title', m.title,
+                'created_at', m.created_at,
+                'is_confirm', m.is_confirm,
+                'prize', m.prize
+              )
+            ),
+          JSON_ARRAY())
+        END AS missions
       FROM 
         programs p
       LEFT JOIN 
         missions m ON p.id = m.program_id
+        ${isConfirm ? '' : 'AND m.is_confirm'}
     `;
 
     const whereClause = walletId ? `WHERE p.owner = ?` : '';

@@ -1,12 +1,47 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  background-color: var(--white);
+  border-radius: 20px;
+  padding: 20px 40px;
+
+  .card {
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 20px;
+
+      font-size: 18px;
+      font-weight: bold;
+
+      span {
+        color: var(--grey-04);
+        font-weight: normal;
+        font-size: 12px;
+      }
+    }
+
+    .content {
+      min-height: 300px;
+      max-height: 600px;
+      overflow: auto;
+    }
+  }
+
   .input {
-    width: 400px;
+    height: 300px;
     padding: 11px 16px;
     border: 1px solid var(--grey-05);
     border-radius: 8px;
     margin-top: 4px;
 
     color: var(--grey-04);
+
+    resize: none;
   }
 
   .submitBtn {

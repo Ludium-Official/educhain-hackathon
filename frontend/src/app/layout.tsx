@@ -4,12 +4,14 @@ import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { opencampus } from '@/constant/educhain-rpc';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import { WagmiProvider } from 'wagmi';
-import { opencampus } from '@/constant/educhain-rpc';
 
 const config = getDefaultConfig({
   appName: 'EDUCHAIN HACKATHON',
@@ -43,7 +45,9 @@ export default function RootLayout({
         <WagmiProvider config={config}>
           <RecoilRoot>
             <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
+              <RainbowKitProvider modalSize="compact">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
+              </RainbowKitProvider>
             </QueryClientProvider>
           </RecoilRoot>
         </WagmiProvider>

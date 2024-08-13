@@ -12,7 +12,7 @@
   .tableWrapper {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 
     .table {
       display: flex;
@@ -22,9 +22,19 @@
       background-color: var(--white);
       border-radius: 20px;
       padding: 20px 40px;
-      margin-top: 24px;
 
-      .missionTable {
+      &:first-child {
+        margin-top: 24px;
+      }
+
+      .tableTitle {
+        margin-bottom: 10px;
+
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .rowsTable {
         padding-bottom: 10px;
         border-bottom: 1px solid var(--grey-05);
 
@@ -35,22 +45,57 @@
 
         .inputWrapper {
           display: flex;
-          align-items: center;
+          flex-direction: column;
+
+          margin-top: 10px;
 
           color: var(--grey-03);
           font-size: 16px;
           font-weight: 500;
 
+          &:first-child {
+            margin-top: 0;
+          }
+
+          fieldset {
+            border-color: var(--grey-05);
+            border-width: 1px;
+
+            &:hover {
+              border-color: var(--grey-05);
+            }
+          }
+
+          input {
+            color: var(--grey-04);
+          }
+
           .input {
-            width: 400px;
+            width: 100%;
             padding: 11px 16px;
             border: 1px solid var(--grey-05);
-            border-radius: 8px;
+            border-radius: 4px;
             margin-top: 4px;
 
             color: var(--grey-04);
+
+            &textarea {
+              resize: none;
+              height: 180px;
+            }
           }
         }
+      }
+
+      .addBtn {
+        width: 100%;
+        background-color: var(--purple-01);
+        padding: 16px 0;
+        border-radius: 40px;
+        margin-top: 24px;
+
+        color: var(--white);
+        font-size: 16px;
       }
     }
   }

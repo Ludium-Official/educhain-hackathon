@@ -1,6 +1,8 @@
 'use client';
 
 import AddLogo from '@/assets/common/AddLogo.svg';
+import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
+import StudyLogo from '@/assets/common/StudyLogo.svg';
 import BackLink from '@/components/BackLink';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
@@ -9,7 +11,7 @@ import { ProgramType } from '@/types/program';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { prop, sortBy } from 'ramda';
+import { isEmpty, prop, sortBy } from 'ramda';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
@@ -72,19 +74,41 @@ export default function Program() {
                       data-bs-parent="#accordionFlush"
                     >
                       <div className={clsx(styles.missionsWrapper, 'accordion-body')}>
-                        {missions?.map((mission) => {
-                          return (
-                            <div key={mission.id} className={styles.missionWrapper}>
-                              <div className={styles.titleWrapper}>
-                                <div className={styles.missionCategory}>
-                                  {mission.category === 'study' ? 'Study' : 'Announcement'}
+                        {isEmpty(missions) && (
+                          <Link className={styles.makeMissionBtn} href={`${PATH.PROGRAM}/${program.id}/edit`}>
+                            Make Missions
+                          </Link>
+                        )}
+                        {!isEmpty(missions) &&
+                          missions?.map((mission) => {
+                            return (
+                              <div key={mission.id} className={styles.missionWrapper}>
+                                <div className={styles.titleWrapper}>
+                                  <div className={styles.missionCategory}>
+                                    {mission.category === 'study' ? (
+                                      <Image
+                                        className={styles.categoryLogo}
+                                        src={StudyLogo.src}
+                                        alt="logo"
+                                        width={24}
+                                        height={24}
+                                      />
+                                    ) : (
+                                      <Image
+                                        className={styles.categoryLogo}
+                                        src={AnnouncementLogo.src}
+                                        alt="logo"
+                                        width={24}
+                                        height={24}
+                                      />
+                                    )}
+                                  </div>
+                                  <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
                                 </div>
-                                <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
+                                <div className={styles.hasOwner}>{mission.owner ? 'Assigned' : 'Not Assigned'}</div>
                               </div>
-                              <div className={styles.hasOwner}>{mission.owner ? '배정됨' : '배정안됨'}</div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
                       </div>
                     </div>
                   </div>

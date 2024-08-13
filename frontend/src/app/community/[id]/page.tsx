@@ -54,7 +54,7 @@ export default function Community() {
             <div className={styles.wrapper}>
               <div className={clsx(styles.card, styles.title)}>
                 {community?.title}
-                <span>작성일: {formatDate}</span>
+                <span>Date: {formatDate}</span>
               </div>
               <div className={clsx(styles.card, styles.content)}>
                 <MarkedHtml markdownString={community?.content} />
