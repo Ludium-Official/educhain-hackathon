@@ -1,0 +1,69 @@
+.container {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .table {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 20px 40px;
+    margin-top: 24px;
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 10px 0;
+      border-bottom: 1px solid var(--grey-05);
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      .leftSide {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        align-items: center;
+
+        .leftTitle {
+          display: flex;
+          flex-direction: column;
+
+          .missionLink {
+            display: flex;
+            align-items: center;
+
+            .prize {
+              background-color: var(--purple-04);
+              margin-right: 10px;
+              padding: 3px 5px;
+              border-radius: 40px;
+
+              color: var(--purple-01);
+              font-size: 12px;
+            }
+          }
+
+          .ownedMission {
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+}

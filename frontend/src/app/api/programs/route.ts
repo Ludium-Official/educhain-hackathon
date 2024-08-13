@@ -40,9 +40,10 @@ const handler = async (req: Request) => {
       ${whereClause}
       GROUP BY 
         p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.prize, p.end_at, p.created_at
+      ORDER BY p.created_at DESC
     `;
 
-    const query = isDash ? `${queryWithConditions} ORDER BY p.created_at LIMIT 6` : queryWithConditions;
+    const query = isDash ? `${queryWithConditions} LIMIT 6` : queryWithConditions;
 
     const [rows] = walletId ? await connection.query(query, [walletId]) : await connection.query(query);
 

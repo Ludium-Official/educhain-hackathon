@@ -26,22 +26,21 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
 
   const SubmitComment = useCallback(
     async (event: any) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        event.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
 
-        await fetchData('/comments/postComment', 'POST', {
-          id: param.id,
-          writer: user?.walletId,
-          message: comment,
-          type,
-        });
+      await fetchData('/comments/postComment', 'POST', {
+        id: param.id,
+        writer: user?.walletId,
+        message: comment,
+        type,
+      });
 
-        commentFuc();
-        setComment('');
-      }
+      commentFuc();
+      setComment('');
     },
-    [param.id, user?.walletId, comment, type, commentFuc],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [param.id, user?.walletId, comment, type],
   );
 
   return (
@@ -66,7 +65,7 @@ const Comment: React.FC<CommentProps> = ({ type, commentFuc, comments }) => {
           })}
         </div>
       </div>
-      <form className={clsx(styles.card, styles.inputComment)} onKeyDown={SubmitComment}>
+      <form className={clsx(styles.card, styles.inputComment)} onSubmit={SubmitComment}>
         <div className={styles.header}>
           <Image className={styles.userImg} src={ProfileLogo.src} alt="logo" width={36} height={36} />
           코멘트 작성하기
