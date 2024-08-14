@@ -69,7 +69,7 @@ export default function Mission() {
                       )}
                       <div className={styles.leftTitle}>
                         <Link className={styles.missionLink} href={`${PATH.MISSION}/${mission.id}`}>
-                          <div className={styles.prize}>{mission.prize} EDU</div>
+                          <div className={styles.prize}>${mission.prize}</div>
                           {mission.title}
                         </Link>
                         <div className={styles.ownedMission}>Owned by {mission.owner_name || '-'}</div>

@@ -80,7 +80,7 @@ export default function MissionDetail() {
                       )}
                     </div>
                     {mission.title}
-                    <div className={styles.missionPrize}>(Prize: {mission.prize})</div>
+                    <div className={styles.missionPrize}>(Prize: ${mission.prize})</div>
                   </div>
                   <div className={styles.rightSide}>
                     <span>Deadline: {formatDate}</span>

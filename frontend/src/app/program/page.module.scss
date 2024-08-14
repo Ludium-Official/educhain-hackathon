@@ -72,20 +72,20 @@
         a {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 15px;
 
           width: inherit;
 
           .badge {
             background-color: var(--info);
-            width: 90px;
-            padding: 5px 0;
+            width: 120px;
+            padding: 10px 2px;
             border-radius: 40px;
 
             text-align: center;
 
             color: var(--white);
-            font-size: 14px;
+            font-size: 15px;
 
             &.studyBadge {
               background-color: var(--green);

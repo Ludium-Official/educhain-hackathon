@@ -39,7 +39,7 @@ export default function Home() {
     };
 
     callData();
-    animateCounter('counter', 0, sumRestAmount, 1000);
+    // animateCounter('counter', 0, sumRestAmount, 1000);
   }, [sumRestAmount, user?.walletId]);
 
   function animateCounter(id: string, start: number, end: number, duration: number): void {
@@ -66,11 +66,11 @@ export default function Home() {
   return (
     <Wrapper>
       {{
-        header: <div>Header</div>,
+        header: <div>Public Edu Bounty Platform</div>,
         body: (
           <div className={styles.container}>
             <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
-              <div className={`carousel-indicators ${styles.carouselButtons}`}>
+              {/* <div className={`carousel-indicators ${styles.carouselButtons}`}>
                 <button
                   type="button"
                   data-bs-target="#carouselExampleIndicators"
@@ -91,8 +91,8 @@ export default function Home() {
                   data-bs-slide-to="2"
                   aria-label="Slide 3"
                 ></button>
-              </div>
-              <div className="carousel-inner">
+              </div> */}
+              {/* <div className="carousel-inner">
                 <div className="carousel-item active">
                   <Image className="d-block w-100" src={Banner.src} alt="logo" width={1033} height={256} />
                 </div>
@@ -102,17 +102,35 @@ export default function Home() {
                 <div className="carousel-item">
                   <Image className="d-block w-100" src={Banner.src} alt="logo" width={1033} height={256} />
                 </div>
-              </div>
+              </div> */}
             </div>
-            <div className={styles.missMissionContainer}>
-              <div className={styles.missedContainer}>
-                <Link className={styles.missionLink} href={PATH.MISSION}>
-                  <div>Missed Mission</div>
-                  <div className={styles.missedAmount}>
-                    <div id="counter">0</div>EDU
-                  </div>
-                  <div>Is Waiting For You</div>
-                </Link>
+            <div className={styles.cardList}>
+              <div className={styles.missMissionContainer}>
+                <div className={styles.missedContainer}>
+                  <Link className={styles.missionLink} href={PATH.MISSION}>
+                    <div className={styles.missedAmount}>
+                      <div id="counter">1800+</div>Builder
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              <div className={styles.missMissionContainer}>
+                <div className={styles.missedContainer}>
+                  <Link className={styles.missionLink} href={PATH.MISSION}>
+                    <div className={styles.missedAmount}>
+                      <div id="counter">400K+</div>Bounty
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              <div className={styles.missMissionContainer}>
+                <div className={styles.missedContainer}>
+                  <Link className={styles.missionLink} href={PATH.MISSION}>
+                    <div className={styles.missedAmount}>
+                      <div id="counter">50+</div>Program
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
             <div className={styles.tableList}>
@@ -145,7 +163,18 @@ export default function Home() {
                     <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                   </Link>
                 </div>
-                <div className={styles.tableBody}>list</div>
+                {notOwnerMissions.map((program) => (
+                  <div key={program.id} className={styles.tableBody}>
+                    <Link href={`${PATH.PROGRAM}/${program.id}`}>
+                      <div className={styles.endTime}>
+                        {program.end_at
+                          ? `${getConvertDeadline(program.end_at)} days before deadline`
+                          : 'Deadline not set'}
+                      </div>
+                      <div className={styles.title}>{program.title}</div>
+                    </Link>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

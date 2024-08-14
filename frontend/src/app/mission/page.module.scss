@@ -22,7 +22,7 @@
       align-items: center;
       justify-content: space-between;
 
-      padding: 10px 0;
+      padding: 25px 0;
       border-bottom: 1px solid var(--grey-05);
 
       &:first-child {
@@ -41,6 +41,7 @@
 
         .leftTitle {
           display: flex;
+          font-size: 20px;
           flex-direction: column;
 
           .missionLink {
@@ -50,16 +51,18 @@
             .prize {
               background-color: var(--purple-04);
               margin-right: 10px;
-              padding: 3px 5px;
+              padding: 10px 20px;
               border-radius: 40px;
 
               color: var(--purple-01);
-              font-size: 12px;
+              font-style: bold;
+              font-size: 18px;
             }
           }
 
           .ownedMission {
             display: flex;
+            font-size: 14px;
             align-items: center;
           }
         }

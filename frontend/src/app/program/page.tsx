@@ -46,7 +46,6 @@ export default function Program() {
           <div className={styles.container}>
             <div className={styles.title}>Program</div>
             <div className={clsx(styles.table, 'accordion accordion-flush')} id="accordionFlush">
-              <div className={styles.tableHeader}>Program list</div>
               {programs.map((program) => {
                 const missions = sortBy(prop('id'), program.missions || []);
 
@@ -57,6 +56,7 @@ export default function Program() {
                         <div className={clsx(styles.badge, program.type === 'study' ? styles.studyBadge : null)}>
                           {program.type}
                         </div>
+                        <div className={clsx(styles.badge, styles.studyBadge)}>${program.prize} Bounty</div>
                         <div className={styles.announceTitle}>{program.title}</div>
                       </Link>
                       <button

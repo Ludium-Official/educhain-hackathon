@@ -101,13 +101,14 @@ export default function Profile() {
                             Hello,<span>{user?.name}</span> 👋
                           </div>
                         </div>
+                        {user?.number && (
                         <div className={styles.infoWrapper}>
                           <div className={styles.intro}>{user?.introduce}</div>
                           <div className={styles.number}>
                             <Image className={styles.phoneImg} src={PhoneLogo.src} alt="logo" width={24} height={24} />
                             {user?.number}
                           </div>
-                        </div>
+                        </div>)}
                       </div>
                       <Link className={styles.editBtn} href={`${PATH.PROFILE}/edit`}>
                         Edit Profile

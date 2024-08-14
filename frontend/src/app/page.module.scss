@@ -19,9 +19,8 @@
 
     background: radial-gradient(circle at 30% 50%, rgba(106, 103, 255, 0.5), transparent 60%),
       radial-gradient(circle at 70% 50%, rgba(242, 113, 227, 0.5), transparent 60%);
-    margin-top: 40px;
     border-radius: 20px;
-    padding: 20px 40px;
+    padding: 50px 40px;
 
     color: var(--purple-05);
 
@@ -44,6 +43,14 @@
         }
       }
     }
+  }
+
+  .cardList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+
+    margin-top: 20px;
   }
 
   .tableList {
