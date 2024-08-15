@@ -1,52 +1,17 @@
-'use client';
-
 import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { RecoilRoot } from 'recoil';
-import { WagmiProvider } from 'wagmi';
-import { opencampus } from '@/constant/educhain-rpc';
-
-const config = getDefaultConfig({
-  appName: 'EDUCHAIN HACKATHON',
-  /// Wallet Connect 쓰려면 필요한데, 일단 내가 하나 팠음.
-  /// https://cloud.walletconnect.com/
-  projectId: 'c6e5adf89ebc72153b3f7f277aa41db9',
-  chains: [opencampus],
-  ssr: true,
-});
+import { Provider } from './provider';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
-
-  useEffect(() => {
-    import('bootstrap/dist/js/bootstrap.bundle.min')
-      .then((module) => {
-        console.log('Bootstrap JavaScript loaded');
-      })
-      .catch((error) => {
-        console.error('Failed to load Bootstrap JavaScript', error);
-      });
-  }, []);
-
   return (
     <html lang="en">
       <body>
-        <WagmiProvider config={config}>
-          <RecoilRoot>
-            <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
-            </QueryClientProvider>
-          </RecoilRoot>
-        </WagmiProvider>
+        <Provider>{children}</Provider>
       </body>
     </html>
   );

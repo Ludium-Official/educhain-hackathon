@@ -1,13 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import BackLink from '@/components/BackLink';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import styles from './page.module.scss';
+import Image from 'next/image';
+import { Progress, Input, Button } from '@nextui-org/react';
+import * as CreationSteps from './creationSteps';
 
 interface Mission {
   prize: string;
@@ -29,25 +31,43 @@ const initMission = {
   endAt: null,
 };
 
+const contentRenderBySteps = (slideNumber: number): React.ReactNode => {
+  switch (slideNumber) {
+    case 0:
+      return <CreationSteps.Guide />;
+    case 1:
+      return <CreationSteps.ProgramInfo />;
+    case 2:
+      return <CreationSteps.SetManagers />;
+    case 3:
+      return <CreationSteps.SetBounty />;
+    case 4:
+      return <CreationSteps.AddMissions />;
+    case 5:
+      return <CreationSteps.Confirm />;
+  }
+};
+
 export default function AddProgram() {
   const route = useRouter();
   const { user } = useUser();
 
-  const [missions, setMissions] = useState<Mission[]>([initMission]);
-
-  const [programPrize, setProgramPrize] = useState('');
   const [programTitle, setProgramTitle] = useState('');
-  const [programGuide, setProgramGuide] = useState('');
+  const [programDescription, setProgramDescription] = useState('');
+  const [programPrize, setProgramPrize] = useState('');
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [programStartTime, setProgramStartTime] = useState<string | null>(null);
   const [programEndTime, setProgramEndTime] = useState<string | null>(null);
+
+  const [creationStep, setCreationStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+  const [slideNumber, setSlideNumber] = useState<number>(0);
 
   const handleMissionChange = (index: number, field: keyof Mission, value: string) => {
     const newMissions = missions.map((mission, i) => (i === index ? { ...mission, [field]: value } : mission));
     setMissions(newMissions);
   };
 
-  const addProgram = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const create = async () => {
     if (!user) {
       return;
     }
@@ -58,7 +78,7 @@ export default function AddProgram() {
           owner: user.walletId,
           type: 'manage',
           title: programTitle,
-          guide: programGuide,
+          guide: programDescription,
           prize: Number(programPrize),
           end_at: programEndTime,
         },
@@ -71,100 +91,68 @@ export default function AddProgram() {
     }
   };
 
+  const nextStep = () => {
+    if (slideNumber === 0) {
+      setCreationStep(1);
+    }
+    if (slideNumber === 5) {
+      create();
+    } else {
+      setSlideNumber(slideNumber + 1);
+    }
+  };
+
   return (
     <Wrapper>
       {{
         header: <BackLink path={PATH.PROGRAM} />,
         body: (
-          <div className={styles.container}>
-            <div className={styles.title}>프로그램 만들기</div>
-            <div className={styles.table}>
-              <div>
-                <div>
-                  1. 프로그램만 만들고 나머지는 다른 사람들한테 시키기 - 프로그램 만들고 미션, 서브미션은 안만듦
-                </div>
-                <div>여기까지만 적으면 그냥 프로그램만 만든 것</div>
-                <div>type은 알아서 지정 (manage, study)</div>
-                <div>
-                  상금:{' '}
-                  <input
-                    type="text"
-                    placeholder="프로그램 상금 적어줭"
-                    onChange={(e) => setProgramPrize(e.target.value)}
-                  />
-                </div>
-                <div>
-                  타이틀:{' '}
-                  <input
-                    type="text"
-                    placeholder="프로그램 타이틀 적어줭"
-                    onChange={(e) => setProgramTitle(e.target.value)}
-                  />
-                </div>
-                <div>
-                  설명:{' '}
-                  <textarea placeholder="프로글매 설명 적어줭" onChange={(e) => setProgramGuide(e.target.value)} />
-                </div>
-                <div>
-                  마감 시간:{' '}
-                  <input
-                    type="date"
-                    placeholder="프로그램 마감시간 적어줭"
-                    onChange={(e) => setProgramEndTime(e.target.value || null)}
-                  />
-                </div>
-                <hr />
+          <div className={`wrapperBody w-full`}>
+            <div className=" mb-2 px-2 flex justify-between items-center">
+              <span className="text-xl text-neutral-600 font-semibold">Create Program</span>
+              <div className="flex items-center justify-end gap-2">
+                <span className="text-sm text-neutral-500">{creationStep + 1} / 6</span>
+                <Progress
+                  size="sm"
+                  aria-label="program-creation-process"
+                  value={((creationStep + 1) / 6) * 100}
+                  classNames={{
+                    base: 'w-48',
+                    indicator: 'bg-ludium',
+                    labelWrapper: 'text-neutral-400',
+                  }}
+                />
               </div>
-              {missions.map((mission, index) => {
-                return (
-                  <div key={index}>
-                    <input
-                      type="text"
-                      placeholder="Prize"
-                      value={mission.prize}
-                      onChange={(e) => handleMissionChange(index, 'prize', e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Validators"
-                      value={mission.validators}
-                      onChange={(e) => handleMissionChange(index, 'validators', e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Owner"
-                      value={mission.owner}
-                      onChange={(e) => handleMissionChange(index, 'owner', e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Title"
-                      value={mission.title}
-                      onChange={(e) => handleMissionChange(index, 'title', e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Guide"
-                      value={mission.guide}
-                      onChange={(e) => handleMissionChange(index, 'guide', e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Category"
-                      value={mission.category}
-                      onChange={(e) => handleMissionChange(index, 'category', e.target.value)}
-                    />
-                    <input
-                      type="datetime-local"
-                      placeholder="End Time"
-                      value={mission.endAt || ''}
-                      onChange={(e) => handleMissionChange(index, 'endAt', e.target.value)}
-                    />
-                  </div>
-                );
-              })}
-              <button onClick={() => setMissions([...missions, initMission])}>Add Mission</button>
-              <button onClick={addProgram}>add!!!!!</button>
+            </div>
+            <div className="bg-white border-solid border-gray-500 border h-[650px] rounded-2xl w-full flex flex-col justify-between p-8">
+              {contentRenderBySteps(slideNumber)}
+              <div className="buttonWrapper flex justify-between items-center">
+                <Button
+                  radius="lg"
+                  size="lg"
+                  variant="light"
+                  className={`${
+                    slideNumber === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+                  } text-lg text-neutral-500 data-[hover=true]:!bg-neutral-200`}
+                  onClick={() => {
+                    setSlideNumber(slideNumber - 1);
+                  }}
+                >
+                  Back
+                </Button>
+                <Button
+                  radius="lg"
+                  size="lg"
+                  variant={`${slideNumber === 5 ? 'solid' : 'light'}`}
+                  className={`${
+                    slideNumber === 5 ? 'bg-ludium text-white' : 'text-ludium data-[hover=true]:!bg-ludiumContainer'
+                  } text-lg`}
+                  onClick={nextStep}
+                  isDisabled={slideNumber === 5 && creationStep < 5}
+                >
+                  {slideNumber === 5 ? 'Create' : slideNumber === 4 && missions.length === 0 ? 'Skip' : 'Next'}
+                </Button>
+              </div>
             </div>
           </div>
         ),
