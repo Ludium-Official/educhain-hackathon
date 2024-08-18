@@ -55,8 +55,6 @@ export const ProgramInfo = () => {
               onChange={(e) => {
                 const start = e.start;
                 const end = e.end;
-                // const startDateTime = new CalendarDateTime(start.year, start.month, start.day, 0, 0, 0, 0);
-                // const endDateTime = new CalendarDateTime(end.year, end.month, end.day, 23, 59, 59, 59);
                 setPeriod(start, end);
               }}
               classNames={{

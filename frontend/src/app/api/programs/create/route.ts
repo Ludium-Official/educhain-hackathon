@@ -44,7 +44,7 @@ const handler = async (req: Request) => {
 
     await connection.commit();
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, programId: programResult.insertId });
   } catch (error) {
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {

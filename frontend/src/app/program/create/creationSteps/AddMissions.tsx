@@ -31,6 +31,7 @@ import { useProgramCreation } from '@/hooks/store/useProgramCreation';
 import { useAccount } from 'wagmi';
 import toast from 'react-hot-toast';
 import Trash from '@/assets/common/Trash.svg';
+import { add, subtract } from '@/functions/math';
 
 export const AddMissions = () => {
   const { user } = useUser();
@@ -54,8 +55,8 @@ export const AddMissions = () => {
     }
     addMission({
       prize,
-      validators: address,
-      owner: address,
+      validators: address.trim(),
+      owner: address.trim(),
       title: missionName,
       content: description,
       category: 'default',
@@ -73,7 +74,7 @@ export const AddMissions = () => {
     if (programInfo.missions.length > 0) {
       let sum = 0;
       programInfo.missions.map((mission) => {
-        sum += mission.prize;
+        sum = add(sum, mission.prize);
       });
       setMissionPrizeSum(sum);
     }
@@ -128,10 +129,13 @@ export const AddMissions = () => {
             <div className="flex gap-2 w-[130px] px-2">
               <Image src={OpencampusLogo} alt="educoin-logo" width={20} height={20} className="shrink-0" />
               <div className="flex flex-auto justify-end items-center gap-2 text-lg">
-                <span className="text-neutral-700">{programInfo.prize - missionPrizeSum}</span>
+                <span className="text-neutral-700">{subtract(programInfo.prize, missionPrizeSum)}</span>
                 <span className="text-neutral-400">EDU</span>
               </div>
             </div>
+          </div>
+          <div className="flex justify-center items-center text-sm text-neutral-400">
+            You can add missions whenever you want
           </div>
         </>
       </ContentContainer>
@@ -198,7 +202,7 @@ export const AddMissions = () => {
                         <div className="flex gap-2 w-[150px]">
                           <span className="text-neutral-400 text-base">EDU</span>
                           <span className="text-neutral-400 text-base whitespace-nowrap">
-                            / {programInfo.prize - missionPrizeSum} EDU
+                            / {subtract(programInfo.prize, missionPrizeSum)} EDU
                           </span>
                         </div>
                       }

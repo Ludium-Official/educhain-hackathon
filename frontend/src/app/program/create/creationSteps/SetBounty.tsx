@@ -12,13 +12,14 @@ import { useUser } from '@/hooks/store/user';
 import { formatEther, keccak256 } from 'viem';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { toCalendarDate } from '@internationalized/date';
+import { subtract } from '@/functions/math';
 
 export const SetBounty = () => {
   const account = useAccount();
   const { user } = useUser();
   const balance = useBalance({ address: account.address });
   const { programInfo, setPrize } = useProgramCreation();
-  const afterBalance = Number(formatEther(balance.data?.value || BigInt('0'))) - programInfo.prize;
+  const afterBalance = subtract(Number(formatEther(balance.data?.value || BigInt('0'))), programInfo.prize);
   return (
     <ContentContainer contentHeader="Allocate Reserve">
       <div className="w-full flex gap-2 flex-col items-center justify-center">
