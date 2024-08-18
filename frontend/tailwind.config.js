@@ -13,11 +13,16 @@ module.exports = {
       keyframes: {
         fade: {
           '0%': { opacity: 0 },
-          '100%': { opacity: 100 },
+          '100%': { opacity: 1 },
+        },
+        blinkOpacity: {
+          '0%': { opacity: 0.5 },
+          '100%': { opacity: 1 },
         },
       },
       animation: {
-        fadeIn: 'fade 1.5s forwards ease',
+        fadeIn: 'fade 0.5s forwards ease',
+        balanceChange: 'blinkOpacity 0.75s forwards ease',
       },
     },
   },

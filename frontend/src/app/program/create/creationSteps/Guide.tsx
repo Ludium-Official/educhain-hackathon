@@ -36,13 +36,21 @@ export const Guide = () => {
             <span className="rounded-full bg-neutral-200 text-neutral-500 font-semibold w-8 h-8 justify-center items-center flex">
               3
             </span>
-            <span className="text-xl text-neutral-700">Allocate bounty</span>
+            <div className="flex gap-2 text-xl text-neutral-700">
+              <span>Allocate Reserve</span>
+              <div className="flex gap-1">
+                <Image src={OpencampusLogo} alt="educoin-logo" width={20} height={20} />
+                <span className="text-neutral-500">EDU</span>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-center items-start my-2 ml-4 pl-10 pb-3 border-l-1.5 border-l-neutral-200 border-solid">
+          <div className="flex flex-col justify-center items-start my-2 ml-4 pl-10 pb-3 border-l-1.5 border-l-neutral-200 border-solid">
             <div className="text-neutral-400 flex items-center justify-start gap-1">
-              <span>On </span>
-              <Image src={OpencampusLogo} alt="educoin-logo" width={14} height={14} />
-              <span>OpenCampus EDU coin</span>
+              <span>
+                Owner/Managers can create new missions or add prize to existing missions,
+                <br />
+                using the balance in the program reserve.
+              </span>
             </div>
           </div>
         </div>

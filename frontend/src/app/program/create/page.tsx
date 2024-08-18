@@ -10,13 +10,15 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Progress, Input, Button } from '@nextui-org/react';
 import * as CreationSteps from './creationSteps';
+import { useProgramCreation } from '@/hooks/store/useProgramCreation';
+import { getLocalTimeZone, now } from '@internationalized/date';
 
 interface Mission {
   prize: string;
   validators: string;
   owner: string;
   title: string;
-  guide: string;
+  content: string;
   category: string;
   endAt: string | null;
 }
@@ -50,54 +52,51 @@ const contentRenderBySteps = (slideNumber: number): React.ReactNode => {
 
 export default function AddProgram() {
   const route = useRouter();
-  const { user } = useUser();
+  // const { user } = useUser();
 
-  const [programTitle, setProgramTitle] = useState('');
-  const [programDescription, setProgramDescription] = useState('');
-  const [programPrize, setProgramPrize] = useState('');
-  const [missions, setMissions] = useState<Mission[]>([]);
-  const [programStartTime, setProgramStartTime] = useState<string | null>(null);
-  const [programEndTime, setProgramEndTime] = useState<string | null>(null);
+  const { programInfo } = useProgramCreation();
 
   const [creationStep, setCreationStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
   const [slideNumber, setSlideNumber] = useState<number>(0);
 
-  const handleMissionChange = (index: number, field: keyof Mission, value: string) => {
-    const newMissions = missions.map((mission, i) => (i === index ? { ...mission, [field]: value } : mission));
-    setMissions(newMissions);
-  };
-
-  const create = async () => {
-    if (!user) {
-      return;
-    }
-
-    try {
-      await fetchData('/programs/create', 'POST', {
-        programData: {
-          owner: user.walletId,
-          type: 'manage',
-          title: programTitle,
-          guide: programDescription,
-          prize: Number(programPrize),
-          end_at: programEndTime,
-        },
-        missionData: missions,
-      });
-
-      //   route.push(PATH.PROGRAM);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const handleMissionChange = (index: number, field: keyof Mission, value: string) => {
+  //   const newMissions = missions.map((mission, i) => (i === index ? { ...mission, [field]: value } : mission));
+  //   setMissions(newMissions);
+  // };
 
   const nextStep = () => {
-    if (slideNumber === 0) {
-      setCreationStep(1);
+    switch (slideNumber) {
+      case 0:
+        setCreationStep(1);
+        break;
+      case 1:
+        if (programInfo.title && programInfo.end_at.compare(now(getLocalTimeZone())) > 0) {
+          setCreationStep(2);
+        }
+        break;
+      case 2:
+        if (creationStep === 2) {
+          setCreationStep(3);
+        }
+        break;
+      case 3:
+        if (creationStep === 3 && programInfo.prize > 0) {
+          setCreationStep(4);
+        }
+        break;
+      case 4:
+        let totalMissionPrizes = 0;
+        programInfo.missions.map((mission) => {
+          totalMissionPrizes += mission.prize;
+        });
+        if (creationStep === 4 && programInfo.prize >= totalMissionPrizes) {
+          setCreationStep(5);
+        }
+        break;
+      case 5:
+        break;
     }
-    if (slideNumber === 5) {
-      create();
-    } else {
+    if (slideNumber < 5) {
       setSlideNumber(slideNumber + 1);
     }
   };
@@ -150,7 +149,11 @@ export default function AddProgram() {
                   onClick={nextStep}
                   isDisabled={slideNumber === 5 && creationStep < 5}
                 >
-                  {slideNumber === 5 ? 'Create' : slideNumber === 4 && missions.length === 0 ? 'Skip' : 'Next'}
+                  {slideNumber === 5
+                    ? 'Create'
+                    : slideNumber === 4 && programInfo.missions.length === 0
+                    ? 'Skip'
+                    : 'Next'}
                 </Button>
               </div>
             </div>

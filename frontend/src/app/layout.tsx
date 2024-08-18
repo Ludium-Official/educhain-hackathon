@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import('bootstrap/dist/js/bootstrap.bundle.min');
 import { Provider } from './provider';
 
 export default function RootLayout({
