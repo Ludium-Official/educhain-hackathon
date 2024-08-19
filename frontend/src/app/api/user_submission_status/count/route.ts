@@ -1,7 +1,7 @@
 import { withAuth } from '@/middlewares/authMiddleware';
 
 import pool from '@/app/api/db';
-import { UserSubmissionStatusMissionsType } from '@/types/user_submission_status_missions';
+import { UserCountType } from '@/types/user_count';
 import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
@@ -14,23 +14,21 @@ const handler = async (req: Request) => {
 
     const query = `
       SELECT
-        m.id, m.title, m.missionCnt, m.prize, m.end_at, COUNT(uss.id) submissionCount
+        COUNT(DISTINCT uss.wallet_id) AS user_count
       FROM
         user_submission_status uss
       JOIN
-        missions m
+        programs p
       ON
-        uss.mission_id = m.id
+        uss.program_id = p.id
       WHERE
-        uss.wallet_id = ?
-      GROUP BY
-        m.id, m.title, m.missionCnt;
+        p.owner= ?;
     `;
     const [rows] = await connection.query(query, [walletId]);
 
-    const request = rows as UserSubmissionStatusMissionsType[];
+    const request = rows as UserCountType[];
 
-    return NextResponse.json(request);
+    return NextResponse.json(request[0]);
   } catch (error) {
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {

@@ -128,9 +128,7 @@ export default function Home() {
                   <div key={program.id} className={styles.tableBody}>
                     <Link href={`${PATH.PROGRAM}/${program.id}`}>
                       <div className={styles.endTime}>
-                        {program.end_at
-                          ? `${getConvertDeadline(program.end_at)} days before deadline`
-                          : 'Deadline not set'}
+                        {program.end_at ? `D-${getConvertDeadline(program.end_at)}` : 'Deadline not set'}
                       </div>
                       <div className={styles.title}>{program.title}</div>
                     </Link>

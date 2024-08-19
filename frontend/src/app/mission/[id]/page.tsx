@@ -97,9 +97,7 @@ export default function MissionDetail() {
                         return (
                           <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>
-                              <span className={styles.endTime}>
-                                {getConvertDeadline(submission.end_at)} days before deadline
-                              </span>
+                              <span className={styles.endTime}>D-{getConvertDeadline(submission.end_at)}</span>
                               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                             </div>
                             {submission.type && (
@@ -125,9 +123,7 @@ export default function MissionDetail() {
                                     <span className={styles.submissionType}>
                                       {submission.type === 'article' ? 'Article' : 'Mission'}
                                     </span>
-                                    <span className={styles.endTime}>
-                                      {getConvertDeadline(submission.end_at)} days before deadline
-                                    </span>
+                                    <span className={styles.endTime}>D-{getConvertDeadline(submission.end_at)}</span>
                                     <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                                   </div>
                                   {submission.type && (
