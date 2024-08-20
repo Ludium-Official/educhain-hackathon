@@ -89,16 +89,34 @@
       border-radius: 20px;
 
       .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
         font-size: 18px;
         font-weight: bold;
+
+        .link {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          color: var(--grey-04);
+          font-size: 16px;
+          font-weight: normal;
+        }
       }
 
       .rows {
         margin-top: 10px;
 
         .row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
           padding: 10px 0;
-          border-bottom: 1px solid var(--grey-06);
+          border-bottom: 1px solid var(--grey-05);
 
           &:last-child {
             border-bottom: 0;

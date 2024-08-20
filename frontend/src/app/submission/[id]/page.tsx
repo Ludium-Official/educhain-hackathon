@@ -46,20 +46,21 @@ export default function SubmissionDetail() {
   }, [param.id, user]);
 
   const formatDate = dayjs(submission?.end_at).format('YYYY.MM.DD');
+
   const buttonTitle = useMemo(() => {
     if (submission?.submitStatus) {
-      return '완료';
+      return 'Success';
     }
 
     if (submission?.type) {
       if (submission.type === 'article') {
-        return '아티클 완료하기';
+        return 'Complete the article';
       }
 
-      return '제출하기';
+      return 'Submit';
     }
 
-    return '지원하기';
+    return 'Apply';
   }, [submission]);
 
   const submissionSubmit = useCallback(async () => {
@@ -97,7 +98,7 @@ export default function SubmissionDetail() {
                   <div>
                     <div className={clsx(styles.card, styles.title)}>
                       {submission.title}
-                      <span>마감일: {formatDate}</span>
+                      <span>Deadline: {formatDate}</span>
                     </div>
                     <div className={clsx(styles.card, styles.content)}>
                       <MarkedHtml markdownString={submission.content} />

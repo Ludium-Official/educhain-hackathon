@@ -1,5 +1,7 @@
 'use client';
 
+import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
+import StudyLogo from '@/assets/common/StudyLogo.svg';
 import BackLink from '@/components/BackLink';
 import MarkedHtml from '@/components/MarkedHtml';
 import Wrapper from '@/components/Wrapper';
@@ -10,6 +12,7 @@ import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { ParsingMissionType } from '@/types/parsingMission';
 import dayjs from 'dayjs';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -63,13 +66,25 @@ export default function MissionDetail() {
               <>
                 <div className={styles.titleWrapper}>
                   <div className={styles.missionHeader}>
-                    <div className={styles.missionCategory}>{mission.category === 'study' ? '학습' : '공고'}</div>
+                    <div className={styles.missionCategory}>
+                      {mission.category === 'study' ? (
+                        <Image className={styles.categoryLogo} src={StudyLogo.src} alt="logo" width={24} height={24} />
+                      ) : (
+                        <Image
+                          className={styles.categoryLogo}
+                          src={AnnouncementLogo.src}
+                          alt="logo"
+                          width={24}
+                          height={24}
+                        />
+                      )}
+                    </div>
                     {mission.title}
-                    <div className={styles.missionPrize}>(상금: {mission.prize})</div>
+                    <div className={styles.missionPrize}>(Prize: {mission.prize})</div>
                   </div>
                   <div className={styles.rightSide}>
-                    <span>마감일: {formatDate}</span>
-                    <div className={styles.owner}>담당자: {mission.owner_name || '-'}</div>
+                    <span>Deadline: {formatDate}</span>
+                    <div className={styles.owner}>Manager: {mission.owner_name || '-'}</div>
                   </div>
                 </div>
                 <div className={styles.contentWrapper}>
@@ -82,7 +97,9 @@ export default function MissionDetail() {
                         return (
                           <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>
-                              <span className={styles.endTime}>마감 {getConvertDeadline(submission.end_at)} 일 전</span>
+                              <span className={styles.endTime}>
+                                {getConvertDeadline(submission.end_at)} days before deadline
+                              </span>
                               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                             </div>
                             {submission.type && (
@@ -106,15 +123,17 @@ export default function MissionDetail() {
                                 <div key={submission.id} className={styles.submissionContent}>
                                   <div className={styles.leftSide}>
                                     <span className={styles.submissionType}>
-                                      {submission.type === 'article' ? '아티클' : '미션'}
+                                      {submission.type === 'article' ? 'Article' : 'Mission'}
                                     </span>
                                     <span className={styles.endTime}>
-                                      마감 {getConvertDeadline(submission.end_at)} 일 전
+                                      {getConvertDeadline(submission.end_at)} days before deadline
                                     </span>
                                     <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                                   </div>
                                   {submission.type && (
-                                    <div className={styles.working}>{submission.submitStatus ? '완료' : '미진행'}</div>
+                                    <div className={styles.working}>
+                                      {submission.submitStatus ? 'Success' : 'Not process'}
+                                    </div>
                                   )}
                                 </div>
                               );

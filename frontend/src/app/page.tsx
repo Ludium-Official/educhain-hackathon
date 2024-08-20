@@ -118,9 +118,9 @@ export default function Home() {
             <div className={styles.tableList}>
               <div className={styles.table}>
                 <div className={styles.tableHeader}>
-                  공고 목록
+                  Announcement List
                   <Link className={styles.link} href={PATH.PROGRAM}>
-                    모두 보기
+                    See all
                     <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                   </Link>
                 </div>
@@ -139,9 +139,9 @@ export default function Home() {
               </div>
               <div className={styles.table}>
                 <div className={styles.tableHeader}>
-                  학습 목록
-                  <Link className={styles.link} href={PATH.HOME}>
-                    모두 보기
+                  Mission List
+                  <Link className={styles.link} href={PATH.MISSION}>
+                    See all
                     <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                   </Link>
                 </div>

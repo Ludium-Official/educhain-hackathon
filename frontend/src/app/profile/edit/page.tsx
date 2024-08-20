@@ -55,25 +55,25 @@ export default function EditProfile() {
         ),
         body: (
           <div className={styles.container}>
-            <div className={styles.title}>프로필 수정</div>
+            <div className={styles.title}>Edit Profile</div>
             <form className={styles.editWrapper} onSubmit={editAccount}>
               <div className={styles.inputWrapper}>
-                닉네임
+                Nickname
                 <input className={styles.input} value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div className={styles.inputWrapper}>
-                연락처
+                Phone
                 <input className={styles.input} value={number} onChange={(e) => setNumber(e.target.value)} />
               </div>
               <div className={styles.inputWrapper}>
-                한 줄 소개
+                Brief Introduce
                 <textarea
                   className={clsx(styles.input, styles.textarea)}
                   value={introduce}
                   onChange={(e) => setIntroduce(e.target.value)}
                 />
               </div>
-              <button className={styles.profileEditBtn}>프로필 적용</button>
+              <button className={styles.profileEditBtn}>Adapt profile</button>
             </form>
           </div>
         ),

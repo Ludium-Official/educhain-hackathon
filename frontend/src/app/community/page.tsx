@@ -37,14 +37,14 @@ export default function Community() {
             {user?.auth === 0 && (
               <Link className={styles.addLink} href={`${PATH.COMMUNITY}/add`}>
                 <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
-                추가하기
+                Add
               </Link>
             )}
           </div>
         ),
         body: (
           <div className={styles.container}>
-            <div className={styles.title}>커뮤니티</div>
+            <div className={styles.title}>Community</div>
             <div className={styles.table}>
               {communities.map((community) => {
                 const now = dayjs();
@@ -59,8 +59,8 @@ export default function Community() {
                       {community.title}
                     </div>
                     <div className={styles.rightSide}>
-                      <div>작성일: {formatDate}</div>
-                      <div>작성자: {community.owner_name}</div>
+                      <div>Date: {formatDate}</div>
+                      <div>Writer: {community.owner_name}</div>
                     </div>
                   </Link>
                 );
