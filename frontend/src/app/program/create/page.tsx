@@ -45,7 +45,17 @@ const contentRenderBySteps = (slideNumber: number): React.ReactNode => {
 
 export default function AddProgram() {
   const route = useRouter();
-  const { programInfo, txConfirm, txSend, sendLoading, confirmLoading, txHash, createProgram } = useProgramCreation();
+  const {
+    programInfo,
+    txSend,
+    txConfirm,
+    isProgramAddedInDb,
+    sendLoading,
+    confirmLoading,
+    txHash,
+    createProgram,
+    reset,
+  } = useProgramCreation();
   const [creationStep, setCreationStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
   const [slideNumber, setSlideNumber] = useState<number>(0);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -154,6 +164,8 @@ export default function AddProgram() {
       </Wrapper>
       <Modal
         isOpen={isOpen}
+        isDismissable={false}
+        backdrop="blur"
         onOpenChange={onOpenChange}
         size="sm"
         hideCloseButton
@@ -164,60 +176,95 @@ export default function AddProgram() {
             <>
               <ModalHeader className="flex flex-col pb-2">Send Transaction</ModalHeader>
               <ModalBody>
-                <div className="flex flex-col gap-3 flex-auto pointer-events-none">
+                <div className="flex flex-col gap-3 flex-auto pointer-events-none pl-1">
                   <div className="flex gap-2 items-center">
-                    <span className="text-base">- Sign & Send Transaction</span>
-                    {txSend && (
+                    <span className="text-base text-neutral-500">- Program Info Add</span>
+                    {isProgramAddedInDb && (
                       <span
-                        className={`text-base ${txSend ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+                        className={`text-base ${
+                          isProgramAddedInDb ? 'opacity-100' : 'opacity-0'
+                        } transition-opacity duration-500`}
                       >
                         ✅
                       </span>
                     )}
                   </div>
                   <div className="flex gap-2 items-center">
-                    <span className="text-base">- Transaction Confirm</span>
+                    <span className="text-base text-neutral-500">- Sign & Send Transaction</span>
                     {txSend && (
                       <span
-                        className={`text-base ${txSend ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+                        className={`text-base ${txSend ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
+                      >
+                        ✅
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 items-center">
+                    <span className="text-base text-neutral-500">- Transaction Confirm</span>
+                    {txConfirm && (
+                      <span
+                        className={`text-base ${
+                          txConfirm ? 'opacity-100' : 'opacity-0'
+                        } transition-opacity duration-500`}
                       >
                         ✅
                       </span>
                     )}
                   </div>
                 </div>
-                <div className={`${txSend ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+              </ModalBody>
+              <ModalFooter className="flex flex-col justify-center items-end gap-2">
+                <div
+                  className={`flex justify-end items-center text-sm underline decoration-neutral-400 ${
+                    txConfirm ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                  }`}
+                >
                   <Link
                     target="_blank"
                     rel="noopener noreferrer"
                     href={`https://opencampus-codex.blockscout.com/tx/${txHash}`}
-                    className="text-neutral-500"
+                    className="!text-neutral-400"
                   >
                     Check transaction on Blockscout
                   </Link>
                 </div>
-              </ModalBody>
-              <ModalFooter>
-                {txConfirm && (
-                  <Button className="text-neutral-500" variant="light" onPress={onClose}>
-                    Close
+                <div className="flex items-center">
+                  {txConfirm && (
+                    <Button
+                      className="text-neutral-500"
+                      variant="light"
+                      onClick={() => {
+                        onClose();
+                        reset();
+                      }}
+                    >
+                      Close
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => {
+                      if (txConfirm) {
+                        route.push(`/program/${programInfo.programId}`);
+                        reset();
+                      } else {
+                        createProgram();
+                      }
+                    }}
+                    className="bg-neutral-700 text-white"
+                    isLoading={sendLoading || confirmLoading}
+                  >
+                    {txConfirm
+                      ? 'Go to program'
+                      : confirmLoading
+                      ? 'Wait tx confirm'
+                      : sendLoading
+                      ? 'Sending..'
+                      : isProgramAddedInDb && !txConfirm
+                      ? 'Resend'
+                      : ''}
                   </Button>
-                )}
-                <Button
-                  onPress={() => {
-                    route.push(`/program`);
-                  }}
-                  className="bg-neutral-700 text-white"
-                  isLoading={sendLoading || confirmLoading}
-                >
-                  {txConfirm
-                    ? 'Go to program'
-                    : confirmLoading
-                    ? 'Wait tx confirm'
-                    : sendLoading
-                    ? 'Sending..'
-                    : 'Sending..'}
-                </Button>
+                </div>
               </ModalFooter>
             </>
           )}

@@ -7,7 +7,7 @@ import { useUser } from './user';
 import { writeContract, waitForTransactionReceipt } from 'wagmi/actions';
 import { config } from '@/app/provider';
 import { LD_ProgramFactoryABI } from '@/constant/LD_ProgramFactoryABI';
-import { Address, Hex, parseEther } from 'viem';
+import { Address, decodeEventLog, Hex, parseEther } from 'viem';
 import {
   parseZonedDateTime,
   today,
@@ -18,6 +18,11 @@ import {
   toCalendarDateTime,
   Time,
 } from '@internationalized/date';
+import { useAccount } from 'wagmi';
+import { LOG_TOPIC0 } from '@/constant/topic0';
+import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
+import { CONTRACT_ADDRESS } from '@/constant/deployed-addresses';
+import { ERROR_MESSAGE } from '@/constant/message';
 
 interface Mission {
   prize: number;
@@ -30,6 +35,7 @@ interface Mission {
 }
 
 interface ProgramInfoType {
+  programId: number;
   title: string;
   start_at: CalendarDateTime;
   end_at: CalendarDateTime;
@@ -42,6 +48,7 @@ interface ProgramInfoType {
 const ProgramInfo = atom<ProgramInfoType>({
   key: 'ProgramCreationInfo',
   default: {
+    programId: 0,
     title: '',
     start_at: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0, 0, 0)),
     end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
@@ -55,14 +62,17 @@ const ProgramInfo = atom<ProgramInfoType>({
 export const useProgramCreation = () => {
   const [programInfo, setProgramInfo] = useRecoilState(ProgramInfo);
   const { user } = useUser();
-  const [txSend, setTxSend] = useState(false);
+  const account = useAccount();
+  const [isProgramAddedInDb, setIsProgramAddedInDb] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
+  const [txSend, setTxSend] = useState(false);
   const [txConfirm, setTxConfirm] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | undefined>();
 
   const reset = () => {
     setProgramInfo({
+      programId: 0,
       title: '',
       start_at: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0, 0, 0)),
       end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
@@ -71,6 +81,7 @@ export const useProgramCreation = () => {
       prize: 0,
       missions: [],
     });
+    setIsProgramAddedInDb(false);
     setTxSend(false);
     setTxConfirm(false);
     setSendLoading(false);
@@ -111,57 +122,70 @@ export const useProgramCreation = () => {
   };
 
   const createProgram = async () => {
-    console.log(programInfo.managers);
     if (!user) {
       return;
     }
-    let programId = 0;
+
+    const startDateTime = new CalendarDateTime(
+      programInfo.start_at.year,
+      programInfo.start_at.month,
+      programInfo.start_at.day,
+      0,
+      0,
+      0,
+      0,
+    );
+    const endDateTime = new CalendarDateTime(
+      programInfo.end_at.year,
+      programInfo.end_at.month,
+      programInfo.end_at.day,
+      23,
+      59,
+      59,
+      59,
+    );
+    const startDateTimestamp = Math.floor(startDateTime.toDate(getLocalTimeZone()).getTime() / 1000);
+    const endDateTimestamp = Math.floor(endDateTime.toDate(getLocalTimeZone()).getTime() / 1000);
+    let programId = programInfo.programId;
     let hash = '0x';
-    try {
-      const data = await fetchData('/programs/create', 'POST', {
-        programData: {
-          owner: user.walletId,
-          type: 'manage',
-          title: programInfo.title,
-          guide: programInfo.description,
-          prize: programInfo.prize,
-          end_at: `${programInfo.end_at.year}-${programInfo.end_at.month}-${programInfo.end_at.day} ${programInfo.end_at.hour}:${programInfo.end_at.minute}:${programInfo.end_at.second}`,
-        },
-        missionData: programInfo.missions.map((mission) => ({
-          ...mission,
-          end_at: `${mission.end_at.year}-${mission.end_at.month}-${mission.end_at.day} ${mission.end_at.hour}:${mission.end_at.minute}:${mission.end_at.second}`,
-        })),
-      });
-      programId = data.programId;
-      console.log(data);
-      //   route.push(PATH.PROGRAM);
-    } catch (err) {
-      console.error(err);
+    let txReceipt;
+
+    setSendLoading(true);
+
+    if (!isProgramAddedInDb) {
+      // add program info to db
+      try {
+        const data = await fetchData('/programs/create', 'POST', {
+          programData: {
+            owner: user.walletId,
+            owner_address: account.address,
+            managers: programInfo.managers,
+            type: 'manage',
+            title: programInfo.title,
+            guide: programInfo.description,
+            prize: programInfo.prize,
+            end_at: endDateTimestamp,
+          },
+          missionData: programInfo.missions.map((mission) => ({
+            ...mission,
+            end_at: endDateTimestamp,
+          })),
+        });
+        programId = data.programId;
+        setProgramInfo({ ...programInfo, programId });
+        setIsProgramAddedInDb(true);
+      } catch (error) {
+        setSendLoading(false);
+        console.error(error);
+        throw ERROR_MESSAGE.DB_UPDATE;
+      }
     }
 
+    // Send program create transaction
     try {
-      setSendLoading(true);
-      const startDateTime = new CalendarDateTime(
-        programInfo.start_at.year,
-        programInfo.start_at.month,
-        programInfo.start_at.day,
-        0,
-        0,
-        0,
-        0,
-      );
-      const endDateTime = new CalendarDateTime(
-        programInfo.end_at.year,
-        programInfo.end_at.month,
-        programInfo.end_at.day,
-        23,
-        59,
-        59,
-        59,
-      );
       hash = await writeContract(config, {
         abi: LD_ProgramFactoryABI,
-        address: '0xD5595Cb547b4d071953d5E9f3De855D8AD5512dC',
+        address: CONTRACT_ADDRESS.EDU_FACTORY,
         functionName: 'createProgram',
         value: parseEther(programInfo.prize.toString()),
         args: [
@@ -171,24 +195,45 @@ export const useProgramCreation = () => {
             auditor: mission.validators.trim() as Address,
             prize: parseEther(mission.prize.toString()),
           })),
-          BigInt(Math.floor(startDateTime.toDate(getLocalTimeZone()).getTime() / 1000)),
-          BigInt(Math.floor(endDateTime.toDate(getLocalTimeZone()).getTime() / 1000)),
+          BigInt(startDateTimestamp),
+          BigInt(endDateTimestamp),
         ],
       });
       setTxHash(hash);
       setSendLoading(false);
       setTxSend(true);
       setConfirmLoading(true);
-      const receipt = await waitForTransactionReceipt(config, { hash: hash as Hex });
+      txReceipt = await waitForTransactionReceipt(config, { hash: hash as Hex });
       setConfirmLoading(false);
-      if (receipt.status === 'success') {
-        setTxConfirm(true);
-      } else {
+      if (txReceipt.status !== 'success') {
         setTxConfirm(false);
+        throw new Error('Transaction Fail');
       }
-    } catch (err) {
+      setTxConfirm(true);
+    } catch (error) {
       setSendLoading(false);
-      console.error(err);
+      if (typeof error === 'string' && error?.includes('User rejected the request')) {
+        throw ERROR_MESSAGE.TRANSACTION_REJECTED;
+      }
+      throw ERROR_MESSAGE.TRANSACTION_FAIL;
+    }
+
+    // check deployed contract address
+    try {
+      const targetLog = txReceipt.logs.filter((log) => log.topics[0] === LOG_TOPIC0.PROGRAM_CREATED)[0];
+      const { args } = decodeEventLog({
+        abi: LD_EventLoggerABI,
+        data: targetLog.data,
+        topics: targetLog.topics,
+      }) as { args: { programId: bigint; programAddress: string; owner: string; start: bigint; end: bigint } };
+
+      await fetchData('/programs/deployed', 'POST', {
+        programId,
+        programAddress: args.programAddress,
+      });
+    } catch (error) {
+      console.error(error);
+      throw ERROR_MESSAGE.UPDATE_DEPLOYED_ADDRESS;
     }
   };
 
@@ -204,9 +249,10 @@ export const useProgramCreation = () => {
     deleteMission,
     createProgram,
     txHash,
-    txSend,
     sendLoading,
+    isProgramAddedInDb,
     txConfirm,
+    txSend,
     confirmLoading,
     reset,
   };

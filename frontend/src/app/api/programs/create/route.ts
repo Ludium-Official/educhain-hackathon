@@ -13,9 +13,10 @@ const handler = async (req: Request) => {
     await connection.beginTransaction();
 
     const [programResult] = await connection.query<import('mysql2').ResultSetHeader>(
-      `INSERT INTO programs (owner, type, title, guide, prize, end_at) VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO programs (owner,owner_address, type, title, guide, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))`,
       [
         programData.owner,
+        programData.owner_address,
         programData.type,
         programData.title,
         programData.guide,
@@ -24,9 +25,17 @@ const handler = async (req: Request) => {
       ],
     );
 
+    const managersPromise = programData.managers.map(async (manager: { address: string; name: string }) => {
+      await connection.query(`INSERT INTO managers (program_id, memo, address) VALUES (?, ?, ?)`, [
+        programResult.insertId,
+        manager.name,
+        manager.address,
+      ]);
+    });
+
     const missionInsertPromises = missionData.map(async (mission: MissionType, idx: number) => {
       await connection.query(
-        `INSERT INTO missions (validators, owner, program_id, mission_id, category, title, content, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO missions (validators, owner, program_id, mission_id, category, title, content, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))`,
         [
           mission.validators,
           mission.owner,
@@ -41,12 +50,13 @@ const handler = async (req: Request) => {
       );
     });
 
-    await Promise.all(missionInsertPromises);
+    await Promise.all([...managersPromise, ...missionInsertPromises]);
 
     await connection.commit();
 
     return NextResponse.json({ success: true, programId: programResult.insertId });
   } catch (error) {
+    console.error(error);
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     if (connection) connection.release();
