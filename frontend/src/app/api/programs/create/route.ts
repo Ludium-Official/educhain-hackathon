@@ -24,13 +24,14 @@ const handler = async (req: Request) => {
       ],
     );
 
-    const missionInsertPromises = missionData.map(async (mission: MissionType) => {
+    const missionInsertPromises = missionData.map(async (mission: MissionType, idx: number) => {
       await connection.query(
-        `INSERT INTO missions (validators, owner, program_id, category, title, content, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO missions (validators, owner, program_id, mission_id, category, title, content, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           mission.validators,
           mission.owner,
           programResult.insertId,
+          idx + 1,
           mission.category,
           mission.title,
           mission.content,
