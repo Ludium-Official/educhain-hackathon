@@ -1,0 +1,19 @@
+.container {
+  .title {
+    margin-bottom: 14px;
+
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--white);
+    width: 100%;
+    margin-top: 10px;
+    padding: 24px;
+    border-radius: 20px;
+  }
+}

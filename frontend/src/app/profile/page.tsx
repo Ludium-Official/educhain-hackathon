@@ -143,7 +143,7 @@ export default function Profile() {
                         <>
                           <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/program`}>
-                              Manage
+                              View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
                           </div>
@@ -171,7 +171,7 @@ export default function Profile() {
                         <>
                           <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/mission`}>
-                              Manage
+                              View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
                           </div>
@@ -217,7 +217,7 @@ export default function Profile() {
                         <>
                           <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/validate`}>
-                              Manage
+                              View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
                           </div>
@@ -243,7 +243,7 @@ export default function Profile() {
                         <>
                           <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/participate`}>
-                              Manage
+                              View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
                           </div>
