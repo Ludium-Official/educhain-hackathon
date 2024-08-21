@@ -82,7 +82,7 @@ export const SetManagers = () => {
               className="flex-auto"
               placeholder="name (optional)"
               value={addressName}
-              onChange={(e) => setAddressName(e.target.value)}
+              onChange={(e) => setAddressName(e.target.value.slice(0, 25))}
               classNames={{ inputWrapper: 'bg-white', input: 'text-neutral-700' }}
             />
           </div>

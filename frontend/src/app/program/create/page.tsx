@@ -73,21 +73,21 @@ export default function AddProgram() {
         }
         break;
       case 2:
-        if (creationStep < 3) {
+        if (creationStep === 2) {
           setCreationStep(3);
         }
         break;
       case 3:
-        if (creationStep < 4 && programInfo.prize > 0) {
+        if (creationStep === 3 && Number(programInfo.prize) > 0) {
           setCreationStep(4);
         }
         break;
       case 4:
         let totalMissionPrizes = 0;
         programInfo.missions.map((mission) => {
-          totalMissionPrizes += mission.prize;
+          totalMissionPrizes += Number(mission.prize);
         });
-        if (creationStep < 5 && programInfo.prize >= totalMissionPrizes) {
+        if (creationStep === 4 && Number(programInfo.prize) >= Number(totalMissionPrizes)) {
           setCreationStep(5);
         }
         break;

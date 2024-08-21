@@ -1,21 +1,29 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ContentContainer } from './common/ContentContainer';
 import { useProgramCreation } from '@/hooks/store/useProgramCreation';
 import { ScrollShadow } from '@nextui-org/react';
 import { toCalendarDate } from '@internationalized/date';
 import { useAccount } from 'wagmi';
+import { add } from '@/functions/math';
 
 export const Confirm = () => {
   const { programInfo } = useProgramCreation();
   const account = useAccount();
+  const [totalMissionReserve, setTotalMissionReserve] = useState<string>('0');
 
-  let totalMissionPrize = 0;
-  programInfo.missions.map((mission) => {
-    totalMissionPrize += mission.prize;
-  });
+  useEffect(() => {
+    if (programInfo.missions.length > 0) {
+      let total = '0';
+      programInfo.missions.map((mission) => {
+        total = add(total, mission.reserve);
+      });
+      setTotalMissionReserve(total);
+      console.log(total);
+    }
+  }, [programInfo.missions]);
   return (
     <ContentContainer contentHeader="Confirm">
       <div className="flex justify-center items-center">
@@ -29,7 +37,7 @@ export const Confirm = () => {
             </div>
           </div>
           <div className="confirmBody">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <div className="text-neutral-500 text-sm">Owner</div>
                 <div className="ml-1">{account.address}</div>
@@ -54,16 +62,18 @@ export const Confirm = () => {
                   <div>Missions</div>
                   <div className="ml-1 flex gap-2">
                     <span>Total</span>
-                    <span>{totalMissionPrize}</span>
+                    <span>{totalMissionReserve}</span>
                     <span className="text-neutral-500">EDU</span>
                   </div>
                 </div>
-                <ScrollShadow className="max-h-40">
+                <ScrollShadow className="h-20 flex flex-col gap-1">
                   {programInfo.missions.map((mission, idx) => (
                     <div key={idx} className="ml-1 flex justify-between gap-2">
                       <div className="truncate">{mission.title}</div>
                       <div className="ml-1 flex gap-2">
                         <span>{mission.prize}</span>
+                        <span className="text-neutral-400">/</span>
+                        <span>{mission.reserve}</span>
                         <span className="text-neutral-500">EDU</span>
                       </div>
                     </div>

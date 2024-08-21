@@ -23,9 +23,11 @@ import { LOG_TOPIC0 } from '@/constant/topic0';
 import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
 import { CONTRACT_ADDRESS } from '@/constant/deployed-addresses';
 import { ERROR_MESSAGE } from '@/constant/message';
+import { opencampus } from '@/constant/educhain-rpc';
 
 interface Mission {
-  prize: number;
+  reserve: string;
+  prize: string;
   validators: string;
   owner: string;
   title: string;
@@ -41,7 +43,7 @@ interface ProgramInfoType {
   end_at: CalendarDateTime;
   description: string;
   managers: { address: string; name?: string }[];
-  prize: number;
+  prize: string;
   missions: Mission[];
 }
 
@@ -54,7 +56,7 @@ const ProgramInfo = atom<ProgramInfoType>({
     end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
     description: '',
     managers: [],
-    prize: 0,
+    prize: '',
     missions: [],
   },
 });
@@ -78,7 +80,7 @@ export const useProgramCreation = () => {
       end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
       description: '',
       managers: [],
-      prize: 0,
+      prize: '',
       missions: [],
     });
     setIsProgramAddedInDb(false);
@@ -109,7 +111,7 @@ export const useProgramCreation = () => {
     setProgramInfo({ ...programInfo, managers: updatedManagers });
   };
 
-  const setPrize = (prize: number) => {
+  const setPrize = (prize: string) => {
     setProgramInfo({ ...programInfo, prize });
   };
   const addMission = (mission: Mission) => {
@@ -158,16 +160,21 @@ export const useProgramCreation = () => {
         const data = await fetchData('/programs/create', 'POST', {
           programData: {
             owner: user.walletId,
+            // [Todo]: cross-chain 에서는 별도의 파라미터로 받아야함.
+            chainId: opencampus.id,
             owner_address: account.address,
             managers: programInfo.managers,
             type: 'manage',
             title: programInfo.title,
             guide: programInfo.description,
-            prize: programInfo.prize,
+            prize: Number(programInfo.prize),
+            start_at: endDateTimestamp,
             end_at: endDateTimestamp,
           },
           missionData: programInfo.missions.map((mission) => ({
             ...mission,
+            reserve: Number(mission.reserve),
+            prize: Number(mission.prize),
             end_at: endDateTimestamp,
           })),
         });
@@ -193,7 +200,7 @@ export const useProgramCreation = () => {
           programInfo.managers.map((manager) => manager.address.trim() as Address),
           programInfo.missions.map((mission: Mission) => ({
             auditor: mission.validators.trim() as Address,
-            prize: parseEther(mission.prize.toString()),
+            prize: parseEther(mission.reserve.toString()),
           })),
           BigInt(startDateTimestamp),
           BigInt(endDateTimestamp),

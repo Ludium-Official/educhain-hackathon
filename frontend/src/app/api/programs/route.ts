@@ -26,7 +26,7 @@ const handler = async (req: Request) => {
                 'title', m.title,
                 'created_at', m.created_at,
                 'is_confirm', m.is_confirm,
-                'prize', m.prize
+                'reserve', m.reserve
               )
             ),
           JSON_ARRAY())
@@ -44,7 +44,7 @@ const handler = async (req: Request) => {
       ${defaultQuery}
       ${whereClause}
       GROUP BY 
-        p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.prize, p.end_at, p.created_at
+        p.id, p.owner, p.is_private, p.type, p.title, p.guide, p.reserve, p.end_at, p.created_at
       ORDER BY p.created_at DESC
     `;
 

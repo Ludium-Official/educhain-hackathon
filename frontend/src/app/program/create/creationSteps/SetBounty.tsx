@@ -9,7 +9,7 @@ import OpencampusLogo from '@/assets/common/OpencampusLogo.svg';
 import CommunityLogo from '@/assets/header/CommunityLogoColored.svg';
 import { User, Card, CardBody, CardHeader, Divider, Input, ScrollShadow } from '@nextui-org/react';
 import { useUser } from '@/hooks/store/user';
-import { formatEther, keccak256 } from 'viem';
+import { formatEther, keccak256, parseEther } from 'viem';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { toCalendarDate } from '@internationalized/date';
 import { subtract } from '@/functions/math';
@@ -19,7 +19,7 @@ export const SetBounty = () => {
   const { user } = useUser();
   const balance = useBalance({ address: account.address });
   const { programInfo, setPrize } = useProgramCreation();
-  const afterBalance = subtract(Number(formatEther(balance.data?.value || BigInt('0'))), programInfo.prize);
+  const afterBalance = subtract(formatEther(balance.data?.value || BigInt('0')), programInfo.prize);
   return (
     <ContentContainer contentHeader="Allocate Reserve">
       <div className="w-full flex gap-2 flex-col items-center justify-center">
@@ -49,10 +49,14 @@ export const SetBounty = () => {
                 <span
                   key={afterBalance}
                   className={`animate-balanceChange ${
-                    programInfo.prize === 0 ? 'text-neutral-700' : afterBalance >= 0 ? 'text-green-600' : 'text-red-600'
+                    Number(programInfo.prize) === 0
+                      ? 'text-neutral-700'
+                      : parseEther(afterBalance) >= BigInt(0)
+                      ? 'text-green-600'
+                      : 'text-red-600'
                   }`}
                 >
-                  {afterBalance.toFixed(3)}
+                  {afterBalance}
                 </span>
                 <span className="text-neutral-400">EDU</span>
               </div>
@@ -66,13 +70,13 @@ export const SetBounty = () => {
           <CardBody className="p-0">
             <Input
               label="Reserve"
-              type="number"
-              value={programInfo.prize.toString() === '0' ? '' : programInfo.prize.toString()}
+              type="text"
+              value={programInfo.prize}
               onChange={(e) => {
                 if (isNaN(Number(e.target.value)) || Number(e.target.value) < 0) {
                   return;
                 }
-                setPrize(Number(e.target.value));
+                setPrize(e.target.value);
               }}
               endContent={<span className="text-neutral-400 text-base">EDU</span>}
               classNames={{

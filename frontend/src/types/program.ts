@@ -7,7 +7,7 @@ export type ProgramType = {
   type: 'manage' | 'study';
   title: string;
   guide: string | null;
-  prize: number;
+  reserve: string;
   end_at: string | null;
   created_at: string;
   missions?: DBMission[];

@@ -32,17 +32,19 @@ import { useAccount } from 'wagmi';
 import toast from 'react-hot-toast';
 import Trash from '@/assets/common/Trash.svg';
 import { add, subtract } from '@/functions/math';
+import { parseEther } from 'viem';
 
 export const AddMissions = () => {
   const { user } = useUser();
   const account = useAccount();
   const { addMission, programInfo, deleteManager } = useProgramCreation();
   const [address, setAddress] = useState<string>('');
-  const [prize, setPrize] = useState<number>(0);
+  const [reserve, setReserve] = useState<string>('');
+  const [prize, setPrize] = useState<string>('');
   const [missionName, setMissionName] = useState<string | undefined>();
   const [description, setDescription] = useState<string>('');
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [missionPrizeSum, setMissionPrizeSum] = useState<number>(0);
+  const [missionPrizeSum, setMissionPrizeSum] = useState<string>('0');
 
   const addHandler = () => {
     const userAddress = address.trim();
@@ -54,6 +56,7 @@ export const AddMissions = () => {
       return;
     }
     addMission({
+      reserve,
       prize,
       validators: address.trim(),
       owner: address.trim(),
@@ -64,7 +67,7 @@ export const AddMissions = () => {
     });
     setAddress('');
     setMissionName('');
-    setPrize(0);
+    setPrize('');
     setDescription('');
 
     onClose();
@@ -72,9 +75,9 @@ export const AddMissions = () => {
 
   useEffect(() => {
     if (programInfo.missions.length > 0) {
-      let sum = 0;
+      let sum = '0';
       programInfo.missions.map((mission) => {
-        sum = add(sum, mission.prize);
+        sum = add(sum, mission.reserve);
       });
       setMissionPrizeSum(sum);
     }
@@ -98,7 +101,7 @@ export const AddMissions = () => {
               <TableColumn className="w-[75px]">No.</TableColumn>
               <TableColumn className="">MISSION</TableColumn>
               <TableColumn align="end" className="w-[150px]">
-                PRIZE
+                PRIZE / RESERVE
               </TableColumn>
             </TableHeader>
             <TableBody emptyContent={'No Missions'} className="">
@@ -106,7 +109,7 @@ export const AddMissions = () => {
                 <TableRow key={idx} className="relative group/rowall items-center">
                   <TableCell>{idx + 1}</TableCell>
                   <TableCell className="transition-all duration-300">
-                    <div className="flex flex-col justify-center items-start gap-1">
+                    <div className="flex flex-col justify-center items-start gap-0">
                       <span className="text-neutral-700 text-base">{mission.title}</span>
                       <span className="text-sm text-neutral-400">Auditor: {mission.validators}</span>
                     </div>
@@ -114,6 +117,8 @@ export const AddMissions = () => {
                   <TableCell className={`transition-all duration-300 text-base`}>
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-neutral-700">{mission.prize}</span>
+                      <span className="text-neutral-400">/</span>
+                      <span className="text-neutral-700">{mission.reserve}</span>
                       <span className="text-neutral-400">EDU</span>
                     </div>
                   </TableCell>
@@ -186,34 +191,73 @@ export const AddMissions = () => {
                       className="w-[400px] flex-shrink-0 flex-auto"
                       classNames={{ inputWrapper: 'bg-white', input: 'text-neutral-700' }}
                     />
-                    <Input
-                      // variant="bordered"
-                      radius="sm"
-                      label="Prize"
-                      type="number"
-                      value={prize.toString() === '0' ? '' : prize.toString()}
-                      onChange={(e) => {
-                        if (isNaN(Number(e.target.value)) || Number(e.target.value) < 0) {
-                          return;
-                        }
-                        setPrize(Number(e.target.value));
-                      }}
-                      endContent={
-                        <div className="flex gap-2 w-[150px]">
-                          <span className="text-neutral-400 text-base">EDU</span>
-                          <span className="text-neutral-400 text-base whitespace-nowrap">
-                            / {subtract(programInfo.prize, missionPrizeSum)} EDU
-                          </span>
-                        </div>
-                      }
-                      className="w-[250px] flex-shrink-0"
-                      classNames={{
-                        base: 'flex-shrink-0',
-                        inputWrapper: 'bg-white',
-                        input:
-                          'text-neutral-700 text-base text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
-                      }}
-                    />
+                    <div className=" bg-white flex justify-center items-center rounded-lg shadow-sm">
+                      {/**
+                       *     --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+                       */}
+                      <Input
+                        // variant="bordered"
+                        radius="sm"
+                        size="md"
+                        label="Prize"
+                        type="number"
+                        value={prize}
+                        onChange={(e) => {
+                          if (isNaN(Number(e.target.value)) || Number(e.target.value) < 0) {
+                            return;
+                          }
+                          setPrize(e.target.value);
+                        }}
+                        className="w-[100px] flex-shrink-0"
+                        classNames={{
+                          base: 'flex-shrink-0',
+                          inputWrapper: 'bg-transparent border-none shadow-none',
+                          input:
+                            'text-neutral-700 text-base text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
+                        }}
+                      />
+                      <span className="text-neutral-400">/</span>
+                      <Input
+                        // variant="bordered"
+                        radius="sm"
+                        size="md"
+                        label="Reserve"
+                        type="number"
+                        value={reserve}
+                        onChange={(e) => {
+                          if (isNaN(Number(e.target.value)) || Number(e.target.value) < 0) {
+                            return;
+                          }
+                          setReserve(e.target.value);
+                        }}
+                        className="w-[100px] flex-shrink-0"
+                        classNames={{
+                          base: 'flex-shrink-0',
+                          inputWrapper: 'bg-transparent border-none shadow-none',
+                          input: [
+                            'text-neutral-700 text-base text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
+                            Number(prize) > Number(reserve) ? '!text-red-600' : '',
+                          ],
+                        }}
+                      />
+                      <div className="text-neutral-400 text-base flex pb-2.5 pr-4 items-end justify-center h-full">
+                        EDU
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-1 text-neutral-400 text-sm justify-end items-center">
+                    <span>Reserve remain:</span>
+                    <span
+                      className={`${
+                        parseEther(subtract(programInfo.prize, missionPrizeSum + reserve)) < BigInt(0)
+                          ? 'text-red-600'
+                          : ''
+                      }`}
+                    >
+                      {subtract(programInfo.prize, missionPrizeSum + reserve)}
+                    </span>
+                    <span>EDU</span>
                   </div>
                 </div>
               </ModalBody>
@@ -221,7 +265,13 @@ export const AddMissions = () => {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                <Button onPress={addHandler} className="bg-neutral-700 text-white">
+                <Button
+                  isDisabled={
+                    parseEther(subtract(programInfo.prize, reserve)) < BigInt(0) || Number(prize) > Number(reserve)
+                  }
+                  onPress={addHandler}
+                  className="bg-neutral-700 text-white"
+                >
                   Add
                 </Button>
               </ModalFooter>
