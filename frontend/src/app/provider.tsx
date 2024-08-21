@@ -20,15 +20,15 @@ export const config = getDefaultConfig({
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
 
-  // useEffect(() => {
-  //   import('bootstrap/dist/js/bootstrap.bundle.min')
-  //     .then((module) => {
-  //       console.log('Bootstrap JavaScript loaded');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Failed to load Bootstrap JavaScript', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    import('bootstrap/dist/js/bootstrap.bundle.min')
+      .then((module) => {
+        console.log('Bootstrap JavaScript loaded');
+      })
+      .catch((error) => {
+        console.error('Failed to load Bootstrap JavaScript', error);
+      });
+  }, []);
 
   return (
     <WagmiProvider config={config}>
