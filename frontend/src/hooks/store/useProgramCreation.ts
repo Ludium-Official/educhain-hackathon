@@ -167,14 +167,14 @@ export const useProgramCreation = () => {
             type: 'manage',
             title: programInfo.title,
             guide: programInfo.description,
-            prize: Number(programInfo.prize),
+            prize: programInfo.prize,
             start_at: endDateTimestamp,
             end_at: endDateTimestamp,
           },
           missionData: programInfo.missions.map((mission) => ({
             ...mission,
-            reserve: Number(mission.reserve),
-            prize: Number(mission.prize),
+            reserve: mission.reserve,
+            prize: mission.prize,
             end_at: endDateTimestamp,
           })),
         });

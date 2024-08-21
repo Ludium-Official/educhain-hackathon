@@ -68,6 +68,7 @@ export const AddMissions = () => {
     setAddress('');
     setMissionName('');
     setPrize('');
+    setReserve('');
     setDescription('');
 
     onClose();
@@ -269,7 +270,7 @@ export const AddMissions = () => {
                   isDisabled={
                     parseEther(subtract(programInfo.prize, reserve)) < BigInt(0) || Number(prize) > Number(reserve)
                   }
-                  onPress={addHandler}
+                  onClick={addHandler}
                   className="bg-neutral-700 text-white"
                 >
                   Add

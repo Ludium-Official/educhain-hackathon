@@ -21,7 +21,6 @@ export const Confirm = () => {
         total = add(total, mission.reserve);
       });
       setTotalMissionReserve(total);
-      console.log(total);
     }
   }, [programInfo.missions]);
   return (
