@@ -158,7 +158,7 @@ export default function ProgramEdit() {
                     </>
                   )}
                   <div className={styles.table}>
-                    <div className={styles.tableTitle}>Program Add</div>
+                    <div className={styles.tableTitle}>Mission Create</div>
                     <div className={styles.rowsTable}>
                       <div className={styles.inputWrapper}>
                         Title
@@ -214,7 +214,7 @@ export default function ProgramEdit() {
                       </div>
                     </div>
                     <button className={styles.addBtn} onClick={addMission}>
-                      Make Mission
+                      Create Mission
                     </button>
                   </div>
                 </div>
