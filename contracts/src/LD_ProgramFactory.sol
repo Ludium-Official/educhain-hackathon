@@ -13,7 +13,6 @@ contract LD_ProgramFactory {
     address public immutable eventLogger;
     address public immutable treasury;
     uint256 public immutable feeRatio;
-    mapping(uint256 => bool) created;
 
     event EventLogger(address indexed eventLogger);
 
@@ -37,7 +36,6 @@ contract LD_ProgramFactory {
         uint256 start,
         uint256 end
     ) external payable returns (address) {
-        require(!created[programId], "Already created program");
         uint256 totalPrize = 0;
         for (uint256 i = 0; i < prizeConfig.length; i++) {
             totalPrize += prizeConfig[i].prize;
@@ -48,7 +46,6 @@ contract LD_ProgramFactory {
         ILD_EduProgram(address(proxy)).initialize{value: msg.value}(
             msg.sender, managers, programId, feeRatio, treasury, prizeConfig, start, end, eventLogger
         );
-        created[programId] = true;
 
         // ILD_EduProgram(address(proxy)).deposit();
         ILD_EventLogger(eventLogger).logProgramCreated(programId, address(proxy), msg.sender, start, end);

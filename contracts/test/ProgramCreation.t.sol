@@ -100,12 +100,4 @@ contract ProgramCreation is Test, TestBase {
         factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1722076820);
         vm.stopPrank();
     }
-
-    function test_Revert_MakeTwice() public {
-        vm.startPrank(user1);
-        factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1832676816);
-        vm.expectRevert("Already created program");
-        factory.createProgram{value: reserveAmount}(2, managers(), prizeConfig(), 1722076816, 1832676816);
-        vm.stopPrank();
-    }
 }

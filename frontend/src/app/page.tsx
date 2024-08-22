@@ -14,6 +14,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
+import { add } from '@/functions/math';
 
 export default function Home() {
   const { user } = useUser();
@@ -22,7 +23,7 @@ export default function Home() {
   const [missions, setMissions] = useState<MissionStatusType[]>([]);
 
   const sumRestAmount = useMemo(() => {
-    return notOwnerMissions.reduce((result, mission) => (result += mission.prize), 0);
+    return notOwnerMissions.reduce((result, mission) => (result = add(result, mission.prize)), '0');
   }, [notOwnerMissions]);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function Home() {
     };
 
     callData();
-    animateCounter('counter', 0, sumRestAmount, 1000);
+    animateCounter('counter', 0, Number(sumRestAmount), 1000);
   }, [sumRestAmount, user?.walletId]);
 
   function animateCounter(id: string, start: number, end: number, duration: number): void {

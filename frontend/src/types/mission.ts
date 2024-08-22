@@ -9,7 +9,8 @@ export type MissionType = {
   title: string;
   content: string;
   missionCnt: number;
-  prize: number;
+  reserve: string;
+  prize: string;
   end_at: string;
   created_at: string;
 };
