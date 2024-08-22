@@ -81,7 +81,7 @@ export default function ProgramDetail() {
                   <div className={styles.table}>
                     <div className={styles.tableHeader}>
                       <div className={styles.titleWrapper}>
-                        Program<span>(Total prize: {program.prize})</span>
+                        Program<span>(Total prize: {program.reserve})</span>
                       </div>
                       <span className={styles.makeDate}>Date: {formatDate}</span>
                     </div>

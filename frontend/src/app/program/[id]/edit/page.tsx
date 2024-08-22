@@ -77,7 +77,7 @@ export default function ProgramEdit() {
             category: missionCategory,
             title: missionTitle,
             content: missionContent,
-            prize: Number(missionPrize),
+            prize: missionPrize,
             end_at: missionEndTime,
           },
         });
