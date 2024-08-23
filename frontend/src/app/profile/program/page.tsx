@@ -61,7 +61,7 @@ export default function ProgramManage() {
   );
 
   const totalPrizeAmount = useMemo(() => {
-    return programs.reduce((result, program) => (result += program.prize), 0);
+    return programs.reduce((result, program) => (result += Number(program.reserve)), 0);
   }, [programs]);
 
   const activeProgramCount = useMemo(() => {

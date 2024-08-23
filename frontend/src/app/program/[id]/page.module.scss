@@ -66,6 +66,10 @@
       }
 
       .tableBody {
+        .accordionCollapse {
+          visibility: visible;
+        }
+
         .tableRow {
           display: flex;
           align-items: center;

@@ -158,7 +158,7 @@ export default function Profile() {
                                       <span className={styles.programType}>{program.type}</span>
                                       <span className={styles.contentTitle}>{program.title}</span>
                                     </Link>
-                                    <div className={styles.prize}>prize: {program.prize} EDU</div>
+                                    <div className={styles.prize}>prize: {program.reserve} EDU</div>
                                   </div>
                                   <div className={styles.deadline}>Deadline: {program.end_at ? formatDate : '-'}</div>
                                 </div>
