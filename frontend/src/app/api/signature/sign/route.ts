@@ -11,12 +11,12 @@ const handler = async (req: Request) => {
   const connection = await pool.getConnection();
 
   try {
-    const [signatureResult] = await connection.query<import('mysql2').ResultSetHeader>(
-      `INSERT INTO signatures (program_id, mission_id, recipient, validator, prize, sig) VALUES (?, ?, ?, ?, ?, ?)`,
-      [sigData.programId, sigData.missionId, sigData.recipient, sigData.validator, sigData.prize, sigData.sig],
+    await connection.query<import('mysql2').ResultSetHeader>(
+      `UPDATE signatures SET sig = ? WHERE program_id = ? AND mission_id = ? AND recipient = ?`,
+      [sigData.sig, sigData.programId, sigData.missionId, sigData.recipient],
     );
 
-    return NextResponse.json({ success: true, sigId: signatureResult.insertId });
+    return NextResponse.json({ success: true, sigId: sigData.id });
   } catch (error) {
     console.error(error);
     return new NextResponse('Internal Server Error', { status: 500 });

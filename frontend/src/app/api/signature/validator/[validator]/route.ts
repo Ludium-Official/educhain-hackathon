@@ -13,7 +13,7 @@ const handler = async (req: Request) => {
   try {
     connection = await pool.getConnection();
 
-    const query = `SELECT * FROM signatures WHERE validator = ?`;
+    const query = `SELECT * FROM signatures WHERE validator = ? AND sig IS NULL`;
     const [rows] = await connection.query(query, [id]);
 
     const request = rows as DBSignature[];

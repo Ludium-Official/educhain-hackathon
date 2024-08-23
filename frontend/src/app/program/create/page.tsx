@@ -78,7 +78,7 @@ export default function AddProgram() {
         }
         break;
       case 3:
-        if (creationStep === 3 && Number(programInfo.prize) > 0) {
+        if (creationStep === 3 && Number(programInfo.reserve) > 0) {
           setCreationStep(4);
         }
         break;
@@ -87,7 +87,7 @@ export default function AddProgram() {
         programInfo.missions.map((mission) => {
           totalMissionPrizes += Number(mission.prize);
         });
-        if (creationStep === 4 && Number(programInfo.prize) >= Number(totalMissionPrizes)) {
+        if (creationStep === 4 && Number(programInfo.reserve) >= Number(totalMissionPrizes)) {
           setCreationStep(5);
         }
         break;
@@ -237,6 +237,7 @@ export default function AddProgram() {
                       onClick={() => {
                         onClose();
                         reset();
+                        route.push(`/program`);
                       }}
                     >
                       Close
@@ -262,7 +263,7 @@ export default function AddProgram() {
                       ? 'Sending..'
                       : isProgramAddedInDb && !txConfirm
                       ? 'Resend'
-                      : ''}
+                      : 'Done'}
                   </Button>
                 </div>
               </ModalFooter>

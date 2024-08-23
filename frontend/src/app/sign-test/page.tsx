@@ -26,14 +26,17 @@ export default function SignTest() {
   const [prize, setPrize] = useState<string>('');
   const account = useAccount();
 
+  const [requested, setRequested] = useState<Signature[]>([]);
   const [approved, setApproved] = useState<Signature[]>([]);
 
-  const { signForClaim } = useValidator();
+  const { signForClaim, requestToValidator } = useValidator();
   const { claim } = useClaim();
 
   const fetchApprovedList = async () => {
-    const list = await fetchData(`/signature/recipient/${account.address}`);
-    setApproved(list);
+    const req = await fetchData(`/signature/validator/${account.address}`);
+    const appr = await fetchData(`/signature/recipient/${account.address}`);
+    setRequested(req);
+    setApproved(appr);
   };
 
   const claimPrize = async (idx: number) => {
@@ -50,80 +53,110 @@ export default function SignTest() {
           </div>
         ),
         body: (
-          <div className={`wrapperBody w-full flex gap-4`}>
-            <div>
-              <div className="w-[400px] mb-2 px-2 flex justify-between items-center">
-                <span className="text-xl text-neutral-600 font-semibold">Sign Test</span>
-              </div>
-              <div className="bg-white border-solid border-gray-500 border h-[650px] rounded-2xl flex flex-col gap-4 p-8">
-                <div className="flex gap-2 flex-col">
+          <div className={`wrapperBody w-full flex flex-col justify-between gap-4`}>
+            <div className="flex justify-end items-center gap-4">
+              <button className="bg-black px-4 py-2 w-full h-10" onClick={fetchApprovedList}>
+                Fetch
+              </button>
+            </div>
+            <div className="bg-white border-solid border-gray-500 border rounded-2xl flex flex-col gap-4 p-8">
+              <div className="flex gap-4 text-sm">
+                <div className="flex gap-2">
                   <span>Program ID</span>
                   <input
-                    className="border border-solid border-neutral-700 text-neutral-700"
+                    className="w-20 border border-solid border-neutral-700 text-neutral-700"
                     value={programId}
                     onChange={(e) => {
                       setProgramId(Number(e.target.value));
                     }}
                   />
                 </div>
-                <div className="flex gap-2 flex-col">
-                  <span>Mission Number (not a mission id)</span>
+                <div className="flex gap-2">
+                  <span>Mission Number</span>
                   <input
-                    className="border border-solid border-neutral-700 text-neutral-700"
+                    className="w-20 border border-solid border-neutral-700 text-neutral-700"
                     value={missionNumber}
                     onChange={(e) => {
                       setMissionNumber(Number(e.target.value));
                     }}
                   />
                 </div>
-                <div className="flex gap-2 flex-col">
+                <div className="flex gap-2">
                   <span>Recipient</span>
                   <input
-                    className="border border-solid border-neutral-700 text-neutral-700"
+                    className="w-60 border border-solid border-neutral-700 text-neutral-700"
                     value={recipient}
                     onChange={(e) => {
                       setRecipient(e.target.value);
                     }}
                   />
                 </div>
-                <div className="flex gap-2 flex-col">
+                <div className="flex gap-2">
                   <span>Prize</span>
                   <input
-                    className="border border-solid border-neutral-700 text-neutral-700"
+                    className="w-20 border border-solid border-neutral-700 text-neutral-700"
                     value={prize}
                     onChange={(e) => {
                       setPrize(e.target.value);
                     }}
                   />
                 </div>
-                <div className="flex justify-center items-center">
-                  <button
-                    className="bg-black px-4 py-2"
-                    onClick={() => signForClaim({ programId, missionNumber, recipient, prize })}
-                  >
-                    Sign!
-                  </button>
-                </div>
               </div>
-            </div>
-            <div>
-              <div className="w-[400px] mb-2 px-2 flex justify-between items-center">
-                <span className="text-xl text-neutral-600 font-semibold">Claim Test</span>
-                <button className="bg-black px-4 py-2" onClick={fetchApprovedList}>
-                  Fetch
+              <div className="flex justify-end items-center gap-4">
+                <button
+                  className="bg-black px-4 py-2 text-sm"
+                  onClick={async () => {
+                    await requestToValidator({ programId, missionNumber, prize, recipient });
+                  }}
+                >
+                  Request Sign
                 </button>
               </div>
-              <div className="bg-white border-solid border-gray-500 border h-[650px] rounded-2xl flex flex-col p-8">
-                {approved.map((sigInfo, idx) => (
-                  <div key={idx} className="flex justify-between items-center">
-                    <div>{`${sigInfo.program_id}_${sigInfo.mission_id}_${sigInfo.prize}_EDU`}</div>
-                    <div>
-                      <button onClick={() => claimPrize(idx)} className="bg-black px-4 py-2">
-                        Claim
-                      </button>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex flex-col justify-between items-center">
+                <div className="mb-2 px-2 ">
+                  <span className="text-xl text-neutral-600 font-semibold">Sign Test</span>
+                </div>
+                <div className="bg-white border-solid border-gray-500 border w-[450px] h-[350px] rounded-2xl flex flex-col gap-2 p-8">
+                  {requested.map((sigInfo, idx) => (
+                    <div key={idx} className="flex justify-between items-center">
+                      <div>{`${sigInfo.program_id}_${sigInfo.mission_id}_${sigInfo.prize}_EDU`}</div>
+                      <div>
+                        <button
+                          onClick={() => {
+                            signForClaim({
+                              programId: sigInfo.program_id,
+                              missionNumber: sigInfo.mission_id,
+                              recipient: sigInfo.recipient,
+                              prize: sigInfo.prize,
+                            });
+                          }}
+                          className="bg-black px-4 py-2"
+                        >
+                          Sign
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col justify-between items-center">
+                <div className="flex mb-2 px-2 justify-between items-center">
+                  <span className="text-xl text-neutral-600 font-semibold">Claim Test</span>
+                </div>
+                <div className="bg-white border-solid border-gray-500 border w-[450px] h-[350px] rounded-2xl flex flex-col p-8">
+                  {approved.map((sigInfo, idx) => (
+                    <div key={idx} className="flex justify-between items-center">
+                      <div>{`${sigInfo.program_id}_${sigInfo.mission_id}_${sigInfo.prize}_EDU`}</div>
+                      <div>
+                        <button onClick={() => claimPrize(idx)} className="bg-black px-4 py-2">
+                          Claim
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

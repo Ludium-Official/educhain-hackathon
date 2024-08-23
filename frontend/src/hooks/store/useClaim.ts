@@ -5,12 +5,14 @@ import { useState } from 'react';
 import { useAccount, useSignTypedData } from 'wagmi';
 import { readContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions';
 import fetchData from '@/libs/fetchData';
-import { Address, formatEther, Hex, parseEther } from 'viem';
+import { Address, formatEther, decodeEventLog, Hex, parseEther } from 'viem';
 import { config } from '@/app/provider';
 import { LD_EduProgramABI } from '@/constant/LD_EduProgramABI';
 import { ERROR_MESSAGE } from '@/constant/message';
 import { Signature } from '@/types/signature';
 import { subtract } from '@/functions/math';
+import { LOG_TOPIC0 } from '@/constant/topic0';
+import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
 
 interface ClaimInput {
   programId: number;
@@ -100,6 +102,20 @@ export const useClaim = (): UseValidatorReturn => {
         throw new Error('Transaction Fail');
       }
       setTxConfirm(true);
+
+      const targetLog = receipt.logs.filter((log) => log.topics[0] === LOG_TOPIC0.PRIZE_CLAIMED)[0];
+      const { args } = decodeEventLog({
+        abi: LD_EventLoggerABI,
+        data: targetLog.data,
+        topics: targetLog.topics,
+      }) as { args: { programId: bigint; missionNumber: bigint; recipient: string; prize: bigint; amount: bigint } };
+
+      await fetchData('/signature/claimed', 'POST', {
+        programId,
+        missionNumber,
+        sigId: sig.id,
+        remain: formatEther(args.prize),
+      });
     } catch (error) {
       console.error(error);
       setIsLoading(false);

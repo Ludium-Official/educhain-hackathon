@@ -18,6 +18,7 @@ interface SignForClaimInput {
 }
 
 interface UseValidatorReturn {
+  requestToValidator: (input: SignForClaimInput) => Promise<void>;
   signForClaim: (input: SignForClaimInput) => Promise<void>;
 }
 
@@ -25,6 +26,28 @@ export const useValidator = (): UseValidatorReturn => {
   const { signTypedDataAsync } = useSignTypedData();
   const account = useAccount();
   // function claim(uint256 programId_, uint256 missionNumber, address recipient, uint256 amount, bytes memory sig)
+
+  const requestToValidator = async ({ programId, missionNumber, recipient, prize }: SignForClaimInput) => {
+    const programInfo = await fetchData(`/programs/${programId}`);
+
+    const validatorAddress = await readContract(config, {
+      address: programInfo.program_address,
+      abi: LD_EduProgramABI,
+      functionName: 'auditor',
+      args: [BigInt(missionNumber)],
+    });
+
+    await fetchData('/signature/add', 'POST', {
+      sigData: {
+        programId,
+        missionId: missionNumber,
+        validator: validatorAddress,
+        recipient,
+        prize,
+        sig: null,
+      },
+    });
+  };
 
   const signForClaim = async ({ programId, missionNumber, recipient, prize }: SignForClaimInput) => {
     const programInfo = await fetchData(`/programs/${programId}`);
@@ -75,17 +98,15 @@ export const useValidator = (): UseValidatorReturn => {
       },
     });
 
-    await fetchData('/signature/add', 'POST', {
+    await fetchData('/signature/sign', 'POST', {
       sigData: {
         programId,
         missionId: missionNumber,
-        validator: account.address,
         recipient,
-        prize,
         sig,
       },
     });
   };
 
-  return { signForClaim };
+  return { requestToValidator, signForClaim };
 };

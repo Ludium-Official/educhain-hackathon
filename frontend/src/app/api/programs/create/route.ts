@@ -21,7 +21,7 @@ const handler = async (req: Request) => {
         programData.type,
         programData.title,
         programData.guide,
-        programData.prize,
+        programData.reserve,
         programData.start_at,
         programData.end_at,
       ],
@@ -37,9 +37,10 @@ const handler = async (req: Request) => {
 
     const missionInsertPromises = missionData.map(async (mission: MissionType, idx: number) => {
       await connection.query(
-        `INSERT INTO missions (validators, owner, program_id, mission_id, category, title, content, reserve, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))`,
+        `INSERT INTO missions (validators, validator_address, owner, program_id, mission_id, category, title, content, reserve, prize, is_confirm, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))`,
         [
           mission.validators,
+          mission.validator_address,
           mission.owner,
           programResult.insertId,
           idx + 1,
@@ -48,6 +49,7 @@ const handler = async (req: Request) => {
           mission.content,
           mission.reserve,
           mission.prize,
+          1,
           mission.end_at,
         ],
       );

@@ -18,8 +18,8 @@ export const SetBounty = () => {
   const account = useAccount();
   const { user } = useUser();
   const balance = useBalance({ address: account.address });
-  const { programInfo, setPrize } = useProgramCreation();
-  const afterBalance = subtract(formatEther(balance.data?.value || BigInt('0')), programInfo.prize);
+  const { programInfo, setReserve } = useProgramCreation();
+  const afterBalance = subtract(formatEther(balance.data?.value || BigInt('0')), programInfo.reserve);
   return (
     <ContentContainer contentHeader="Allocate Reserve">
       <div className="w-full flex gap-2 flex-col items-center justify-center">
@@ -49,7 +49,7 @@ export const SetBounty = () => {
                 <span
                   key={afterBalance}
                   className={`animate-balanceChange ${
-                    Number(programInfo.prize) === 0
+                    Number(programInfo.reserve) === 0
                       ? 'text-neutral-700'
                       : parseEther(afterBalance) >= BigInt(0)
                       ? 'text-green-600'
@@ -71,12 +71,12 @@ export const SetBounty = () => {
             <Input
               label="Reserve"
               type="text"
-              value={programInfo.prize}
+              value={programInfo.reserve}
               onChange={(e) => {
                 if (isNaN(Number(e.target.value)) || Number(e.target.value) < 0) {
                   return;
                 }
-                setPrize(e.target.value);
+                setReserve(e.target.value);
               }}
               endContent={<span className="text-neutral-400 text-base">EDU</span>}
               classNames={{
@@ -121,7 +121,7 @@ export const SetBounty = () => {
               </div>
               <div className="token-info flex gap-2">
                 <span key={afterBalance} className="animate-balanceChange">
-                  {programInfo.prize}
+                  {programInfo.reserve}
                 </span>
                 <span className="text-neutral-400">EDU</span>
               </div>
