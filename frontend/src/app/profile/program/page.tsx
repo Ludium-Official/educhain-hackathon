@@ -50,12 +50,18 @@ export default function ProgramManage() {
       event.preventDefault();
       event.stopPropagation();
 
-      await fetchData('/missions/patchActive', 'POST', {
-        id: event.target.value,
-      });
+      const dataValue = event.currentTarget.getAttribute('data-value');
+      const parsedValue = dataValue ? JSON.parse(dataValue) : null;
 
-      alert(`Now active mission id ${event.target.value}`);
-      callProgramsWithMissions();
+      if (parsedValue) {
+        await fetchData('/missions/patchActive', 'POST', {
+          id: parsedValue.id,
+          program_id: parsedValue.programId,
+        });
+
+        alert(`Now active mission id ${parsedValue.id}`);
+        callProgramsWithMissions();
+      }
     },
     [callProgramsWithMissions],
   );
@@ -140,7 +146,11 @@ export default function ProgramManage() {
                             <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
                           </div>
                           {!mission.is_confirm && (
-                            <button className={styles.confirmBtn} value={mission.id} onClick={SubmitComment}>
+                            <button
+                              className={styles.confirmBtn}
+                              data-value={JSON.stringify({ id: mission.id, programId: mission.program_id })}
+                              onClick={SubmitComment}
+                            >
                               Confirm
                             </button>
                           )}

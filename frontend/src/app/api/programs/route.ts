@@ -26,7 +26,8 @@ const handler = async (req: Request) => {
                 'title', m.title,
                 'created_at', m.created_at,
                 'is_confirm', m.is_confirm,
-                'reserve', m.reserve
+                'reserve', m.reserve,
+                'program_id', m.program_id
               )
             ),
           JSON_ARRAY())
