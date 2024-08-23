@@ -35,6 +35,10 @@
       }
 
       .info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
         width: 100%;
         background-color: #d5e1ff;
         padding: 10px;
@@ -43,55 +47,58 @@
         color: var(--info);
       }
 
-      .rowsTable {
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--grey-05);
+      .chapterContainer {
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fafafa;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
 
-        &:last-child {
-          padding-bottom: 0;
-          border-bottom: 0;
+      .chapterTitle {
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .inputWrapper {
+        display: flex;
+        flex-direction: column;
+
+        margin-top: 10px;
+
+        color: var(--grey-03);
+        font-size: 16px;
+        font-weight: 500;
+
+        &:first-child {
+          margin-top: 0;
         }
 
-        .inputWrapper {
-          display: flex;
-          flex-direction: column;
+        fieldset {
+          border-color: var(--grey-05);
+          border-width: 1px;
 
-          margin-top: 10px;
-
-          color: var(--grey-03);
-          font-size: 16px;
-          font-weight: 500;
-
-          &:first-child {
-            margin-top: 0;
-          }
-
-          fieldset {
+          &:hover {
             border-color: var(--grey-05);
-            border-width: 1px;
-
-            &:hover {
-              border-color: var(--grey-05);
-            }
           }
+        }
 
-          input {
-            color: var(--grey-04);
-          }
+        input {
+          color: var(--grey-04);
+        }
 
-          .input {
-            width: 100%;
-            padding: 11px 16px;
-            border: 1px solid var(--grey-05);
-            border-radius: 4px;
-            margin-top: 4px;
+        .input {
+          width: 100%;
+          padding: 11px 16px;
+          border: 1px solid var(--grey-05);
+          border-radius: 4px;
+          margin-top: 4px;
 
-            color: var(--grey-04);
+          color: var(--grey-04);
 
-            &textarea {
-              resize: none;
-              height: 180px;
-            }
+          &textarea {
+            resize: none;
+            height: 180px;
           }
         }
       }
