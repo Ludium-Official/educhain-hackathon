@@ -1,6 +1,8 @@
 'use client';
 
+import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
 import ArrowLogo from '@/assets/common/ArrowLogo.svg';
+import StudyLogo from '@/assets/common/StudyLogo.svg';
 import PhoneLogo from '@/assets/profile/PhoneLogo.svg';
 import ProfileLogo from '@/assets/profile/ProfileLogo.svg';
 import BackLink from '@/components/BackLink';
@@ -12,6 +14,8 @@ import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import { UserType } from '@/types/user';
 import { UserSubmissionStatusMissionsType } from '@/types/user_submission_status_missions';
+import { Tab, Tabs } from '@mui/material';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,6 +31,11 @@ export default function Profile() {
   const [validateMissions, setValidateMissions] = useState<MissionType[]>([]);
   const [ownerMissions, setOwnerMissions] = useState<MissionType[]>([]);
   const [statusMissions, setStatusMissions] = useState<UserSubmissionStatusMissionsType[]>([]);
+  const [value, setValue] = useState('one');
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   const signIn = useCallback(async () => {
     const addressKey = sha256ToHex(`${account.address}${process.env.NEXT_PUBLIC_ADDRESS_KEY}`);
@@ -101,82 +110,165 @@ export default function Profile() {
                             Hello,<span>{user?.name}</span> 👋
                           </div>
                         </div>
-                        <div className={styles.infoWrapper}>
-                          <div className={styles.intro}>{user?.introduce}</div>
-                          <div className={styles.number}>
-                            <Image className={styles.phoneImg} src={PhoneLogo.src} alt="logo" width={24} height={24} />
-                            {user?.number}
+                        {user.number && user.introduce && (
+                          <div className={styles.infoWrapper}>
+                            {user.introduce && <div className={styles.intro}>{user.introduce}</div>}
+                            {user.number && (
+                              <div className={styles.number}>
+                                <Image
+                                  className={styles.phoneImg}
+                                  src={PhoneLogo.src}
+                                  alt="logo"
+                                  width={24}
+                                  height={24}
+                                />
+                                {user.number}
+                              </div>
+                            )}
                           </div>
-                        </div>
+                        )}
                       </div>
                       <Link className={styles.editBtn} href={`${PATH.PROFILE}/edit`}>
                         Edit Profile
                       </Link>
                     </div>
-                    <div className={styles.userStatusContainer}>
-                      <div className={styles.userStatusWrapper}>
-                        <div className={styles.title}>
-                          Owned programs
-                          <Link className={styles.link} href={`${PATH.PROFILE}/program`}>
-                            Manage
-                            <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
-                          </Link>
-                        </div>
-                        <div className={styles.rows}>
-                          {programs.map((program) => {
-                            return (
-                              <div key={program.id} className={styles.row}>
-                                <Link href={`${PATH.PROGRAM}/${program.id}`} className={styles.rowTitle}>
-                                  {program.title}
-                                </Link>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      <div className={styles.userStatusWrapper}>
-                        <div className={styles.title}>Missions in validate</div>
-                        <div className={styles.rows}>
-                          {validateMissions.map((mission) => {
-                            return (
-                              <div key={mission.id} className={styles.row}>
-                                <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
-                                  {mission.title}
-                                </Link>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      <div className={styles.userStatusWrapper}>
-                        <div className={styles.title}>Owned Missions</div>
-                        <div className={styles.rows}>
-                          {ownerMissions.map((mission) => {
-                            return (
-                              <div key={mission.id} className={styles.row}>
-                                <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
-                                  {mission.title}
-                                </Link>
-                                <div>{mission.is_confirm ? 'YES' : 'NO'}</div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      <div className={styles.userStatusWrapper}>
-                        <div className={styles.title}>Participate Missions</div>
-                        <div className={styles.rows}>
-                          {statusMissions.map((mission) => {
-                            return (
-                              <div key={mission.id} className={styles.row}>
-                                <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.rowTitle}>
-                                  {mission.title}
-                                </Link>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
+                    <div className={styles.handleWrapper}>
+                      <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary">
+                        <Tab value="one" label="Owned programs" />
+                        <Tab value="two" label="Owned Missions" />
+                        <Tab value="three" label="Missions in validate" />
+                        <Tab value="four" label="Participate Missions" />
+                      </Tabs>
+                      {value === 'one' && (
+                        <>
+                          <div className={styles.title}>
+                            <Link className={styles.link} href={`${PATH.PROFILE}/program`}>
+                              View all
+                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                            </Link>
+                          </div>
+                          <div className={styles.rows}>
+                            {programs.map((program) => {
+                              const formatDate = dayjs(program.end_at).format('YYYY.MM.DD');
+
+                              return (
+                                <div key={program.id} className={styles.row}>
+                                  <div className={styles.rowTitle}>
+                                    <Link href={`${PATH.PROGRAM}/${program.id}`} className={styles.link}>
+                                      <span className={styles.programType}>{program.type}</span>
+                                      <span className={styles.contentTitle}>{program.title}</span>
+                                    </Link>
+                                    <div className={styles.prize}>prize: {program.reserve} EDU</div>
+                                  </div>
+                                  <div className={styles.deadline}>Deadline: {program.end_at ? formatDate : '-'}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+                      {value === 'two' && (
+                        <>
+                          <div className={styles.title}>
+                            <Link className={styles.link} href={`${PATH.PROFILE}/mission`}>
+                              View all
+                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                            </Link>
+                          </div>
+                          <div className={styles.rows}>
+                            {ownerMissions.map((mission) => {
+                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
+
+                              return (
+                                <div key={mission.id} className={styles.row}>
+                                  <div className={styles.rowTitle}>
+                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
+                                      <span>
+                                        {mission.category === 'study' ? (
+                                          <Image
+                                            className={styles.categoryLogo}
+                                            src={StudyLogo.src}
+                                            alt="logo"
+                                            width={24}
+                                            height={24}
+                                          />
+                                        ) : (
+                                          <Image
+                                            className={styles.categoryLogo}
+                                            src={AnnouncementLogo.src}
+                                            alt="logo"
+                                            width={24}
+                                            height={24}
+                                          />
+                                        )}
+                                      </span>
+                                      <span className={styles.contentTitle}>{mission.title}</span>
+                                    </Link>
+                                    <div className={styles.prize}>prize: {mission.prize} EDU</div>
+                                  </div>
+                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+                      {value === 'three' && (
+                        <>
+                          <div className={styles.title}>
+                            <Link className={styles.link} href={`${PATH.PROFILE}/validate`}>
+                              View all
+                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                            </Link>
+                          </div>
+                          <div className={styles.rows}>
+                            {validateMissions.map((mission) => {
+                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
+
+                              return (
+                                <div key={mission.id} className={styles.row}>
+                                  <div className={styles.rowTitle}>
+                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
+                                      <span className={styles.contentTitle}>{mission.title}</span>
+                                    </Link>
+                                  </div>
+                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+                      {value === 'four' && (
+                        <>
+                          <div className={styles.title}>
+                            <Link className={styles.link} href={`${PATH.PROFILE}/participate`}>
+                              View all
+                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                            </Link>
+                          </div>
+                          <div className={styles.rows}>
+                            {statusMissions.map((mission) => {
+                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
+
+                              return (
+                                <div key={mission.id} className={styles.row}>
+                                  <div className={styles.rowTitle}>
+                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
+                                      <span className={styles.programType}>
+                                        {mission.missionCnt === mission.submissionCount ? 'Done' : 'Ing'}
+                                      </span>
+                                      <span className={styles.contentTitle}>{mission.title}</span>
+                                    </Link>
+                                    <div className={styles.prize}>prize: {mission.prize} EDU</div>
+                                  </div>
+                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
                     </div>
                   </>
                 ) : (

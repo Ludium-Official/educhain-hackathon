@@ -12,7 +12,7 @@ const handler = async (req: Request) => {
     connection = await pool.getConnection();
 
     await connection.query(
-      `INSERT INTO missions (validators, owner, program_id, category, title, content, prize, end_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO missions (validators, owner, program_id, category, title, content, prize, end_at, reserve) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         missionData.validators,
         missionData.owner,
@@ -22,6 +22,7 @@ const handler = async (req: Request) => {
         missionData.content,
         missionData.prize,
         missionData.end_at,
+        missionData.reserve,
       ],
     );
 

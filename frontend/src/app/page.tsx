@@ -8,6 +8,7 @@ import { getConvertDeadline } from '@/functions/deadline-function';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
+import { MissionStatusType } from '@/types/mission_status';
 import { ProgramType } from '@/types/program';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ export default function Home() {
   const { user } = useUser();
   const [programs, setPrograms] = useState<ProgramType[]>([]);
   const [notOwnerMissions, setNotOwnerMissions] = useState<MissionType[]>([]);
+  const [missions, setMissions] = useState<MissionStatusType[]>([]);
 
   const sumRestAmount = useMemo(() => {
     return notOwnerMissions.reduce((result, mission) => (result = add(result, mission.prize)), '0');
@@ -26,17 +28,22 @@ export default function Home() {
 
   useEffect(() => {
     const callData = async () => {
-      const [programs, notOwnerMissions] = await Promise.all([
+      const [programs, notOwnerMissions, missions] = await Promise.all([
         fetchData('/programs', 'POST', {
           isDash: true,
         }),
         fetchData('/missions/not_owner', 'POST', {
           walletId: user?.walletId,
         }),
+        fetchData('/missions', 'POST', {
+          isDash: true,
+          wallet_id: user?.walletId,
+        }),
       ]);
 
       setPrograms(programs);
       setNotOwnerMissions(notOwnerMissions);
+      setMissions(missions);
     };
 
     callData();
@@ -129,9 +136,7 @@ export default function Home() {
                   <div key={program.id} className={styles.tableBody}>
                     <Link href={`${PATH.PROGRAM}/${program.id}`}>
                       <div className={styles.endTime}>
-                        {program.end_at
-                          ? `${getConvertDeadline(program.end_at)} days before deadline`
-                          : 'Deadline not set'}
+                        {program.end_at ? `D-${getConvertDeadline(program.end_at)}` : 'Deadline not set'}
                       </div>
                       <div className={styles.title}>{program.title}</div>
                     </Link>
@@ -146,7 +151,16 @@ export default function Home() {
                     <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                   </Link>
                 </div>
-                <div className={styles.tableBody}>list</div>
+                {missions.map((mission) => (
+                  <div key={mission.id} className={styles.tableBody}>
+                    <Link href={`${PATH.MISSION}/${mission.id}`}>
+                      <div className={styles.endTime}>
+                        {mission.end_at ? `D-${getConvertDeadline(mission.end_at)}` : 'Deadline not set'}
+                      </div>
+                      <div className={styles.title}>{mission.title}</div>
+                    </Link>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

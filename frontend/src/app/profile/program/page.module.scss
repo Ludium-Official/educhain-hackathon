@@ -1,7 +1,15 @@
 .container {
   .title {
+    margin-bottom: 14px;
+
     font-size: 24px;
     font-weight: bold;
+  }
+
+  .introCard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 
   .content {
@@ -10,9 +18,26 @@
 
     background-color: var(--white);
     width: 100%;
-    margin-top: 24px;
+    margin-top: 10px;
     padding: 24px;
     border-radius: 20px;
+
+    .cardTitle {
+      color: var(--purple-01);
+      font-weight: bold;
+      font-size: 25px;
+    }
+
+    .cardContent {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      margin-top: 30px;
+
+      font-size: 20px;
+      font-weight: 500;
+    }
 
     .row {
       display: flex;
@@ -24,8 +49,25 @@
         margin-bottom: 0;
       }
 
-      .programTitle {
-        font-weight: bold;
+      .programTitleWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .programTitle {
+          max-width: 800px;
+
+          font-size: 20px;
+          font-weight: bold;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        span {
+          color: var(--grey-04);
+        }
       }
 
       .line {

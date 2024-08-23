@@ -117,9 +117,9 @@ const SideHeader = () => {
       <div className={styles.footerWrapper}>
         <Image className={styles.subLogo} src={LudiumSubLogo.src} alt="logo" width={52} height={24} />
         <div className={styles.companyInfoWrapper}>
-          <div>(주) 루디움 | 대표자: 홍길동</div>
-          <div>개인정보처리방침 | 이용약관</div>
-          <div>개인정보보호책임자: 홍길동</div>
+          <div>Co.,Ltd. LUDIUM | Rep: LUDIUM</div>
+          <div>Terms of service | Privacy policy</div>
+          <div>Chief Privacy Officer: LUDIUM</div>
         </div>
         <div className={styles.contactWrapper}>
           <strong>Contact us</strong>

@@ -122,7 +122,7 @@ export default function ProgramDetail() {
                                 <div className={styles.missionPrize}>(Prize: {mission.prize})</div>
                               </div>
                               <button
-                                className={clsx(styles.collapseBtn, 'accordion-button collapsed')}
+                                className={clsx(styles.collapseBtn, 'accordion-button')}
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target={`#accordion-${mission.id}`}
@@ -130,7 +130,10 @@ export default function ProgramDetail() {
                                 aria-controls={`accordion-${mission.id}`}
                               ></button>
                             </h2>
-                            <div id={`accordion-${mission.id}`} className="accordion-collapse collapse">
+                            <div
+                              id={`accordion-${mission.id}`}
+                              className={clsx(styles.accordionCollapse, 'accordion-collapse collapse show')}
+                            >
                               <div className={clsx(styles.missionsWrapper, 'accordion-body')}>
                                 <div className={styles.missionOwner}>
                                   Manager: {mission.owner_name || <button className={styles.apply}>Apply</button>}

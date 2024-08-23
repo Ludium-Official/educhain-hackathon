@@ -59,18 +59,17 @@ export default function Program() {
                         <div className={styles.announceTitle}>{program.title}</div>
                       </Link>
                       <button
-                        className={clsx(styles.collapseBtn, 'accordion-button collapsed')}
+                        className={clsx(styles.collapseBtn, 'accordion-button')}
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target={`#accordion-${program.id}`}
-                        aria-expanded="false"
+                        aria-expanded="true"
                         aria-controls={`accordion-${program.id}`}
                       ></button>
                     </h2>
                     <div
                       id={`accordion-${program.id}`}
-                      className="accordion-collapse collapse"
-                      data-bs-parent="#accordionFlush"
+                      className={clsx(styles.accordionCollapse, 'accordion-collapse collapse show')}
                     >
                       <div className={clsx(styles.missionsWrapper, 'accordion-body')}>
                         {isEmpty(missions) && (

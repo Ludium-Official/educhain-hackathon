@@ -7,12 +7,12 @@ import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
+import { getLocalTimeZone, today } from '@internationalized/date';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
+import { DatePicker } from '@nextui-org/react';
 import { useParams, useRouter } from 'next/navigation';
 import { isEmpty } from 'ramda';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
 
 export default function ProgramEdit() {
@@ -31,6 +31,7 @@ export default function ProgramEdit() {
   const [missionContent, setMissionContent] = useState('');
   const [missionCategory, setMissionCategory] = useState(''); // announcement, study
   const [missionPrize, setMissionPrize] = useState('');
+  const [missionReserve, setMissionReserve] = useState('');
   const [missionEndTime, setMissionEndTime] = useState<string | null>(null);
 
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function ProgramEdit() {
             title: missionTitle,
             content: missionContent,
             prize: missionPrize,
+            reserve: missionReserve,
             end_at: missionEndTime,
           },
         });
@@ -89,6 +91,11 @@ export default function ProgramEdit() {
       console.error(err);
     }
   };
+
+  const totalPrize = useMemo(() => {
+    return missions.reduce((result, mission) => (result += Number(mission.prize)), 0);
+  }, [missions]);
+  console.log(totalPrize);
 
   return (
     <Wrapper>
@@ -158,7 +165,7 @@ export default function ProgramEdit() {
                     </>
                   )}
                   <div className={styles.table}>
-                    <div className={styles.tableTitle}>Program Add</div>
+                    <div className={styles.tableTitle}>Mission Create</div>
                     <div className={styles.rowsTable}>
                       <div className={styles.inputWrapper}>
                         Title
@@ -185,11 +192,25 @@ export default function ProgramEdit() {
                         />
                       </div>
                       <div className={styles.inputWrapper}>
+                        Reserve
+                        <input
+                          className={styles.input}
+                          placeholder="Reserve of mission"
+                          onChange={(e) => setMissionReserve(e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
                         Deadline
                         <DatePicker
-                          onChange={(value) => {
-                            const formatValue = dayjs(value).format('YYYY-MM-DD HH:mm:ss');
-                            setMissionEndTime(formatValue);
+                          aria-label="program-period"
+                          size="sm"
+                          lang="en"
+                          hourCycle={24}
+                          variant="underlined"
+                          visibleMonths={3}
+                          minValue={today(getLocalTimeZone())}
+                          onChange={(e) => {
+                            setMissionEndTime(`${e.year}-${e.month >= 10 ? e.month : `0${e.month}`}-${e.day} 00:00:00`);
                           }}
                         />
                       </div>
@@ -214,7 +235,7 @@ export default function ProgramEdit() {
                       </div>
                     </div>
                     <button className={styles.addBtn} onClick={addMission}>
-                      Make Mission
+                      Create Mission
                     </button>
                   </div>
                 </div>

@@ -63,6 +63,10 @@
         padding-bottom: 0;
       }
 
+      .accordionCollapse {
+        visibility: visible;
+      }
+
       .tableRow {
         display: flex;
         justify-content: space-between;

@@ -23,7 +23,7 @@ const SubmissionRow: React.FC<SubmissionRowProps> = ({ submissions }) => {
           <div key={submission.id} className={styles.submissionWrapper}>
             <div className={styles.leftSide}>
               {submission.type && <span>{submission.type === 'article' ? 'Article' : 'Mission'}</span>}
-              <span className={styles.endTime}>{getConvertDeadline(submission.end_at)} days before deadline</span>
+              <span className={styles.endTime}>D-{getConvertDeadline(submission.end_at)}</span>
               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
             </div>
             <div className={styles.rightSide}>

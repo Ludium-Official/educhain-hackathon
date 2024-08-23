@@ -1,5 +1,6 @@
 'use client';
 
+import AddLogo from '@/assets/common/AddLogo.svg';
 import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
 import StudyLogo from '@/assets/common/StudyLogo.svg';
 import BackLink from '@/components/BackLink';
@@ -56,8 +57,14 @@ export default function MissionDetail() {
     <Wrapper>
       {{
         header: (
-          <div>
+          <div className={styles.headerWrapper}>
             <BackLink path={mission ? `${PATH.PROGRAM}/${mission.program_id}` : PATH.PROGRAM} />
+            {user && user?.walletId === mission?.owner && (
+              <Link className={styles.addLink} href={`${PATH.MISSION}/${param.id}/edit`}>
+                <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
+                Manage
+              </Link>
+            )}
           </div>
         ),
         body: (
@@ -97,9 +104,7 @@ export default function MissionDetail() {
                         return (
                           <div key={submission.id} className={styles.submissionContent}>
                             <div className={styles.leftSide}>
-                              <span className={styles.endTime}>
-                                {getConvertDeadline(submission.end_at)} days before deadline
-                              </span>
+                              <span className={styles.endTime}>D-{getConvertDeadline(submission.end_at)}</span>
                               <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                             </div>
                             {submission.type && (
@@ -125,9 +130,7 @@ export default function MissionDetail() {
                                     <span className={styles.submissionType}>
                                       {submission.type === 'article' ? 'Article' : 'Mission'}
                                     </span>
-                                    <span className={styles.endTime}>
-                                      {getConvertDeadline(submission.end_at)} days before deadline
-                                    </span>
+                                    <span className={styles.endTime}>D-{getConvertDeadline(submission.end_at)}</span>
                                     <Link href={`${PATH.SUBMISSION}/${submission.id}`}>{submission.title}</Link>
                                   </div>
                                   {submission.type && (
