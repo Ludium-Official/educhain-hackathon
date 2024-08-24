@@ -41,6 +41,24 @@ export const ProgramInfo = () => {
             />
           </div>
           <div className="title flex gap-3 items-center justify-start">
+            <span className="text-lg text-neutral-600 w-28">- Tag </span>
+            <Input
+              size="sm"
+              variant="underlined"
+              labelPlacement="outside"
+              value={programInfo.type}
+              onChange={(e) => {
+                setType(e.target.value);
+              }}
+              placeholder="e.g., Educhain"
+              classNames={{
+                base: 'w-[400px] shadow-none',
+                inputWrapper: 'p-0 shadow-none border-b-2 border-solid border-neutral-200',
+                input: 'text-base text-neutral-700 placeholder:text-neutral-400',
+              }}
+            />
+          </div>
+          <div className="title flex gap-3 items-center justify-start">
             <span className="text-lg text-neutral-600 w-28">- Period</span>
             <DateRangePicker
               aria-label="program-period"

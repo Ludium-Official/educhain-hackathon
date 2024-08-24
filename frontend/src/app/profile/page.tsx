@@ -6,8 +6,6 @@ import StudyLogo from '@/assets/common/StudyLogo.svg';
 import PhoneLogo from '@/assets/profile/PhoneLogo.svg';
 import ProfileLogo from '@/assets/profile/ProfileLogo.svg';
 import BackLink from '@/components/BackLink';
-import ParticipateMissionList from '@/components/ParticipateMissionList';
-import ValidateMissionList from '@/components/ValidateList';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
@@ -147,7 +145,7 @@ export default function Profile() {
                         <>
                           <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/program`}>
-                              View all
+                              Program Dashboard
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
                           </div>
@@ -173,12 +171,12 @@ export default function Profile() {
                       )}
                       {value === 'two' && (
                         <>
-                          <div className={styles.title}>
+                          {/* <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/mission`}>
                               View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
-                          </div>
+                          </div> */}
                           <div className={styles.rows}>
                             {ownerMissions.map((mission) => {
                               const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
@@ -217,18 +215,60 @@ export default function Profile() {
                         </>
                       )}
                       {value === 'three' && (
-                        <div className={styles.rows}>
-                          {validateMissions.map((mission) => (
-                            <ValidateMissionList key={mission.id} mission={mission} />
-                          ))}
-                        </div>
+                        <>
+                          {/* <div className={styles.title}>
+                            <Link className={styles.link} href={`${PATH.PROFILE}/validate`}>
+                              View all
+                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                            </Link>
+                          </div> */}
+                          <div className={styles.rows}>
+                            {validateMissions.map((mission) => {
+                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
+
+                              return (
+                                <div key={mission.id} className={styles.row}>
+                                  <div className={styles.rowTitle}>
+                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
+                                      <span className={styles.contentTitle}>{mission.title}</span>
+                                    </Link>
+                                  </div>
+                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
                       )}
                       {value === 'four' && (
-                        <div className={styles.rows}>
-                          {statusMissions.map((mission) => (
-                            <ParticipateMissionList key={mission.id} mission={mission} />
-                          ))}
-                        </div>
+                        <>
+                          {/* <div className={styles.title}>
+                            <Link className={styles.link} href={`${PATH.PROFILE}/participate`}>
+                              View all
+                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
+                            </Link>
+                          </div> */}
+                          <div className={styles.rows}>
+                            {statusMissions.map((mission) => {
+                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
+
+                              return (
+                                <div key={mission.id} className={styles.row}>
+                                  <div className={styles.rowTitle}>
+                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
+                                      <span className={styles.programType}>
+                                        {mission.missionCnt === mission.submissionCount ? 'Done' : 'Ing'}
+                                      </span>
+                                      <span className={styles.contentTitle}>{mission.title}</span>
+                                    </Link>
+                                    <div className={styles.prize}>Prize: {mission.prize} EDU</div>
+                                  </div>
+                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
                       )}
                     </div>
                   </>

@@ -92,7 +92,7 @@ export default function ProgramManage() {
         ),
         body: (
           <div className={styles.container}>
-            <div className={styles.title}>Program Manage</div>
+            <div className={styles.title}>Program Dashboard</div>
             <div className={styles.introCard}>
               <div className={styles.content}>
                 <div className={styles.cardTitle}>Prize</div>

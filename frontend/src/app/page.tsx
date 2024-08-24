@@ -74,10 +74,10 @@ export default function Home() {
   return (
     <Wrapper>
       {{
-        header: <div>Header</div>,
+        header: <div>Edupyramid</div>,
         body: (
           <div className={styles.container}>
-            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+            {/* <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
               <div className={`carousel-indicators ${styles.carouselButtons}`}>
                 <button
                   type="button"
@@ -111,16 +111,48 @@ export default function Home() {
                   <Image className="d-block w-100" src={Banner.src} alt="logo" width={1033} height={256} />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className={styles.missMissionContainer}>
               <div className={styles.missedContainer}>
                 <Link className={styles.missionLink} href={PATH.MISSION}>
-                  <div>Missed Mission</div>
+                <div>.</div>
                   <div className={styles.missedAmount}>
-                    <div id="counter">0</div>EDU
+                  Open Edu Bounty Program Management System on Educhain
                   </div>
-                  <div>Is Waiting For You</div>
+                  <div>.</div>
                 </Link>
+              </div>
+            </div>
+            <div className="flex space-x-4">
+              <div className={styles.missMissionContainer}>
+                <div className={styles.missedContainer}>
+                  <Link className={styles.missionLink} href={PATH.MISSION}>
+                    <div>Whole Builder</div>
+                    <div className={styles.missedAmount}>
+                      200+
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              <div className={styles.missMissionContainer}>
+                <div className={styles.missedContainer}>
+                  <Link className={styles.missionLink} href={PATH.MISSION}>
+                    <div>Total Bounty</div>
+                    <div className={styles.missedAmount}>
+                      $400K+
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              <div className={styles.missMissionContainer}>
+                <div className={styles.missedContainer}>
+                  <Link className={styles.missionLink} href={PATH.MISSION}>
+                    <div>Remain Bounty</div>
+                    <div className={styles.missedAmount}>
+                      <div id="counter">0</div>EDU
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
             <div className={styles.tableList}>
