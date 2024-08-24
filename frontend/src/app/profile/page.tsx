@@ -204,7 +204,7 @@ export default function Profile() {
                                       </span>
                                       <span className={styles.contentTitle}>{mission.title}</span>
                                     </Link>
-                                    <div className={styles.prize}>prize: {mission.prize} EDU</div>
+                                    <div className={styles.prize}>Reserve: {mission.prize} EDU</div>
                                   </div>
                                   <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
                                 </div>
