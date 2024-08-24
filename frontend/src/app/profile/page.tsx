@@ -158,7 +158,7 @@ export default function Profile() {
                                       <span className={styles.programType}>{program.type}</span>
                                       <span className={styles.contentTitle}>{program.title}</span>
                                     </Link>
-                                    <div className={styles.prize}>prize: {program.reserve} EDU</div>
+                                    <div className={styles.prize}>Reserve: {program.reserve} EDU</div>
                                   </div>
                                   <div className={styles.deadline}>Deadline: {program.end_at ? formatDate : '-'}</div>
                                 </div>
@@ -178,7 +178,6 @@ export default function Profile() {
                           <div className={styles.rows}>
                             {ownerMissions.map((mission) => {
                               const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
-
                               return (
                                 <div key={mission.id} className={styles.row}>
                                   <div className={styles.rowTitle}>
@@ -204,7 +203,7 @@ export default function Profile() {
                                       </span>
                                       <span className={styles.contentTitle}>{mission.title}</span>
                                     </Link>
-                                    <div className={styles.prize}>prize: {mission.prize} EDU</div>
+                                    <div className={styles.prize}>Prize: {mission.prize} EDU</div>
                                   </div>
                                   <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
                                 </div>
@@ -260,7 +259,7 @@ export default function Profile() {
                                       </span>
                                       <span className={styles.contentTitle}>{mission.title}</span>
                                     </Link>
-                                    <div className={styles.prize}>prize: {mission.prize} EDU</div>
+                                    <div className={styles.prize}>Prize: {mission.prize} EDU</div>
                                   </div>
                                   <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
                                 </div>

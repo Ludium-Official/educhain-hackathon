@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
+import { add } from '@/functions/math';
 
 export default function ProgramDetail() {
   const param = useParams();
@@ -27,6 +28,7 @@ export default function ProgramDetail() {
   const { user } = useUser();
   const [program, setProgram] = useState<ProgramType>();
   const [missions, setMissions] = useState<ParsingMissionType[]>([]);
+  const [totalPrize, setTotalPrize] = useState<string>('0');
 
   useEffect(() => {
     const callData = async () => {
@@ -48,6 +50,12 @@ export default function ProgramDetail() {
 
         setProgram(programResponse as ProgramType);
         setMissions(parsingMissionData as ParsingMissionType[]);
+
+        let total = '0';
+        for (const mission of parsingMissionData) {
+          total = add(total, mission.prize);
+        }
+        setTotalPrize(total);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -87,7 +95,7 @@ export default function ProgramDetail() {
                   <div className={styles.table}>
                     <div className={styles.tableHeader}>
                       <div className={styles.titleWrapper}>
-                        Program<span>(Total prize: {program.reserve})</span>
+                        Program<span>(Total prize: {totalPrize})</span>
                       </div>
                       <span className={styles.makeDate}>Date: {formatDate}</span>
                     </div>
@@ -100,7 +108,6 @@ export default function ProgramDetail() {
                     <div className={clsx(styles.tableAccordion, 'accordion accordion-flush')}>
                       {missions.map((mission) => {
                         const chapters = mission.chapters;
-
                         return (
                           <div key={mission.id} className={clsx(styles.tableBody, 'accordion-item')}>
                             <h2 className={clsx(styles.tableRow, 'accordion-header')}>
