@@ -7,41 +7,25 @@ import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
-import { getLocalTimeZone, today } from '@internationalized/date';
-import { FormControlLabel, Radio, RadioGroup, Tab, Tabs } from '@mui/material';
-import { DatePicker } from '@nextui-org/react';
-import { useParams, useRouter } from 'next/navigation';
-import { isEmpty } from 'ramda';
-import { useEffect, useMemo, useState } from 'react';
+import { TabContext, TabPanel } from '@mui/lab';
+import { Tab, Tabs } from '@mui/material';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
-import TabPanel from '@mui/lab/TabPanel';
-import TabContext from '@mui/lab/TabContext';
-import { PieChart } from '@mui/x-charts';
 
 export default function ProgramEdit() {
-  const route = useRouter();
   const param = useParams();
 
   const { user } = useUser();
   const [program, setProgram] = useState<ProgramType>();
   const [missions, setMissions] = useState<MissionType[]>([]);
+  const [programTitle, setProgramTitle] = useState('');
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
   const [value, setValue] = useState('1');
-
-  // for edit program
-  const [programTitle, setProgramTitle] = useState('');
-
-  // for create mission
-  const [missionTitle, setMissionTitle] = useState('');
-  const [missionContent, setMissionContent] = useState('');
-  const [missionCategory, setMissionCategory] = useState(''); // announcement, study
-  const [missionPrize, setMissionPrize] = useState('');
-  const [missionReserve, setMissionReserve] = useState('');
-  const [missionEndTime, setMissionEndTime] = useState<string | null>(null);
 
   useEffect(() => {
     const callData = async () => {
@@ -60,56 +44,6 @@ export default function ProgramEdit() {
 
     callData();
   }, [param.id, user?.walletId]);
-
-  const addMission = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (isEmpty(missionTitle)) {
-      alert('Fill in title');
-      return;
-    } else if (isEmpty(missionCategory)) {
-      alert('Fill in category');
-      return;
-    } else if (isEmpty(missionPrize)) {
-      alert('Fill in prize');
-      return;
-    } else if (Number(missionPrize) > reservePrize) {
-      alert('Check rest prize');
-      return;
-    } else if (Number(missionReserve) > Number(missionPrize)) {
-      alert('Check mission prize');
-      return;
-    }
-
-    try {
-      if (user && program) {
-        await fetchData('/missions/add', 'POST', {
-          missionData: {
-            validators: program.owner,
-            owner: user.walletId,
-            program_id: program.id,
-            category: missionCategory,
-            title: missionTitle,
-            content: missionContent,
-            prize: missionPrize,
-            reserve: missionReserve,
-            end_at: missionEndTime,
-          },
-        });
-
-        alert('Success to make mission!');
-        route.push(`${PATH.PROGRAM}/${program.id}`);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const reservePrize = useMemo(() => {
-    const allocatePrize = missions.reduce((result, mission) => (result += Number(mission.prize)), 0);
-
-    return Number(program?.reserve) - allocatePrize;
-  }, [missions, program?.reserve]);
 
   return (
     <Wrapper>

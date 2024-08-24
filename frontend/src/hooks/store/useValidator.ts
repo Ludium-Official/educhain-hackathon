@@ -1,14 +1,13 @@
 'use client';
 
-import { opencampus } from '@/constant/educhain-rpc';
-import { useState } from 'react';
-import { useAccount, useSignTypedData } from 'wagmi';
-import { readContract } from 'wagmi/actions';
-import fetchData from '@/libs/fetchData';
-import { Address, parseEther } from 'viem';
 import { config } from '@/app/provider';
 import { LD_EduProgramABI } from '@/constant/LD_EduProgramABI';
+import { opencampus } from '@/constant/educhain-rpc';
 import { ERROR_MESSAGE } from '@/constant/message';
+import fetchData from '@/libs/fetchData';
+import { Address, parseEther } from 'viem';
+import { useAccount, useSignTypedData } from 'wagmi';
+import { readContract } from 'wagmi/actions';
 
 interface SignForClaimInput {
   programId: number;
@@ -41,7 +40,10 @@ export const useValidator = (): UseValidatorReturn => {
       sigData: {
         programId,
         missionId: missionNumber,
-        validator: validatorAddress,
+        validator:
+          validatorAddress === '0x0000000000000000000000000000000000000000'
+            ? programInfo.owner_address
+            : validatorAddress,
         recipient,
         prize,
         sig: null,

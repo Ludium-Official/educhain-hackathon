@@ -1,23 +1,15 @@
 'use client';
 
-import AddLogo from '@/assets/common/AddLogo.svg';
-import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
-import StudyLogo from '@/assets/common/StudyLogo.svg';
 import BackLink from '@/components/BackLink';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
-import fetchData from '@/libs/fetchData';
-import { ProgramType } from '@/types/program';
-import clsx from 'clsx';
-import Image from 'next/image';
-import Link from 'next/link';
-import { isEmpty, prop, sortBy } from 'ramda';
-import { useEffect, useState } from 'react';
-import styles from './page.module.scss';
-import { useValidator } from '@/hooks/store/useValidator';
-import { Signature } from '@/types/signature';
-import { useAccount } from 'wagmi';
 import { useClaim } from '@/hooks/store/useClaim';
+import { useValidator } from '@/hooks/store/useValidator';
+import fetchData from '@/libs/fetchData';
+import { Signature } from '@/types/signature';
+import { useState } from 'react';
+import { useAccount } from 'wagmi';
+import styles from './page.module.scss';
 
 export default function SignTest() {
   const [programId, setProgramId] = useState<number>(0);

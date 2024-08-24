@@ -6,10 +6,13 @@ import StudyLogo from '@/assets/common/StudyLogo.svg';
 import PhoneLogo from '@/assets/profile/PhoneLogo.svg';
 import ProfileLogo from '@/assets/profile/ProfileLogo.svg';
 import BackLink from '@/components/BackLink';
+import ParticipateMissionList from '@/components/ParticipateMissionList';
+import ValidateMissionList from '@/components/ValidateList';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
+import { DBSignature } from '@/types/entities/signature';
 import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import { UserType } from '@/types/user';
@@ -56,10 +59,34 @@ export default function Profile() {
     setUser(null);
   }, [account.address, setUser]);
 
+  const participateCallData = useCallback(async () => {
+    const [statusMissions, recipientList] = await Promise.all([
+      // 돈을 받았다 라는 내용을 적어야 할 것 같은데 signature에서 claim하면 사라지는데 사라지면 안될 것 같음
+      fetchData('/user_submission_status/missions', 'POST', {
+        walletId: user?.walletId,
+      }),
+      fetchData(`/signature/recipient/${account.address}`),
+    ]);
+
+    const combinedArray = statusMissions.map((mission: UserSubmissionStatusMissionsType) => {
+      const signature = recipientList.find(
+        (sig: DBSignature) => sig.mission_id === mission.mission_id && sig.program_id === mission.program_id,
+      );
+
+      if (signature) {
+        return { ...mission, signature: { id: signature.id, sig: signature.sig } };
+      } else {
+        return mission;
+      }
+    });
+
+    setStatusMissions(combinedArray);
+  }, [account.address, user?.walletId]);
+
   useEffect(() => {
     const callData = async () => {
       try {
-        const [missionResponse, validateMissions, ownerMissions, statusMissions] = await Promise.all([
+        const [missionResponse, validateMissions, ownerMissions] = await Promise.all([
           fetchData('/programs', 'POST', {
             walletId: user?.walletId,
           }),
@@ -69,22 +96,19 @@ export default function Profile() {
           fetchData('/missions/owner', 'POST', {
             walletId: user?.walletId,
           }),
-          fetchData('/user_submission_status/missions', 'POST', {
-            walletId: user?.walletId,
-          }),
         ]);
 
         setPrograms(missionResponse);
         setValidateMissions(validateMissions);
         setOwnerMissions(ownerMissions);
-        setStatusMissions(statusMissions);
+        participateCallData();
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     callData();
-  }, [user?.walletId]);
+  }, [account.address, participateCallData, user?.walletId]);
 
   return (
     <Wrapper>
@@ -213,60 +237,22 @@ export default function Profile() {
                         </>
                       )}
                       {value === 'three' && (
-                        <>
-                          {/* <div className={styles.title}>
-                            <Link className={styles.link} href={`${PATH.PROFILE}/validate`}>
-                              View all
-                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
-                            </Link>
-                          </div> */}
-                          <div className={styles.rows}>
-                            {validateMissions.map((mission) => {
-                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
-
-                              return (
-                                <div key={mission.id} className={styles.row}>
-                                  <div className={styles.rowTitle}>
-                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
-                                      <span className={styles.contentTitle}>{mission.title}</span>
-                                    </Link>
-                                  </div>
-                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </>
+                        <div className={styles.rows}>
+                          {validateMissions.map((mission) => (
+                            <ValidateMissionList key={mission.id} mission={mission} />
+                          ))}
+                        </div>
                       )}
                       {value === 'four' && (
-                        <>
-                          {/* <div className={styles.title}>
-                            <Link className={styles.link} href={`${PATH.PROFILE}/participate`}>
-                              View all
-                              <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
-                            </Link>
-                          </div> */}
-                          <div className={styles.rows}>
-                            {statusMissions.map((mission) => {
-                              const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
-
-                              return (
-                                <div key={mission.id} className={styles.row}>
-                                  <div className={styles.rowTitle}>
-                                    <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
-                                      <span className={styles.programType}>
-                                        {mission.missionCnt === mission.submissionCount ? 'Done' : 'Ing'}
-                                      </span>
-                                      <span className={styles.contentTitle}>{mission.title}</span>
-                                    </Link>
-                                    <div className={styles.prize}>Prize: {mission.prize} EDU</div>
-                                  </div>
-                                  <div className={styles.deadline}>Deadline: {mission.end_at ? formatDate : '-'}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </>
+                        <div className={styles.rows}>
+                          {statusMissions.map((mission) => (
+                            <ParticipateMissionList
+                              key={mission.id}
+                              mission={mission}
+                              participateCallData={participateCallData}
+                            />
+                          ))}
+                        </div>
                       )}
                     </div>
                   </>

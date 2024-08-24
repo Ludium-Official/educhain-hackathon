@@ -1,0 +1,63 @@
+.row {
+  display: grid;
+  grid-template-columns: 4fr 0.5fr 0.6fr;
+  align-items: center;
+
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey-05);
+
+  &:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .rowTitle {
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      .contentTitle {
+        display: block;
+
+        max-width: 800px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .programType {
+        background-color: var(--purple-01);
+        padding: 2px 5px;
+        border-radius: 40px;
+
+        color: var(--white);
+        font-size: 12px;
+      }
+    }
+
+    .prize {
+      margin-top: 6px;
+    }
+  }
+
+  .buttonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .submissionBtn {
+      background-color: var(--purple-01);
+      padding: 5px 10px;
+      border-radius: 40px;
+
+      font-size: 12px;
+    }
+
+    .notWork {
+      cursor: no-drop;
+      background-color: var(--purple-02);
+    }
+  }
+}

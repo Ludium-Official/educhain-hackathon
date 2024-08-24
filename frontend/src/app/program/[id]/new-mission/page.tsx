@@ -8,20 +8,16 @@ import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import { getLocalTimeZone, today } from '@internationalized/date';
-import { FormControlLabel, Radio, RadioGroup, Tab, Tabs } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { DatePicker } from '@nextui-org/react';
 import { useParams, useRouter } from 'next/navigation';
 import { isEmpty } from 'ramda';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
-import TabPanel from '@mui/lab/TabPanel';
-import TabContext from '@mui/lab/TabContext';
-import { useAccount } from 'wagmi';
 
 export default function ProgramEdit() {
   const route = useRouter();
   const param = useParams();
-  const { address } = useAccount();
   const { user } = useUser();
   const [program, setProgram] = useState<ProgramType>();
   const [missions, setMissions] = useState<MissionType[]>([]);
@@ -73,10 +69,10 @@ export default function ProgramEdit() {
     } else if (isEmpty(missionPrize)) {
       alert('Fill in prize');
       return;
-    } else if (Number(missionPrize) > reservePrize) {
-      alert('Check rest prize');
+    } else if (Number(missionReserve) > reservePrize) {
+      alert('Check rest reserve prize');
       return;
-    } else if (Number(missionReserve) > Number(missionPrize)) {
+    } else if (Number(missionPrize) > Number(missionReserve)) {
       alert('Check mission prize');
       return;
     }
@@ -94,7 +90,7 @@ export default function ProgramEdit() {
             prize: missionPrize,
             reserve: missionReserve,
             end_at: missionEndTime,
-            validator_addresss: address,
+            validator_address: program.owner_address,
           },
         });
 
@@ -143,20 +139,20 @@ export default function ProgramEdit() {
                       </div>
                       <div className={styles.inputWrapper}>
                         <div className={styles.prizeInput}>
-                          Prize<span>(reserve prize: {reservePrize} EDU)</span>
+                          Reserve<span>(remain prize: {reservePrize} EDU)</span>
                         </div>
-                        <input
-                          className={styles.input}
-                          placeholder="Prize of mission"
-                          onChange={(e) => setMissionPrize(e.target.value)}
-                        />
-                      </div>
-                      <div className={styles.inputWrapper}>
-                        Reserve
                         <input
                           className={styles.input}
                           placeholder="Reserve of mission"
                           onChange={(e) => setMissionReserve(e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
+                        Prize
+                        <input
+                          className={styles.input}
+                          placeholder="Prize of mission"
+                          onChange={(e) => setMissionPrize(e.target.value)}
                         />
                       </div>
                       <div className={styles.inputWrapper}>
