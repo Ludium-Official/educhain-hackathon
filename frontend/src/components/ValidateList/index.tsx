@@ -16,7 +16,7 @@ const ValidateMissionList: React.FC<ValidateMissionListProps> = ({ mission }) =>
   return (
     <div className={styles.row}>
       <div className={styles.rowTitle}>
-        <Link href={`${PATH.MISSION}/${mission.id}`} className={styles.link}>
+        <Link href={`${PATH.MISSION}/${mission.id}/edit`} className={styles.link}>
           <span className={styles.contentTitle}>{mission.title}</span>
         </Link>
       </div>

@@ -71,11 +71,15 @@ const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission
   const tokenClaim = useMemo(() => {
     if (account && mission.signature) {
       if (mission.signature.sig) {
-        return (
-          <button className={styles.submissionBtn} onClick={() => claimPrize()}>
-            Claim
-          </button>
-        );
+        if (mission.signature.is_claimed === '1') {
+          return (
+            <button className={styles.submissionBtn} onClick={() => claimPrize()}>
+              Claim
+            </button>
+          );
+        }
+
+        return <button className={clsx(styles.submissionBtn, styles.notWork)}>Claimed</button>;
       }
 
       return <button className={clsx(styles.submissionBtn, styles.notWork)}>Claim</button>;

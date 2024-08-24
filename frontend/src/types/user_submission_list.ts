@@ -4,4 +4,5 @@ export type UserSubmissionListType = {
   wallet_id: string;
   submission_count: number;
   sig: string | null;
+  is_claimed: string;
 };

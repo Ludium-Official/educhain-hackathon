@@ -10,7 +10,7 @@ const handler = async (req: Request) => {
   try {
     connection = await pool.getConnection();
 
-    const updateSig = `UPDATE FROM signatures SET is_claimed = 1 WHERE id = ?`;
+    const updateSig = `UPDATE signatures SET is_claimed = 1 WHERE id = ?`;
     await connection.query<import('mysql2').ResultSetHeader>(updateSig, [sigId]);
 
     const updateReserve = `UPDATE missions SET reserve = ? WHERE program_id = ? AND mission_id = ?`;

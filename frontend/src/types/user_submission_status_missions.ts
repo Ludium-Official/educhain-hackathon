@@ -10,5 +10,6 @@ export type UserSubmissionStatusMissionsType = {
   signature: {
     id: number;
     sig?: string | null;
+    is_claimed: string;
   };
 };

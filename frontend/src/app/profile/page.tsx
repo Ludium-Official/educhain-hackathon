@@ -74,7 +74,7 @@ export default function Profile() {
       );
 
       if (signature) {
-        return { ...mission, signature: { id: signature.id, sig: signature.sig } };
+        return { ...mission, signature: { id: signature.id, sig: signature.sig, is_claimed: signature.is_claimed } };
       } else {
         return mission;
       }

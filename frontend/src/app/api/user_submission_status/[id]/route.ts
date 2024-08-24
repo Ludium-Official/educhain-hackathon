@@ -18,7 +18,8 @@ const handler = async (req: Request) => {
           u.name,
           uss.address,
           COUNT(DISTINCT uss.submission_id) AS submission_count,
-          GROUP_CONCAT(DISTINCT s.sig) AS sig
+          GROUP_CONCAT(DISTINCT s.sig) AS sig,
+          GROUP_CONCAT(DISTINCT s.is_claimed) AS is_claimed
       FROM
           user_submission_status uss
       LEFT JOIN

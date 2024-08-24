@@ -5,6 +5,7 @@ import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { UserSubmissionListType } from '@/types/user_submission_list';
 import { useParams } from 'next/navigation';
+import { isNil } from 'ramda';
 import { useCallback, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
@@ -37,7 +38,7 @@ const SubmissionUsers: React.FC = () => {
   }, [param.id, participateCallData]);
 
   const missionStatus = (submission: UserSubmissionListType) => {
-    if (!submission.sig) {
+    if (submission.is_claimed === '0' && isNil(submission.sig)) {
       return (
         <button
           className={styles.submissionBtn}
@@ -48,14 +49,17 @@ const SubmissionUsers: React.FC = () => {
               recipient: submission.address,
               prize: mission?.prize || '',
             });
+            participateCallData();
           }}
         >
           Sign
         </button>
       );
+    } else if (isNil(submission.is_claimed)) {
+      return <div>Ing..</div>;
     }
 
-    return <div>Ing..</div>;
+    return <div>Done</div>;
   };
 
   return (
