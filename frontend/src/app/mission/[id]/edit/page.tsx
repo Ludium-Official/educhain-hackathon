@@ -1,19 +1,17 @@
 'use client';
-import { PieChart } from '@mui/x-charts/PieChart';
-import BlueExclamationLogo from '@/assets/common/BlueExclamationLogo.svg';
 import BackLink from '@/components/BackLink';
-import CreateSubmission from '@/components/CreateSubmission';
+import SubmissionUsers from '@/components/SubmissionUsers';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
-import Image from 'next/image';
+import { TabContext, TabPanel } from '@mui/lab';
+import { Tab, Tabs } from '@mui/material';
+import { PieChart } from '@mui/x-charts/PieChart';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
-import { Tab, Tabs } from '@mui/material';
-import { TabContext, TabPanel } from '@mui/lab';
 
 export interface Submission {
   title: string;
@@ -116,7 +114,9 @@ export default function MissionEdit() {
                     />
                   </TabPanel>
                   <TabPanel value="2">MissionDetail</TabPanel>
-                  <TabPanel value="2">Signatures</TabPanel>
+                  <TabPanel value="3">
+                    <SubmissionUsers />
+                  </TabPanel>
                 </TabContext>
               </>
             ) : (

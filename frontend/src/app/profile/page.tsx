@@ -61,7 +61,7 @@ export default function Profile() {
 
   const participateCallData = useCallback(async () => {
     const [statusMissions, recipientList] = await Promise.all([
-      // 돈을 받았다 라는 내용을 적어야 할 것 같은데 signature에서 claim하면 사라지는데 사라지면 안될 것 같음
+      // TODO: 돈을 받았다 라는 내용을 적어야 할 것 같은데 signature에서 claim하면 사라지는데 사라지면 안될 것 같음
       fetchData('/user_submission_status/missions', 'POST', {
         walletId: user?.walletId,
       }),

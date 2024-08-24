@@ -1,7 +1,6 @@
 import { withAuth } from '@/middlewares/authMiddleware';
 
 import pool from '@/app/api/db';
-import { DBSignature } from '@/types/entities/signature';
 import { NextResponse } from 'next/server';
 
 const handler = async (req: Request) => {
@@ -11,8 +10,8 @@ const handler = async (req: Request) => {
   try {
     connection = await pool.getConnection();
 
-    const deleteSig = `DELETE FROM signatures WHERE id = ?`;
-    await connection.query<import('mysql2').ResultSetHeader>(deleteSig, [sigId]);
+    const updateSig = `UPDATE FROM signatures SET is_claimed = 1 WHERE id = ?`;
+    await connection.query<import('mysql2').ResultSetHeader>(updateSig, [sigId]);
 
     const updateReserve = `UPDATE missions SET reserve = ? WHERE program_id = ? AND mission_id = ?`;
     await connection.query<import('mysql2').ResultSetHeader>(updateReserve, [remain, programId, missionNumber]);
