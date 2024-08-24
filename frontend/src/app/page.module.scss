@@ -4,45 +4,76 @@
 
   width: 100%;
 
-  .carouselButtons {
-    button {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+  .edupyramidContainer {
+    animation: gradientBackground 8s ease infinite;
+    position: relative;
+
+    display: inline-block;
+
+    background: linear-gradient(270deg, #cb1111, #2575fc, #6a11cb);
+    background-size: 600% 600%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    margin-bottom: 20px;
+
+    color: transparent;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  @keyframes gradientBackground {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
     }
   }
 
-  .missMissionContainer {
+  .cardContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .cardWrapper {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .missedContainer {
+    background: radial-gradient(circle at 30% 50%, rgba(106, 103, 255, 0.5), transparent 60%),
+      radial-gradient(circle at 70% 50%, rgba(242, 113, 227, 0.5), transparent 60%);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .missedContainer:hover {
+    transform: translateY(-5px);
+  }
+
+  .missedAmount {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background: radial-gradient(circle at 30% 50%, rgba(106, 103, 255, 0.5), transparent 60%),
-      radial-gradient(circle at 70% 50%, rgba(242, 113, 227, 0.5), transparent 60%);
+    font-size: 28px;
+    font-weight: bold;
     margin-top: 10px;
-    border-radius: 20px;
-    padding: 20px 40px;
 
-    color: var(--purple-05);
-
-    .missedContainer {
-      width: 100%;
-
-      text-align: center;
+    .counter {
       font-size: 24px;
-
-      .missionLink {
-        .missedAmount {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-
-          color: var(--purple-01);
-          font-size: 35px;
-          font-weight: bold;
-        }
-      }
+      display: inline-block;
+      margin-right: 5px;
     }
   }
 

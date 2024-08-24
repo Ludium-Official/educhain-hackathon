@@ -1,10 +1,10 @@
 'use client';
 
 import ArrowLogo from '@/assets/common/ArrowLogo.svg';
-import Banner from '@/assets/main/Banner.png';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
 import { getConvertDeadline } from '@/functions/deadline-function';
+import { add } from '@/functions/math';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
@@ -14,7 +14,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
-import { add } from '@/functions/math';
 
 export default function Home() {
   const { user } = useUser();
@@ -77,81 +76,31 @@ export default function Home() {
         header: <div>Edupyramid</div>,
         body: (
           <div className={styles.container}>
-            {/* <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
-              <div className={`carousel-indicators ${styles.carouselButtons}`}>
-                <button
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="0"
-                  className="active"
-                  aria-current="true"
-                  aria-label="Slide 1"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="1"
-                  aria-label="Slide 2"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="2"
-                  aria-label="Slide 3"
-                ></button>
-              </div>
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <Image className="d-block w-100" src={Banner.src} alt="logo" width={1033} height={256} />
-                </div>
-                <div className="carousel-item">
-                  <Image className="d-block w-100" src={Banner.src} alt="logo" width={1033} height={256} />
-                </div>
-                <div className="carousel-item">
-                  <Image className="d-block w-100" src={Banner.src} alt="logo" width={1033} height={256} />
-                </div>
-              </div>
-            </div> */}
-            <div className={styles.missMissionContainer}>
-              <div className={styles.missedContainer}>
-                <Link className={styles.missionLink} href={PATH.MISSION}>
-                <div>.</div>
-                  <div className={styles.missedAmount}>
-                  Open Edu Bounty Program Management System on Educhain
-                  </div>
-                  <div>.</div>
-                </Link>
-              </div>
+            <div className={styles.edupyramidContainer}>
+              <div>Open Edu Bounty Program Management System on Educhain</div>
             </div>
-            <div className="flex space-x-4">
-              <div className={styles.missMissionContainer}>
+            <div className={styles.cardContainer}>
+              <div className={styles.cardWrapper}>
                 <div className={styles.missedContainer}>
-                  <Link className={styles.missionLink} href={PATH.MISSION}>
-                    <div>Whole Builder</div>
-                    <div className={styles.missedAmount}>
-                      200+
-                    </div>
-                  </Link>
+                  <div>Whole Builder</div>
+                  <div className={styles.missedAmount}>200+</div>
                 </div>
               </div>
-              <div className={styles.missMissionContainer}>
+              <div className={styles.cardWrapper}>
                 <div className={styles.missedContainer}>
-                  <Link className={styles.missionLink} href={PATH.MISSION}>
-                    <div>Total Bounty</div>
-                    <div className={styles.missedAmount}>
-                      $400K+
-                    </div>
-                  </Link>
+                  <div>Total Bounty</div>
+                  <div className={styles.missedAmount}>$400K+</div>
                 </div>
               </div>
-              <div className={styles.missMissionContainer}>
+              <div className={styles.cardWrapper}>
                 <div className={styles.missedContainer}>
-                  <Link className={styles.missionLink} href={PATH.MISSION}>
-                    <div>Remain Bounty</div>
-                    <div className={styles.missedAmount}>
-                      <div id="counter">0</div>EDU
+                  <div>Remain Bounty</div>
+                  <div className={styles.missedAmount}>
+                    <div className={styles.counter} id="counter">
+                      0
                     </div>
-                  </Link>
+                    EDU
+                  </div>
                 </div>
               </div>
             </div>
