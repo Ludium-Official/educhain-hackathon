@@ -49,7 +49,7 @@ export default function SubmissionDetail() {
 
   const buttonTitle = useMemo(() => {
     if (submission?.submitStatus) {
-      return 'Success';
+      return 'Completed';
     }
 
     if (submission?.type) {
@@ -64,11 +64,7 @@ export default function SubmissionDetail() {
   }, [submission]);
 
   const submissionSubmit = useCallback(async () => {
-    if (submission?.submitStatus) {
-      return null;
-    }
-
-    if (submission?.type === 'article') {
+    if (submission?.type) {
       await fetchData(`/submissions/submit/${param.id}`, 'POST', {
         submission,
         wallet_id: user?.walletId,
@@ -78,7 +74,7 @@ export default function SubmissionDetail() {
       return null;
     }
 
-    route.push(`${PATH.SUBMISSION}/${param.id}/submit`);
+    return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param.id, route, submission, user?.walletId]);
 
@@ -104,6 +100,9 @@ export default function SubmissionDetail() {
                       <MarkedHtml markdownString={submission.content} />
                     </div>
                   </div>
+                  {!submission?.submitStatus && submission.type === 'mission' && (
+                    <textarea className={styles.input} placeholder="input your answer" />
+                  )}
                   <button
                     className={clsx(styles.submitBtn, submission?.submitStatus ? styles.isSubmit : null)}
                     onClick={submissionSubmit}

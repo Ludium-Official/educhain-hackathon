@@ -35,6 +35,18 @@
       }
     }
 
+    .input {
+      height: 300px;
+      padding: 11px 16px;
+      border: 1px solid var(--grey-05);
+      border-radius: 8px;
+      margin-top: 4px;
+
+      color: var(--grey-04);
+
+      resize: none;
+    }
+
     .content {
       max-height: calc(100dvh - 320px);
       overflow: auto;

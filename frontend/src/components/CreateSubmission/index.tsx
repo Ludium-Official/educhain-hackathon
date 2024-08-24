@@ -12,9 +12,10 @@ import styles from './index.module.scss';
 interface CreateSubmissionProps {
   submissions: Submission[];
   setSubmissions: Dispatch<SetStateAction<Submission[]>>;
+  isStudy?: boolean;
 }
 
-const CreateSubmission: React.FC<CreateSubmissionProps> = ({ submissions, setSubmissions }) => {
+const CreateSubmission: React.FC<CreateSubmissionProps> = ({ submissions, setSubmissions, isStudy = false }) => {
   const handleInputChange = (index: number, field: keyof Submission, value: string) => {
     const updatedSubmissions = submissions.map((submission, i) =>
       i === index ? { ...submission, [field]: value } : submission,
@@ -52,19 +53,21 @@ const CreateSubmission: React.FC<CreateSubmissionProps> = ({ submissions, setSub
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange(index, 'content', e.target.value)}
             />
           </div>
-          <div className={styles.inputWrapper}>
-            Type
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name={`row-radio-buttons-group-${index}`}
-              value={submission.type} // Set the current value
-              onChange={(e) => handleInputChange(index, 'type', e.target.value)}
-            >
-              <FormControlLabel value="article" control={<Radio />} label="Article" />
-              <FormControlLabel value="mission" control={<Radio />} label="Mission" />
-            </RadioGroup>
-          </div>
+          {isStudy && (
+            <div className={styles.inputWrapper}>
+              Type
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name={`row-radio-buttons-group-${index}`}
+                value={submission.type} // Set the current value
+                onChange={(e) => handleInputChange(index, 'type', e.target.value)}
+              >
+                <FormControlLabel value="article" control={<Radio />} label="Article" />
+                <FormControlLabel value="mission" control={<Radio />} label="Mission" />
+              </RadioGroup>
+            </div>
+          )}
           <div className={styles.inputWrapper}>
             Deadline
             <DatePicker

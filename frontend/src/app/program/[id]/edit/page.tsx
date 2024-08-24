@@ -55,16 +55,20 @@ export default function ProgramEdit() {
   const addMission = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isEmpty(missionPrize) || isEmpty(missionTitle) || isEmpty(missionCategory)) {
-      if (isEmpty(missionTitle)) {
-        alert('Fill in title');
-        return;
-      } else if (isEmpty(missionCategory)) {
-        alert('Fill in category');
-        return;
-      }
-
+    if (isEmpty(missionTitle)) {
+      alert('Fill in title');
+      return;
+    } else if (isEmpty(missionCategory)) {
+      alert('Fill in category');
+      return;
+    } else if (isEmpty(missionPrize)) {
       alert('Fill in prize');
+      return;
+    } else if (Number(missionPrize) > reservePrize) {
+      alert('Check rest prize');
+      return;
+    } else if (Number(missionReserve) > Number(missionPrize)) {
+      alert('Check mission prize');
       return;
     }
 
@@ -92,10 +96,11 @@ export default function ProgramEdit() {
     }
   };
 
-  const totalPrize = useMemo(() => {
-    return missions.reduce((result, mission) => (result += Number(mission.prize)), 0);
-  }, [missions]);
-  console.log(totalPrize);
+  const reservePrize = useMemo(() => {
+    const allocatePrize = missions.reduce((result, mission) => (result += Number(mission.prize)), 0);
+
+    return Number(program?.reserve) - allocatePrize;
+  }, [missions, program?.reserve]);
 
   return (
     <Wrapper>
@@ -184,7 +189,9 @@ export default function ProgramEdit() {
                         />
                       </div>
                       <div className={styles.inputWrapper}>
-                        Prize
+                        <div className={styles.prizeInput}>
+                          Prize<span>(reserve prize: {reservePrize} EDU)</span>
+                        </div>
                         <input
                           className={styles.input}
                           placeholder="Prize of mission"
@@ -215,7 +222,7 @@ export default function ProgramEdit() {
                         />
                       </div>
                       <div className={styles.inputWrapper}>
-                        Program Type
+                        Program Category
                         <RadioGroup
                           row
                           aria-labelledby="demo-row-radio-buttons-group-label"

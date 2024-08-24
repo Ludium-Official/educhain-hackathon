@@ -1,5 +1,6 @@
 'use client';
 
+import BlueExclamationLogo from '@/assets/common/BlueExclamationLogo.svg';
 import BackLink from '@/components/BackLink';
 import CreateSubmission from '@/components/CreateSubmission';
 import Wrapper from '@/components/Wrapper';
@@ -7,6 +8,7 @@ import { PATH } from '@/constant/route';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
@@ -24,6 +26,7 @@ export default function MissionEdit() {
 
   const { user } = useUser();
 
+  const [chapterTitle, setChapterTitle] = useState('');
   const [mission, setMission] = useState<MissionType>();
   const [submissions, setSubmissions] = useState<Submission[]>([
     {
@@ -51,37 +54,24 @@ export default function MissionEdit() {
   const addSubmission = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // if (isEmpty(missionPrize) || isEmpty(missionTitle) || isEmpty(missionCategory)) {
-    //   if (isEmpty(missionTitle)) {
-    //     alert('Fill in title');
-    //     return;
-    //   } else if (isEmpty(missionCategory)) {
-    //     alert('Fill in category');
-    //     return;
-    //   }
-
-    //   alert('Fill in prize');
-    //   return;
-    // }
-
     try {
-      // if (user && program) {
-      //   await fetchData('/missions/add', 'POST', {
-      //     missionData: {
-      //       validators: program.owner,
-      //       owner: user.walletId,
-      //       program_id: program.id,
-      //       category: missionCategory,
-      //       title: missionTitle,
-      //       content: missionContent,
-      //       prize: missionPrize,
-      //       reserve: missionReserve,
-      //       end_at: missionEndTime,
-      //     },
-      //   });
-      //   alert('Success to make mission!');
-      //   route.push(`${PATH.PROGRAM}/${program.id}`);
-      // }
+      if (user && mission) {
+        await fetchData(`/submissions/${param.id}/add`, 'POST', {
+          chapterData:
+            mission?.category === 'study'
+              ? {
+                  title: chapterTitle,
+                }
+              : null,
+          submissionData: {
+            program_id: mission.program_id,
+            submissions: submissions,
+          },
+        });
+
+        alert('Success to make submission!');
+        route.push(`${PATH.MISSION}/${param.id}`);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -101,9 +91,23 @@ export default function MissionEdit() {
                     <div className={styles.tableTitle}>SubMission Create</div>
                     {mission?.category === 'study' ? (
                       <>
-                        <div className={styles.info}>You can create multiple submissions for a single chapter.</div>
-                        <div>Study</div>
-                        <CreateSubmission submissions={submissions} setSubmissions={setSubmissions} />
+                        <div className={styles.info}>
+                          <Image src={BlueExclamationLogo.src} alt="logo" width={24} height={24} />
+                          You can create multiple submissions for a single chapter.
+                        </div>
+                        <div className={styles.chapterContainer}>
+                          <div className={styles.chapterTitle}>Chapter</div>
+                          <div className={styles.inputWrapper}>
+                            Title
+                            <input
+                              type="text"
+                              className={styles.input}
+                              placeholder="Title of chapter"
+                              onChange={(e) => setChapterTitle(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <CreateSubmission submissions={submissions} setSubmissions={setSubmissions} isStudy={true} />
                       </>
                     ) : (
                       <CreateSubmission submissions={submissions} setSubmissions={setSubmissions} />

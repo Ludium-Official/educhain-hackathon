@@ -57,6 +57,17 @@
             margin-top: 0;
           }
 
+          .prizeInput {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            span {
+              color: var(--info);
+              font-size: 13px;
+            }
+          }
+
           fieldset {
             border-color: var(--grey-05);
             border-width: 1px;
