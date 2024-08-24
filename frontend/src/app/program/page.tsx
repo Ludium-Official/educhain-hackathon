@@ -37,7 +37,6 @@ export default function Program() {
           <div className={styles.headerWrapper}>
             <BackLink path={PATH.HOME} />
             <Link className={styles.addLink} href={`${PATH.PROGRAM}/create`}>
-              <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
               Create program
             </Link>
           </div>
@@ -46,7 +45,7 @@ export default function Program() {
           <div className={styles.container}>
             <div className={styles.title}>Program</div>
             <div className={clsx(styles.table, 'accordion accordion-flush')} id="accordionFlush">
-              <div className={styles.tableHeader}>Program list</div>
+              {/* <div className={styles.tableHeader}>Program list</div> */}
               {programs.map((program) => {
                 const missions = sortBy(prop('id'), program.missions || []);
                 return (
@@ -56,18 +55,19 @@ export default function Program() {
                         <div className={clsx(styles.badge, program.type === 'study' ? styles.studyBadge : null)}>
                           {program.type}
                         </div>
+                        <div className={styles.prize}>{program.reserve} EDU</div>
                         <div className={styles.announceTitle}>{program.title}</div>
                       </Link>
-                      <button
+                      {/* <button
                         className={clsx(styles.collapseBtn, 'accordion-button')}
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target={`#accordion-${program.id}`}
                         aria-expanded="true"
                         aria-controls={`accordion-${program.id}`}
-                      ></button>
+                      ></button> */}
                     </h2>
-                    <div
+                    {/* <div
                       id={`accordion-${program.id}`}
                       className={clsx(styles.accordionCollapse, 'accordion-collapse collapse show')}
                     >
@@ -108,7 +108,7 @@ export default function Program() {
                             );
                           })}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 );
               })}

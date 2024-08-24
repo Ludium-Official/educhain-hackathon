@@ -64,12 +64,18 @@ export default function ProgramDetail() {
         header: (
           <div className={styles.headerWrapper}>
             <BackLink path={PATH.PROGRAM} />
-            {user && (
-              <Link className={styles.addLink} href={`${PATH.PROGRAM}/${param.id}/edit`}>
-                <Image className={styles.profileImg} src={AddLogo.src} alt="logo" width={24} height={24} />
-                Manage
-              </Link>
-            )}
+            <div className="flex space-x-10">
+              {user && (
+                <Link className={styles.addLink} href={`${PATH.PROGRAM}/${param.id}/new-mission`}>
+                  New Mission
+                </Link>
+              )}
+              {user && user.walletId == program?.owner&& (
+                <Link className={styles.addLink} href={`${PATH.PROGRAM}/${param.id}/edit`}>
+                  Manage Program
+                </Link>
+              )}
+            </div>
           </div>
         ),
         body: (

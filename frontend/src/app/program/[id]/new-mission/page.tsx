@@ -118,84 +118,85 @@ export default function ProgramEdit() {
           <div className={styles.container}>
             {program && user ? (
               <>
-                <div className={styles.title}>Program Manage</div>
-                <TabContext value={value}>
-                  <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary">
-                    <Tab value="1" label="Dashboard" />
-                    <Tab value="2" label="Program Detail" />
-                    <Tab value="3" label="Missions" />
-                  </Tabs>
-
-                  <TabPanel value="1">Dashboard</TabPanel>
-                  <TabPanel value="2">
-                    <div className={styles.tableWrapper}>
-                      {user.walletId === program?.owner && (
-                        <div className={styles.table}>
-                          <div className={styles.tableTitle}>Program</div>
-                          <div className={styles.rowsTable}>
-                            <div className={styles.inputWrapper}>
-                              Title
-                              <input
-                                className={styles.input}
-                                value={program.title}
-                                onChange={(e) => setProgramTitle(e.target.value)}
-                              />
-                            </div>
-                          </div>
+                <div className={styles.title}>New Mission</div>
+                <div className={styles.tableWrapper}>
+                  <div className={styles.table}>
+                    <div className={styles.tableTitle}>Mission Create</div>
+                    <div className={styles.rowsTable}>
+                      <div className={styles.inputWrapper}>
+                        Title
+                        <input
+                          className={styles.input}
+                          placeholder="Title of mission"
+                          onChange={(e) => setMissionTitle(e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
+                        Content
+                        <textarea
+                          className={styles.input}
+                          placeholder="Content of mission"
+                          onChange={(e) => setMissionContent(e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
+                        <div className={styles.prizeInput}>
+                          Prize<span>(reserve prize: {reservePrize} EDU)</span>
                         </div>
-                      )}
+                        <input
+                          className={styles.input}
+                          placeholder="Prize of mission"
+                          onChange={(e) => setMissionPrize(e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
+                        Reserve
+                        <input
+                          className={styles.input}
+                          placeholder="Reserve of mission"
+                          onChange={(e) => setMissionReserve(e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
+                        Deadline
+                        <DatePicker
+                          aria-label="program-period"
+                          size="sm"
+                          lang="en"
+                          hourCycle={24}
+                          variant="underlined"
+                          visibleMonths={3}
+                          minValue={today(getLocalTimeZone())}
+                          onChange={(e) => {
+                            setMissionEndTime(`${e.year}-${e.month >= 10 ? e.month : `0${e.month}`}-${e.day} 00:00:00`);
+                          }}
+                        />
+                      </div>
+                      <div className={styles.inputWrapper}>
+                        Program Category
+                        <RadioGroup
+                          row
+                          aria-labelledby="demo-row-radio-buttons-group-label"
+                          name="row-radio-buttons-group"
+                        >
+                          <FormControlLabel
+                            value="announcement"
+                            control={<Radio onChange={(e) => setMissionCategory(e.target.value)} />}
+                            label="Announcement"
+                          />
+                          <FormControlLabel
+                            value="study"
+                            control={<Radio onChange={(e) => setMissionCategory(e.target.value)} />}
+                            label="Study"
+                          />
+                        </RadioGroup>
+                      </div>
                     </div>
-                  </TabPanel>
-                  <TabPanel value="3">
-                    {' '}
-                    <div className={styles.tableWrapper}>
-                      {user.walletId === program?.owner && (
-                        <>
-                          <div className={styles.table}>
-                            <div className={styles.tableTitle}>Missions</div>
-                            {missions.map((mission) => {
-                              const validators = mission.validators.split(',');
-
-                              return (
-                                <div key={mission.id} className={styles.rowsTable}>
-                                  <div className={styles.inputWrapper}>
-                                    Title
-                                    <input
-                                      className={styles.input}
-                                      value={mission.title}
-                                      onChange={(e) => console.log(e.target.value)}
-                                    />
-                                  </div>
-                                  {validators.map((validator) => {
-                                    return (
-                                      <div key={validator} className={styles.inputWrapper}>
-                                        Validators
-                                        <input
-                                          className={styles.input}
-                                          value={validator}
-                                          onChange={(e) => console.log(e.target.value)}
-                                        />
-                                      </div>
-                                    );
-                                  })}
-                                  <div className={styles.inputWrapper}>
-                                    Owner
-                                    <input
-                                      className={styles.input}
-                                      value={mission.owner || ''}
-                                      onChange={(e) => console.log(e.target.value)}
-                                    />
-                                    {mission.owner_name}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </TabPanel>
-                </TabContext>
+                    <button className={styles.addBtn} onClick={addMission}>
+                      Create Mission
+                    </button>
+                  </div>
+                </div>
               </>
             ) : (
               <div>null</div>

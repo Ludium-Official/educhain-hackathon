@@ -143,7 +143,7 @@ export default function Profile() {
                         <>
                           <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/program`}>
-                              View all
+                              Program Dashboard
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
                           </div>
@@ -169,12 +169,12 @@ export default function Profile() {
                       )}
                       {value === 'two' && (
                         <>
-                          <div className={styles.title}>
+                          {/* <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/mission`}>
                               View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
-                          </div>
+                          </div> */}
                           <div className={styles.rows}>
                             {ownerMissions.map((mission) => {
                               const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
@@ -215,12 +215,12 @@ export default function Profile() {
                       )}
                       {value === 'three' && (
                         <>
-                          <div className={styles.title}>
+                          {/* <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/validate`}>
                               View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
-                          </div>
+                          </div> */}
                           <div className={styles.rows}>
                             {validateMissions.map((mission) => {
                               const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');
@@ -241,12 +241,12 @@ export default function Profile() {
                       )}
                       {value === 'four' && (
                         <>
-                          <div className={styles.title}>
+                          {/* <div className={styles.title}>
                             <Link className={styles.link} href={`${PATH.PROFILE}/participate`}>
                               View all
                               <Image className={styles.seeLink} src={ArrowLogo.src} alt="logo" width={24} height={24} />
                             </Link>
-                          </div>
+                          </div> */}
                           <div className={styles.rows}>
                             {statusMissions.map((mission) => {
                               const formatDate = dayjs(mission.end_at).format('YYYY.MM.DD');

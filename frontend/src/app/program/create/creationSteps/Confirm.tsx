@@ -31,6 +31,9 @@ export const Confirm = () => {
             <div className="flex justify-center items-center text-xl text-neutral-700">
               <span>{programInfo.title}</span>
             </div>
+            <div className="flex justify-center items-center text-xl text-neutral-700">
+              <span>{programInfo.type}</span>
+            </div>
             <div className="flex justify-end items-center text-neutral-500 text-sm">
               <span>{`${toCalendarDate(programInfo.start_at)} ~ ${toCalendarDate(programInfo.end_at)}`}</span>
             </div>
