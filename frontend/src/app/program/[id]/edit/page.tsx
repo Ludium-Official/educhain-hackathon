@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
 import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
+import { PieChart } from '@mui/x-charts';
 
 export default function ProgramEdit() {
   const route = useRouter();
@@ -126,7 +127,21 @@ export default function ProgramEdit() {
                     <Tab value="3" label="Missions" />
                   </Tabs>
 
-                  <TabPanel value="1">Dashboard</TabPanel>
+                  <TabPanel value="1">
+                    <PieChart
+                      series={[
+                        {
+                          data: [
+                            { id: 0, value: 10, label: 'series A' },
+                            { id: 1, value: 15, label: 'series B' },
+                            { id: 2, value: 20, label: 'series C' },
+                          ],
+                        },
+                      ]}
+                      width={400}
+                      height={200}
+                    />
+                  </TabPanel>
                   <TabPanel value="2">
                     <div className={styles.tableWrapper}>
                       {user.walletId === program?.owner && (

@@ -16,11 +16,12 @@ import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
 import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
+import { useAccount } from 'wagmi';
 
 export default function ProgramEdit() {
   const route = useRouter();
   const param = useParams();
-
+  const { address } = useAccount();
   const { user } = useUser();
   const [program, setProgram] = useState<ProgramType>();
   const [missions, setMissions] = useState<MissionType[]>([]);
@@ -93,6 +94,7 @@ export default function ProgramEdit() {
             prize: missionPrize,
             reserve: missionReserve,
             end_at: missionEndTime,
+            validator_addresss: address,
           },
         });
 

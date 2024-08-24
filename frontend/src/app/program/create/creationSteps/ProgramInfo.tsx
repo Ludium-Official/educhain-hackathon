@@ -16,7 +16,7 @@ import {
 } from '@internationalized/date';
 
 export const ProgramInfo = () => {
-  const { programInfo, setTitle, setDescription, setPeriod } = useProgramCreation();
+  const { programInfo, setTitle, setTag, setDescription, setPeriod } = useProgramCreation();
   const date = new Date();
   return (
     <ContentContainer contentHeader="Program Info">
@@ -48,7 +48,7 @@ export const ProgramInfo = () => {
               labelPlacement="outside"
               value={programInfo.type}
               onChange={(e) => {
-                setType(e.target.value);
+                setTag(e.target.value);
               }}
               placeholder="e.g., Educhain"
               classNames={{

@@ -98,7 +98,7 @@ export const useProgramCreation = () => {
   const setTitle = (title: string) => {
     setProgramInfo({ ...programInfo, title });
   };
-  const setType = (type: string) => {
+  const setTag = (type: string) => {
     setProgramInfo({ ...programInfo, type });
   };
   const setPeriod = (start_at: CalendarDateTime, end_at: CalendarDateTime) => {
@@ -260,6 +260,7 @@ export const useProgramCreation = () => {
   return {
     programInfo,
     setTitle,
+    setTag,
     setPeriod,
     setDescription,
     addManager,
@@ -268,7 +269,6 @@ export const useProgramCreation = () => {
     addMission,
     deleteMission,
     createProgram,
-    setType,
     txHash,
     sendLoading,
     isProgramAddedInDb,
