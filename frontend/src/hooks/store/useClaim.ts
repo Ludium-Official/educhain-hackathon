@@ -1,18 +1,16 @@
 'use client';
 
-import { opencampus } from '@/constant/educhain-rpc';
-import { useState } from 'react';
-import { useAccount, useSignTypedData } from 'wagmi';
-import { readContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions';
-import fetchData from '@/libs/fetchData';
-import { Address, formatEther, decodeEventLog, Hex, parseEther } from 'viem';
 import { config } from '@/app/provider';
 import { LD_EduProgramABI } from '@/constant/LD_EduProgramABI';
-import { ERROR_MESSAGE } from '@/constant/message';
-import { Signature } from '@/types/signature';
-import { subtract } from '@/functions/math';
-import { LOG_TOPIC0 } from '@/constant/topic0';
 import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
+import { ERROR_MESSAGE } from '@/constant/message';
+import { LOG_TOPIC0 } from '@/constant/topic0';
+import fetchData from '@/libs/fetchData';
+import { Signature } from '@/types/signature';
+import { useState } from 'react';
+import { Address, Hex, decodeEventLog, formatEther, parseEther } from 'viem';
+import { useAccount } from 'wagmi';
+import { readContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions';
 
 interface ClaimInput {
   programId: number;

@@ -7,4 +7,8 @@ export type UserSubmissionStatusMissionsType = {
   mission_id: number;
   program_id: number;
   submissionCount: number;
+  signature: {
+    id: number;
+    sig?: string | null;
+  };
 };

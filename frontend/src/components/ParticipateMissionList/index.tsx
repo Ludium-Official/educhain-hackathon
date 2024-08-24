@@ -7,22 +7,24 @@ import { useValidator } from '@/hooks/store/useValidator';
 import { UserSubmissionStatusMissionsType } from '@/types/user_submission_status_missions';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { isNil } from 'ramda';
+import { useCallback, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import styles from './index.module.scss';
 
 interface ParticipateMissionListProps {
   mission: UserSubmissionStatusMissionsType;
+  participateCallData: () => Promise<void>;
 }
 
-const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission }) => {
+const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission, participateCallData }) => {
   const account = useAccount();
   const { requestToValidator } = useValidator();
   const { claim } = useClaim();
 
-  const claimPrize = async () => {
+  const claimPrize = useCallback(async () => {
     await claim({ programId: mission.program_id, missionNumber: mission.mission_id });
-  };
+  }, [mission.program_id, mission.mission_id, claim]);
 
   const isExpired = useMemo(() => {
     const remindDate = getConvertDeadline(mission.end_at);
@@ -36,32 +38,39 @@ const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission
   const missionStatus = useMemo(() => {
     if (account) {
       if (mission.missionCnt === mission.submissionCount) {
-        return (
-          <button
-            className={styles.submissionBtn}
-            onClick={async () => {
-              await requestToValidator({
-                programId: mission.program_id,
-                missionNumber: mission.mission_id,
-                prize: mission.prize,
-                recipient: account.address || '',
-              });
-            }}
-          >
-            Request
-          </button>
-        );
+        if (mission.signature?.id && !isNil(mission.signature?.sig)) {
+          return <button className={clsx(styles.submissionBtn, styles.notWork)}>Done</button>;
+        } else if (mission.signature?.id && isNil(mission.signature?.sig)) {
+          return <button className={clsx(styles.submissionBtn, styles.notWork)}>Reviewing</button>;
+        } else {
+          return (
+            <button
+              className={styles.submissionBtn}
+              onClick={async () => {
+                await requestToValidator({
+                  programId: mission.program_id,
+                  missionNumber: mission.mission_id,
+                  prize: mission.prize,
+                  recipient: account.address || '',
+                });
+                participateCallData();
+              }}
+            >
+              Request
+            </button>
+          );
+        }
       }
 
       return <button className={clsx(styles.submissionBtn, styles.notWork)}>Request</button>;
     }
 
     return null;
-  }, [account, mission, requestToValidator]);
+  }, [account, mission, participateCallData, requestToValidator]);
 
   const tokenClaim = useMemo(() => {
-    if (account) {
-      if (mission.missionCnt === mission.submissionCount) {
+    if (account && mission.signature) {
+      if (mission.signature.sig) {
         return (
           <button className={styles.submissionBtn} onClick={() => claimPrize()}>
             Claim
@@ -73,7 +82,7 @@ const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission
     }
 
     return null;
-  }, [account, mission]);
+  }, [account, claimPrize, mission]);
 
   return (
     <div className={styles.row}>
