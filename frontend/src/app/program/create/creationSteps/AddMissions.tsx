@@ -33,6 +33,7 @@ import toast from 'react-hot-toast';
 import Trash from '@/assets/common/Trash.svg';
 import { add, subtract } from '@/functions/math';
 import { parseEther } from 'viem';
+import { sha256ToHex } from '@/libs/cryptoEncode';
 
 export const AddMissions = () => {
   const { user } = useUser();
@@ -42,6 +43,7 @@ export const AddMissions = () => {
   const [reserve, setReserve] = useState<string>('');
   const [prize, setPrize] = useState<string>('');
   const [missionName, setMissionName] = useState<string | undefined>();
+  const [missionCategory, setMissionCategory] = useState<string>('announcement');
   const [description, setDescription] = useState<string>('');
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [missionPrizeSum, setMissionPrizeSum] = useState<string>('0');
@@ -58,11 +60,12 @@ export const AddMissions = () => {
     addMission({
       reserve,
       prize,
-      validators: address.trim(),
-      owner: address.trim(),
+      validators: sha256ToHex(`${address.trim()}${process.env.NEXT_PUBLIC_ADDRESS_KEY}`),
+      owner: sha256ToHex(`${address.trim()}${process.env.NEXT_PUBLIC_ADDRESS_KEY}`),
+      validator_address: address.trim(),
       title: missionName,
       content: description,
-      category: 'default',
+      category: missionCategory,
       end_at: programInfo.end_at,
     });
     setAddress('');
@@ -112,7 +115,7 @@ export const AddMissions = () => {
                   <TableCell className="transition-all duration-300">
                     <div className="flex flex-col justify-center items-start gap-0">
                       <span className="text-neutral-700 text-base">{mission.title}</span>
-                      <span className="text-sm text-neutral-400">Auditor: {mission.validators}</span>
+                      <span className="text-sm text-neutral-400">Auditor: {mission.validator_address}</span>
                     </div>
                   </TableCell>
                   <TableCell className={`transition-all duration-300 text-base`}>
@@ -135,7 +138,7 @@ export const AddMissions = () => {
             <div className="flex gap-2 w-[130px] px-2">
               <Image src={OpencampusLogo} alt="educoin-logo" width={20} height={20} className="shrink-0" />
               <div className="flex flex-auto justify-end items-center gap-2 text-lg">
-                <span className="text-neutral-700">{subtract(programInfo.prize, missionPrizeSum)}</span>
+                <span className="text-neutral-700">{subtract(programInfo.reserve, missionPrizeSum)}</span>
                 <span className="text-neutral-400">EDU</span>
               </div>
             </div>
@@ -157,7 +160,28 @@ export const AddMissions = () => {
               <ModalHeader className="flex flex-col gap-1">Add Mission</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-2 flex-auto">
-                  <div>
+                  <div className="flex gap-2 items-center">
+                    <Select
+                      label="Type"
+                      radius="sm"
+                      value={missionCategory}
+                      onSelectionChange={(e) => {
+                        if (e.anchorKey) {
+                          setMissionCategory(e.anchorKey);
+                        }
+                      }}
+                      className="w-[130px] text-neutral-700 flex-shrink-0 flex"
+                      classNames={{
+                        base: '',
+                        listbox: '[&_ul]:pl-0 [&_ul]:mb-0',
+                        trigger: 'bg-white h-[56px]',
+                        selectorIcon: 'fill-neutral-400',
+                      }}
+                    >
+                      <SelectItem key="announcement">Announce</SelectItem>
+                      <SelectItem key="study">Study</SelectItem>
+                    </Select>
+
                     <Input
                       radius="sm"
                       className="flex-auto"
@@ -193,10 +217,6 @@ export const AddMissions = () => {
                       classNames={{ inputWrapper: 'bg-white', input: 'text-neutral-700' }}
                     />
                     <div className=" bg-white flex justify-center items-center rounded-lg shadow-sm">
-                      {/**
-                       *     --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-                       */}
                       <Input
                         // variant="bordered"
                         radius="sm"
@@ -251,12 +271,12 @@ export const AddMissions = () => {
                     <span>Reserve remain:</span>
                     <span
                       className={`${
-                        parseEther(subtract(programInfo.prize, missionPrizeSum + reserve)) < BigInt(0)
+                        parseEther(subtract(programInfo.reserve, missionPrizeSum + reserve)) < BigInt(0)
                           ? 'text-red-600'
                           : ''
                       }`}
                     >
-                      {subtract(programInfo.prize, missionPrizeSum + reserve)}
+                      {subtract(programInfo.reserve, missionPrizeSum + reserve)}
                     </span>
                     <span>EDU</span>
                   </div>
@@ -268,7 +288,7 @@ export const AddMissions = () => {
                 </Button>
                 <Button
                   isDisabled={
-                    parseEther(subtract(programInfo.prize, reserve)) < BigInt(0) || Number(prize) > Number(reserve)
+                    parseEther(subtract(programInfo.reserve, reserve)) < BigInt(0) || Number(prize) > Number(reserve)
                   }
                   onClick={addHandler}
                   className="bg-neutral-700 text-white"

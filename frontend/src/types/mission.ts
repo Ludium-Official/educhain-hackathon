@@ -1,6 +1,7 @@
 export type MissionType = {
   id: number;
   validators: string;
+  validator_address: string;
   owner: string | null;
   owner_name: string;
   program_id: number;

@@ -1,0 +1,165 @@
+.headerWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .addLink {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.container {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .table {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 20px 40px;
+    margin-top: 24px;
+
+    .tableHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 20px;
+
+      color: var(--black);
+      font-size: 18px;
+      font-weight: 500;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        font-size: 14px;
+      }
+    }
+
+    .tableBody {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+
+      padding: 25px 20px;
+      border-bottom: 1px solid var(--grey-05);
+
+      &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .tableRow {
+        display: flex;
+        justify-content: space-between;
+
+        font-size: 18px;
+
+        a {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          width: inherit;
+
+          .badge {
+            background-color: var(--info);
+            width: 90px;
+            padding: 5px 0;
+            border-radius: 40px;
+
+            text-align: center;
+
+            color: var(--white);
+            font-size: 14px;
+
+            &.studyBadge {
+              background-color: var(--green);
+            }
+          }
+        }
+
+        .collapseBtn {
+          background-color: inherit;
+          box-shadow: none;
+          width: fit-content;
+
+          &::after {
+            background-image: var(--bs-accordion-btn-icon);
+          }
+        }
+
+        .announceTitle {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+          max-width: 770px;
+
+          overflow: hidden;
+        }
+      }
+
+      .endTime {
+        width: fit-content;
+        padding: 3px 8px;
+        border: 1px solid var(--purple-01);
+        border-radius: 4px;
+
+        font-size: 12px;
+        color: var(--purple-01);
+      }
+    }
+  }
+}
+
+.missionsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 0;
+
+  .makeMissionBtn {
+    width: fit-content;
+    padding: 3px 5px;
+    border: 1px solid var(--grey-04);
+    border-radius: 4px;
+  }
+
+  .missionWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px;
+    border: 1px solid var(--grey-06);
+    border-radius: 4px;
+
+    .titleWrapper {
+      display: flex;
+      align-items: center;
+
+      .missionCategory {
+        margin-right: 10px;
+      }
+    }
+
+    .hasOwner {
+      margin-right: 20px;
+    }
+  }
+}

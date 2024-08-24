@@ -24,12 +24,14 @@ import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
 import { CONTRACT_ADDRESS } from '@/constant/deployed-addresses';
 import { ERROR_MESSAGE } from '@/constant/message';
 import { opencampus } from '@/constant/educhain-rpc';
+import { add, subtract } from '@/functions/math';
 
 interface Mission {
   reserve: string;
   prize: string;
   validators: string;
   owner: string;
+  validator_address: string;
   title: string;
   content: string;
   category: string;
@@ -43,7 +45,7 @@ interface ProgramInfoType {
   end_at: CalendarDateTime;
   description: string;
   managers: { address: string; name?: string }[];
-  prize: string;
+  reserve: string;
   missions: Mission[];
 }
 
@@ -56,7 +58,7 @@ const ProgramInfo = atom<ProgramInfoType>({
     end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
     description: '',
     managers: [],
-    prize: '',
+    reserve: '',
     missions: [],
   },
 });
@@ -80,7 +82,7 @@ export const useProgramCreation = () => {
       end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
       description: '',
       managers: [],
-      prize: '',
+      reserve: '',
       missions: [],
     });
     setIsProgramAddedInDb(false);
@@ -111,8 +113,8 @@ export const useProgramCreation = () => {
     setProgramInfo({ ...programInfo, managers: updatedManagers });
   };
 
-  const setPrize = (prize: string) => {
-    setProgramInfo({ ...programInfo, prize });
+  const setReserve = (reserve: string) => {
+    setProgramInfo({ ...programInfo, reserve });
   };
   const addMission = (mission: Mission) => {
     setProgramInfo({ ...programInfo, missions: [...programInfo.missions, mission] });
@@ -150,9 +152,14 @@ export const useProgramCreation = () => {
     const endDateTimestamp = Math.floor(endDateTime.toDate(getLocalTimeZone()).getTime() / 1000);
     let programId = programInfo.programId;
     let hash = '0x';
+    let sumMissionReserve = '0';
     let txReceipt;
 
     setSendLoading(true);
+
+    for (const mission of programInfo.missions) {
+      sumMissionReserve = add(sumMissionReserve, mission.reserve);
+    }
 
     if (!isProgramAddedInDb) {
       // add program info to db
@@ -167,7 +174,7 @@ export const useProgramCreation = () => {
             type: 'manage',
             title: programInfo.title,
             guide: programInfo.description,
-            prize: programInfo.prize,
+            reserve: subtract(programInfo.reserve, sumMissionReserve),
             start_at: endDateTimestamp,
             end_at: endDateTimestamp,
           },
@@ -194,12 +201,12 @@ export const useProgramCreation = () => {
         abi: LD_ProgramFactoryABI,
         address: CONTRACT_ADDRESS.EDU_FACTORY,
         functionName: 'createProgram',
-        value: parseEther(programInfo.prize.toString()),
+        value: parseEther(programInfo.reserve.toString()),
         args: [
           BigInt(programId),
           programInfo.managers.map((manager) => manager.address.trim() as Address),
           programInfo.missions.map((mission: Mission) => ({
-            auditor: mission.validators.trim() as Address,
+            auditor: mission.validator_address.trim() as Address,
             prize: parseEther(mission.reserve.toString()),
           })),
           BigInt(startDateTimestamp),
@@ -251,7 +258,7 @@ export const useProgramCreation = () => {
     setDescription,
     addManager,
     deleteManager,
-    setPrize,
+    setReserve,
     addMission,
     deleteMission,
     createProgram,

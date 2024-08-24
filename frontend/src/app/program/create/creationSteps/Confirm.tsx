@@ -52,7 +52,7 @@ export const Confirm = () => {
               <div className="flex flex-col gap-1">
                 <div className="text-neutral-500 text-sm">Program Reserve</div>
                 <div className="ml-1 flex gap-2">
-                  <span>{programInfo.prize}</span>
+                  <span>{programInfo.reserve}</span>
                   <span className="text-neutral-500">EDU</span>
                 </div>
               </div>
