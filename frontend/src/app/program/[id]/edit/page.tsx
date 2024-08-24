@@ -9,6 +9,7 @@ import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Tab, Tabs } from '@mui/material';
+import { PieChart } from '@mui/x-charts';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
