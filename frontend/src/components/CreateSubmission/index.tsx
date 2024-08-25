@@ -1,12 +1,12 @@
 'use client';
 
-import { Submission } from '@/app/mission/[id]/edit/page';
 import WhiteAddLogo from '@/assets/common/WhiteAddLogo.svg';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { DatePicker } from '@nextui-org/react';
 import Image from 'next/image';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { Submission } from '../CreateSubmissionFlow';
 import styles from './index.module.scss';
 
 interface CreateSubmissionProps {

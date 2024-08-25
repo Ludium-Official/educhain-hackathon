@@ -11,8 +11,9 @@ const handler = async (req: Request) => {
   try {
     connection = await pool.getConnection();
 
+    console.log(missionData);
     await connection.query(
-      `INSERT INTO missions (validators, owner, program_id, category, title, content, prize, end_at, reserve) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO missions (validators, owner, program_id, category, title, content, prize, end_at, reserve, validator_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         missionData.validators,
         missionData.owner,
@@ -23,11 +24,13 @@ const handler = async (req: Request) => {
         missionData.prize,
         missionData.end_at,
         missionData.reserve,
+        missionData.validator_address,
       ],
     );
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.log(error);
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     if (connection) connection.release();

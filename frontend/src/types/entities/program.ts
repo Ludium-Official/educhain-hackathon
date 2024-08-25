@@ -11,4 +11,5 @@ export type DBProgram = {
   end_at: string;
   created_at: string;
   missions?: DBMission[];
+  program_address: string;
 };

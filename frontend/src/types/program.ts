@@ -11,4 +11,6 @@ export type ProgramType = {
   end_at: string | null;
   created_at: string;
   missions?: DBMission[];
+  owner_address: string;
+  program_address: string;
 };

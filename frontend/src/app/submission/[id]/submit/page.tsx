@@ -11,12 +11,14 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 import styles from './page.module.scss';
 
 export default function SubmissionSubmit() {
   const route = useRouter();
   const param = useParams();
 
+  const account = useAccount();
   const { user } = useUser();
   const [submission, setSubmission] = useState<SubmissionType>();
 
@@ -43,7 +45,10 @@ export default function SubmissionSubmit() {
 
     await fetchData(`/submissions/submit/${param.id}`, 'POST', {
       submission,
-      wallet_id: user?.walletId,
+      wallet_info: {
+        wallet_id: user?.walletId,
+        address: account.address,
+      },
     });
 
     route.push(`${PATH.SUBMISSION}/${param.id}`);

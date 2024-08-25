@@ -27,6 +27,7 @@ const handler = async (req: Request) => {
                 'created_at', m.created_at,
                 'is_confirm', m.is_confirm,
                 'reserve', m.reserve,
+                'prize', m.prize,
                 'program_id', m.program_id
               )
             ),
@@ -57,6 +58,7 @@ const handler = async (req: Request) => {
 
     return NextResponse.json(programs);
   } catch (error) {
+    console.error(error);
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     if (connection) connection.release();

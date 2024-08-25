@@ -14,7 +14,7 @@ const handler = async (req: Request) => {
 
     const query = `
       SELECT
-        m.id, m.title, m.missionCnt, m.prize, m.end_at, COUNT(uss.id) submissionCount
+        m.id, m.title, m.missionCnt, m.prize, m.end_at, m.program_id, m.mission_id, COUNT(uss.id) submissionCount
       FROM
         user_submission_status uss
       JOIN

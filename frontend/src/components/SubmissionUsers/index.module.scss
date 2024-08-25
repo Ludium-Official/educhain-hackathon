@@ -1,0 +1,47 @@
+.container {
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid var(--grey-04);
+    padding: 10px;
+
+    &:first {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .leftSide {
+      display: flex;
+      align-items: center;
+
+      .addressWrapper {
+        display: flex;
+        align-items: center;
+
+        margin-left: 10px;
+
+        .address {
+          max-width: 200px;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .submissionBtn {
+      background-color: var(--purple-01);
+      padding: 5px 10px;
+      border-radius: 40px;
+
+      font-size: 12px;
+    }
+  }
+}

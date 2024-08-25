@@ -15,12 +15,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
+import { useWriteContract } from 'wagmi';
+import { waitForTransactionReceipt, readContract } from 'wagmi/actions';
+import { parseEther, decodeEventLog, formatEther } from 'viem';
+import type { Address, Hex } from 'viem';
+import { LD_EduProgramABI } from '@/constant/LD_EduProgramABI';
+import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
+import { LOG_TOPIC0 } from '@/constant/topic0';
+import { config } from '@/app/provider';
 
 export default function ProgramManage() {
   const { user } = useUser();
 
   const [programs, setPrograms] = useState<ProgramType[]>([]);
   const [userCount, setUserCount] = useState<UserCountType>();
+  const { writeContractAsync } = useWriteContract();
 
   const callProgramsWithMissions = useCallback(async () => {
     try {
@@ -53,10 +62,33 @@ export default function ProgramManage() {
       const dataValue = event.currentTarget.getAttribute('data-value');
       const parsedValue = dataValue ? JSON.parse(dataValue) : null;
 
+      const hash = await writeContractAsync({
+        address: parsedValue.programAddress as Address,
+        abi: LD_EduProgramABI,
+        functionName: 'addMission',
+        args: [parsedValue.ownerAddress as Address, parseEther(parsedValue.missionReserve)],
+      });
+
+      const txReceipt = await waitForTransactionReceipt(config, { hash: hash as Hex });
+      const reserve = await readContract(config, {
+        address: parsedValue.programAddress as Address,
+        abi: LD_EduProgramABI,
+        functionName: 'reserve',
+      });
+
+      const targetLog = txReceipt.logs.filter((log) => log.topics[0] === LOG_TOPIC0.MISSION_ADDED)[0];
+      const { args } = decodeEventLog({
+        abi: LD_EventLoggerABI,
+        data: targetLog.data,
+        topics: targetLog.topics,
+      }) as { args: { programId: bigint; newMissionNumber: bigint; prize: bigint } };
+
       if (parsedValue) {
         await fetchData('/missions/patchActive', 'POST', {
           id: parsedValue.id,
           program_id: parsedValue.programId,
+          mission_id: Number(args.newMissionNumber),
+          programReserve: formatEther(reserve),
         });
 
         alert(`Now active mission id ${parsedValue.id}`);
@@ -92,7 +124,7 @@ export default function ProgramManage() {
         ),
         body: (
           <div className={styles.container}>
-            <div className={styles.title}>Program Manage</div>
+            <div className={styles.title}>Program Dashboard</div>
             <div className={styles.introCard}>
               <div className={styles.content}>
                 <div className={styles.cardTitle}>Prize</div>
@@ -148,7 +180,13 @@ export default function ProgramManage() {
                           {!mission.is_confirm && (
                             <button
                               className={styles.confirmBtn}
-                              data-value={JSON.stringify({ id: mission.id, programId: mission.program_id })}
+                              data-value={JSON.stringify({
+                                id: mission.id,
+                                programId: mission.program_id,
+                                ownerAddress: program.owner_address,
+                                programAddress: program.program_address,
+                                missionReserve: mission.reserve,
+                              })}
                               onClick={SubmitComment}
                             >
                               Confirm

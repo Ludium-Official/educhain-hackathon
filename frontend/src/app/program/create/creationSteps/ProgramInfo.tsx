@@ -16,7 +16,7 @@ import {
 } from '@internationalized/date';
 
 export const ProgramInfo = () => {
-  const { programInfo, setTitle, setDescription, setPeriod } = useProgramCreation();
+  const { programInfo, setTitle, setTag, setDescription, setPeriod } = useProgramCreation();
   const date = new Date();
   return (
     <ContentContainer contentHeader="Program Info">
@@ -33,6 +33,24 @@ export const ProgramInfo = () => {
                 setTitle(e.target.value);
               }}
               placeholder="e.g., Smart contract study with OpenCampus"
+              classNames={{
+                base: 'w-[400px] shadow-none',
+                inputWrapper: 'p-0 shadow-none border-b-2 border-solid border-neutral-200',
+                input: 'text-base text-neutral-700 placeholder:text-neutral-400',
+              }}
+            />
+          </div>
+          <div className="title flex gap-3 items-center justify-start">
+            <span className="text-lg text-neutral-600 w-28">- Tag </span>
+            <Input
+              size="sm"
+              variant="underlined"
+              labelPlacement="outside"
+              value={programInfo.type}
+              onChange={(e) => {
+                setTag(e.target.value);
+              }}
+              placeholder="e.g., Educhain"
               classNames={{
                 base: 'w-[400px] shadow-none',
                 inputWrapper: 'p-0 shadow-none border-b-2 border-solid border-neutral-200',

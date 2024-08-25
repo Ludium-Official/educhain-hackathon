@@ -14,4 +14,5 @@ export type MissionType = {
   prize: string;
   end_at: string;
   created_at: string;
+  mission_id: number;
 };

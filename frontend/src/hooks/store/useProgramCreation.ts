@@ -41,6 +41,7 @@ interface Mission {
 interface ProgramInfoType {
   programId: number;
   title: string;
+  type: string;
   start_at: CalendarDateTime;
   end_at: CalendarDateTime;
   description: string;
@@ -54,6 +55,7 @@ const ProgramInfo = atom<ProgramInfoType>({
   default: {
     programId: 0,
     title: '',
+    type: '',
     start_at: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0, 0, 0)),
     end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
     description: '',
@@ -78,6 +80,7 @@ export const useProgramCreation = () => {
     setProgramInfo({
       programId: 0,
       title: '',
+      type: '',
       start_at: toCalendarDateTime(today(getLocalTimeZone()), new Time(0, 0, 0, 0)),
       end_at: toCalendarDateTime(today(getLocalTimeZone()).add({ months: 1 }), new Time(23, 59, 59, 59)),
       description: '',
@@ -94,6 +97,9 @@ export const useProgramCreation = () => {
 
   const setTitle = (title: string) => {
     setProgramInfo({ ...programInfo, title });
+  };
+  const setTag = (type: string) => {
+    setProgramInfo({ ...programInfo, type });
   };
   const setPeriod = (start_at: CalendarDateTime, end_at: CalendarDateTime) => {
     setProgramInfo({ ...programInfo, start_at, end_at });
@@ -171,7 +177,7 @@ export const useProgramCreation = () => {
             chainId: opencampus.id,
             owner_address: account.address,
             managers: programInfo.managers,
-            type: 'manage',
+            type: programInfo.type,
             title: programInfo.title,
             guide: programInfo.description,
             reserve: subtract(programInfo.reserve, sumMissionReserve),
@@ -254,6 +260,7 @@ export const useProgramCreation = () => {
   return {
     programInfo,
     setTitle,
+    setTag,
     setPeriod,
     setDescription,
     addManager,
