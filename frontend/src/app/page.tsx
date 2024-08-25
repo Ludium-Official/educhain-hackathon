@@ -83,7 +83,7 @@ export default function Home() {
               <div className={styles.cardWrapper}>
                 <div className={styles.missedContainer}>
                   <div>Whole Builder</div>
-                  <div className={styles.missedAmount}>200+</div>
+                  <div className={styles.missedAmount}>1,800+</div>
                 </div>
               </div>
               <div className={styles.cardWrapper}>

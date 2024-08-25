@@ -11,7 +11,6 @@ const handler = async (req: Request) => {
   try {
     connection = await pool.getConnection();
 
-    console.log(missionData);
     await connection.query(
       `INSERT INTO missions (validators, owner, program_id, category, title, content, prize, end_at, reserve, validator_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -30,7 +29,6 @@ const handler = async (req: Request) => {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.log(error);
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     if (connection) connection.release();
