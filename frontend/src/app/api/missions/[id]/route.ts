@@ -31,11 +31,9 @@ const handler = async (req: Request) => {
     const [rows] = await connection.query(query, [id]);
 
     const request = rows as DBMission[];
-    console.log(request);
 
     return NextResponse.json(request[0]);
   } catch (error) {
-    console.log(error);
     return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     if (connection) connection.release();
