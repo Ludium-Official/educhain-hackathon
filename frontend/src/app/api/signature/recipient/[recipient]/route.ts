@@ -13,7 +13,7 @@ const handler = async (req: Request) => {
   try {
     connection = await pool.getConnection();
 
-    const query = `SELECT * FROM signatures WHERE recipient = ? AND is_claimed = 0`;
+    const query = `SELECT * FROM signatures WHERE recipient = ?`;
     const [rows] = await connection.query(query, [id]);
 
     const request = rows as DBSignature[];

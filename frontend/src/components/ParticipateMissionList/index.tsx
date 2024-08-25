@@ -24,7 +24,8 @@ const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission
 
   const claimPrize = useCallback(async () => {
     await claim({ programId: mission.program_id, missionNumber: mission.mission_id });
-  }, [mission.program_id, mission.mission_id, claim]);
+    participateCallData();
+  }, [claim, mission.program_id, mission.mission_id, participateCallData]);
 
   const isExpired = useMemo(() => {
     const remindDate = getConvertDeadline(mission.end_at);
@@ -71,7 +72,7 @@ const ParticipateMissionList: React.FC<ParticipateMissionListProps> = ({ mission
   const tokenClaim = useMemo(() => {
     if (account && mission.signature) {
       if (mission.signature.sig) {
-        if (mission.signature.is_claimed === '1') {
+        if (mission.signature.is_claimed === 0) {
           return (
             <button className={styles.submissionBtn} onClick={() => claimPrize()}>
               Claim

@@ -3,6 +3,6 @@ export type UserSubmissionListType = {
   name: string;
   wallet_id: string;
   submission_count: number;
-  sig: string | null;
-  is_claimed: string;
+  sig?: string | null;
+  is_claimed?: number | null;
 };

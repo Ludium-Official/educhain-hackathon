@@ -7,4 +7,5 @@ export type Signature = {
   prize: string;
   sig: string;
   sig_hash: string;
+  is_claimed: boolean;
 };
