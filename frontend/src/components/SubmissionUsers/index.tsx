@@ -1,66 +1,69 @@
 'use client';
 
 import { useValidator } from '@/hooks/store/useValidator';
+import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { UserSubmissionListType } from '@/types/user_submission_list';
 import { useParams } from 'next/navigation';
-import { isNil } from 'ramda';
+import { includes, isNil } from 'ramda';
 import { useCallback, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 
-const SubmissionUsers: React.FC = () => {
+interface SubmissionUsersProps {
+  mission?: MissionType;
+  validatorList: string[];
+}
+
+const SubmissionUsers: React.FC<SubmissionUsersProps> = ({ mission, validatorList }) => {
   const param = useParams();
   const { signForClaim } = useValidator();
 
-  const [mission, setMissions] = useState<MissionType>();
+  const { user } = useUser();
   const [userSubmissions, setUserSubmissions] = useState<UserSubmissionListType[]>([]);
 
   const participateCallData = useCallback(async () => {
-    const [userSubmissions] = await Promise.all([fetchData(`/user_submission_status/${param.id}`)]);
+    const [userSubmissions] = await Promise.all([
+      fetchData(`/user_submission_status/${param.id}`, 'POST', {
+        program_id: mission?.program_id,
+        mission_id: mission?.mission_id,
+      }),
+    ]);
 
     setUserSubmissions(userSubmissions);
-  }, [param.id]);
+  }, [mission?.mission_id, mission?.program_id, param.id]);
 
   useEffect(() => {
-    const callData = async () => {
-      try {
-        const [missionResponse] = await Promise.all([fetchData(`/missions/${param.id}`)]);
+    participateCallData();
+  }, [participateCallData]);
 
-        setMissions(missionResponse);
-        participateCallData();
-      } catch (error) {
-        console.error('Error fetching data:', error);
+  const missionStatus = useCallback(
+    (submission: UserSubmissionListType) => {
+      if (submission.is_claimed === 0 && isNil(submission.sig)) {
+        return (
+          <button
+            className={styles.submissionBtn}
+            onClick={() => {
+              signForClaim({
+                programId: mission?.program_id || 0,
+                missionNumber: mission?.mission_id || 0,
+                recipient: submission.address,
+                prize: mission?.prize || '',
+              });
+              participateCallData();
+            }}
+          >
+            Sign
+          </button>
+        );
+      } else if (submission.is_claimed === 1 && !isNil(submission.sig)) {
+        return <div>Done</div>;
       }
-    };
 
-    callData();
-  }, [param.id, participateCallData]);
-
-  const missionStatus = (submission: UserSubmissionListType) => {
-    if (submission.is_claimed === '0' && isNil(submission.sig)) {
-      return (
-        <button
-          className={styles.submissionBtn}
-          onClick={() => {
-            signForClaim({
-              programId: mission?.program_id || 0,
-              missionNumber: mission?.mission_id || 0,
-              recipient: submission.address,
-              prize: mission?.prize || '',
-            });
-            participateCallData();
-          }}
-        >
-          Sign
-        </button>
-      );
-    } else if (isNil(submission.is_claimed)) {
       return <div>Ing..</div>;
-    }
-
-    return <div>Done</div>;
-  };
+    },
+    [mission?.mission_id, mission?.prize, mission?.program_id, participateCallData, signForClaim],
+  );
 
   return (
     <div className={styles.container}>
@@ -73,7 +76,7 @@ const SubmissionUsers: React.FC = () => {
                 (<span className={styles.address}>{submission.address}</span>)
               </div>
             </div>
-            {missionStatus(submission)}
+            {includes(user?.walletId, validatorList) && missionStatus(submission)}
           </div>
         );
       })}

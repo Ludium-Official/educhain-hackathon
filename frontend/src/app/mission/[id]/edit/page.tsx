@@ -12,6 +12,7 @@ import { TabContext, TabPanel } from '@mui/lab';
 import { Tab, Tabs } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useParams } from 'next/navigation';
+import { includes, split } from 'ramda';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
@@ -41,13 +42,15 @@ export default function MissionEdit() {
     callData();
   }, [param.id, user?.walletId]);
 
+  const validatorList = split(',', mission?.validators || '');
+
   return (
     <Wrapper>
       {{
         header: <BackLink path={`${PATH.MISSION}/${param.id}`} />,
         body: (
           <div className={styles.container}>
-            {user?.walletId === mission?.owner ? (
+            {user?.walletId === mission?.owner || includes(user?.walletId, validatorList) ? (
               <>
                 <div className={styles.title}>Mission Manage</div>
                 <TabContext value={value}>
@@ -76,7 +79,7 @@ export default function MissionEdit() {
                     <CreateSubmissionFlow mission={mission} />
                   </TabPanel>
                   <TabPanel value="3">
-                    <SubmissionUsers />
+                    <SubmissionUsers mission={mission} validatorList={validatorList} />
                   </TabPanel>
                 </TabContext>
               </>
