@@ -14,6 +14,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { isEmpty } from 'ramda';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './page.module.scss';
+import { subtract } from '@/functions/math';
+import { parseEther } from 'viem';
 
 export default function ProgramEdit() {
   const route = useRouter();
@@ -69,7 +71,7 @@ export default function ProgramEdit() {
     } else if (isEmpty(missionPrize)) {
       alert('Fill in prize');
       return;
-    } else if (Number(missionReserve) > reservePrize) {
+    } else if (program?.reserve && parseEther(subtract(program.reserve, missionReserve)) < BigInt(0)) {
       alert('Check rest reserve prize');
       return;
     } else if (Number(missionPrize) > Number(missionReserve)) {
@@ -102,11 +104,11 @@ export default function ProgramEdit() {
     }
   };
 
-  const reservePrize = useMemo(() => {
-    const allocatePrize = missions.reduce((result, mission) => (result += Number(mission.prize)), 0);
+  // const reservePrize = useMemo(() => {
+  //   const allocatePrize = missions.reduce((result, mission) => (result += Number(mission.prize)), 0);
 
-    return Number(program?.reserve) - allocatePrize;
-  }, [missions, program?.reserve]);
+  //   return Number(program?.reserve) - allocatePrize;
+  // }, [missions, program?.reserve]);
 
   return (
     <Wrapper>
@@ -139,7 +141,7 @@ export default function ProgramEdit() {
                       </div>
                       <div className={styles.inputWrapper}>
                         <div className={styles.prizeInput}>
-                          Reserve<span>(remain prize: {reservePrize} EDU)</span>
+                          Reserve<span>(remain: {program?.reserve} EDU)</span>
                         </div>
                         <input
                           className={styles.input}

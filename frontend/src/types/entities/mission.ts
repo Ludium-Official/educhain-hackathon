@@ -10,7 +10,8 @@ export type DBMission = {
   title: string;
   content: string;
   missionCnt: number;
-  prize: number;
+  prize: string;
+  reserve: string;
   end_at: string;
   created_at: string;
 };
