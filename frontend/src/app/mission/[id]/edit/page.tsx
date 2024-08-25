@@ -1,5 +1,7 @@
 'use client';
+
 import BackLink from '@/components/BackLink';
+import CreateSubmissionFlow from '@/components/CreateSubmissionFlow';
 import SubmissionUsers from '@/components/SubmissionUsers';
 import Wrapper from '@/components/Wrapper';
 import { PATH } from '@/constant/route';
@@ -9,19 +11,11 @@ import { MissionType } from '@/types/mission';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Tab, Tabs } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
 
-export interface Submission {
-  title: string;
-  content: string;
-  type: string;
-  endTime: string;
-}
-
 export default function MissionEdit() {
-  const route = useRouter();
   const param = useParams();
 
   const { user } = useUser();
@@ -31,17 +25,7 @@ export default function MissionEdit() {
   };
 
   const [value, setValue] = useState('1');
-
-  const [chapterTitle, setChapterTitle] = useState('');
   const [mission, setMission] = useState<MissionType>();
-  const [submissions, setSubmissions] = useState<Submission[]>([
-    {
-      title: '',
-      content: '',
-      type: 'article',
-      endTime: '',
-    },
-  ]);
 
   useEffect(() => {
     const callData = async () => {
@@ -56,32 +40,6 @@ export default function MissionEdit() {
 
     callData();
   }, [param.id, user?.walletId]);
-
-  const addSubmission = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      if (user && mission) {
-        await fetchData(`/submissions/${param.id}/add`, 'POST', {
-          chapterData:
-            mission?.category === 'study'
-              ? {
-                  title: chapterTitle,
-                }
-              : null,
-          submissionData: {
-            program_id: mission.program_id,
-            submissions: submissions,
-          },
-        });
-
-        alert('Success to make submission!');
-        route.push(`${PATH.MISSION}/${param.id}`);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <Wrapper>
@@ -113,7 +71,10 @@ export default function MissionEdit() {
                       height={200}
                     />
                   </TabPanel>
-                  <TabPanel value="2">MissionDetail</TabPanel>
+                  <TabPanel value="2">
+                    <div>Detail component</div>
+                    <CreateSubmissionFlow mission={mission} />
+                  </TabPanel>
                   <TabPanel value="3">
                     <SubmissionUsers />
                   </TabPanel>
