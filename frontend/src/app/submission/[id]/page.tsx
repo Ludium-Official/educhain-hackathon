@@ -83,14 +83,10 @@ export default function SubmissionDetail() {
           alert('Wrong answer. Please check the answer and try again.');
           return;
         }
-      } else {
-        // 백틱 사이의 값이 없는 경우
-        console.warn('No content found between backticks.');
-        return;
       }
     }
 
-    alert("Correct ansewer! Submit the answer.");
+    alert('Correct ansewer! Submit the answer.');
 
     if (submission?.type) {
       await fetchData(`/submissions/submit/${param.id}`, 'POST', {
