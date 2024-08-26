@@ -52,7 +52,7 @@ export default function SubmissionSubmit() {
     });
 
     route.push(`${PATH.SUBMISSION}/${param.id}`);
-  }, [param.id, route, submission, user?.walletId]);
+  }, [account.address, param.id, route, submission, user?.walletId]);
 
   const formatDate = dayjs(submission?.end_at).format('YYYY.MM.DD');
 

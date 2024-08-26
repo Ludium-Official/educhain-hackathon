@@ -10,7 +10,9 @@ import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Tab, Tabs } from '@mui/material';
+import { LineChart } from '@mui/x-charts';
 import { PieChart } from '@mui/x-charts/PieChart';
+import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { includes, split } from 'ramda';
 import { useEffect, useState } from 'react';
@@ -43,6 +45,7 @@ export default function MissionEdit() {
   }, [param.id, user?.walletId]);
 
   const validatorList = split(',', mission?.validators || '');
+  const validatorAddrList = split(',', mission?.validator_address || '');
 
   return (
     <Wrapper>
@@ -60,19 +63,60 @@ export default function MissionEdit() {
                     <Tab value="3" label="Submissions" />
                   </Tabs>
                   <TabPanel value="1">
-                    <PieChart
-                      series={[
-                        {
-                          data: [
-                            { id: 0, value: 10, label: 'series A' },
-                            { id: 1, value: 15, label: 'series B' },
-                            { id: 2, value: 20, label: 'series C' },
-                          ],
-                        },
-                      ]}
-                      width={400}
-                      height={200}
-                    />
+                    <div className={styles.chartWrapper}>
+                      <div className={styles.cardWrapper}>
+                        <div className={styles.title}>Daily activity</div>
+                        <LineChart
+                          width={660}
+                          height={310}
+                          series={[{ data: [10, 4, 15, 12, 10, 9, 17], label: 'activity', color: '#861cc4' }]}
+                          xAxis={[
+                            {
+                              scaleType: 'point',
+                              data: [
+                                '2024-08-22',
+                                'P2024-08-23',
+                                '2024-08-24',
+                                '2024-08-25',
+                                '2024-08-26',
+                                '2024-08-27',
+                                '2024-08-28',
+                              ],
+                            },
+                          ]}
+                        />
+                      </div>
+                      <div className={styles.cardWrapper}>
+                        <div className={styles.title}>Progress status</div>
+                        <PieChart
+                          colors={['#861cc4', '#9d66bc']}
+                          series={[
+                            {
+                              outerRadius: 120,
+                              data: [
+                                { id: 0, value: 45, label: 'Done' },
+                                { id: 1, value: 70, label: 'Ing' },
+                              ],
+                              highlightScope: { faded: 'global', highlighted: 'item' },
+                              faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                            },
+                          ]}
+                          {...{
+                            margin: { right: 5 },
+                            legend: { hidden: true },
+                          }}
+                          height={310}
+                        />
+                      </div>
+                    </div>
+                    <div className={clsx(styles.cardWrapper, styles.validatorList)}>
+                      <div className={styles.title}>Validator list</div>
+                      {validatorAddrList.map((validator) => (
+                        <div key={validator} className={styles.validator}>
+                          {validator}
+                        </div>
+                      ))}
+                    </div>
                   </TabPanel>
                   <TabPanel value="2">
                     <div>Detail component</div>
