@@ -173,7 +173,7 @@ export default function ProgramDetail() {
                 </div>
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

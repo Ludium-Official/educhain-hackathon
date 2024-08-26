@@ -24,6 +24,7 @@ export default function SubmissionDetail() {
   const { user } = useUser();
   const [submission, setSubmission] = useState<SubmissionType>();
   const [comments, setComments] = useState<CommentType[]>();
+  const [answer, setAnswer] = useState<string>('');
 
   const commentCallData = useCallback(async () => {
     const commentsResponse = (await fetchData(`/comments/${param.id}`, 'POST', {
@@ -64,8 +65,33 @@ export default function SubmissionDetail() {
 
     return 'Apply';
   }, [submission]);
-
+  const handleChange = (e: any) => {
+    console.log('Value before update:', answer);
+    setAnswer(e.target.value);
+    console.log('Value after update:', e.target.value);
+  };
   const submissionSubmit = useCallback(async () => {
+    if (submission?.type === 'mission') {
+      const content = submission.content;
+      const regex = /```([\s\S]*?)```/g;
+      let match = regex.exec(content);
+      if (match) {
+        const extractedValue = match[1];
+        const trimmedExtractedValue = extractedValue.replace(/\s+/g, '').trim();
+        const trimmedInputValue = answer.replace(/\s+/g, '').trim();
+        if (extractedValue !== answer && trimmedExtractedValue !== trimmedInputValue) {
+          alert('Wrong answer. Please check the answer and try again.');
+          return;
+        }
+      } else {
+        // 백틱 사이의 값이 없는 경우
+        console.warn('No content found between backticks.');
+        return;
+      }
+    }
+
+    alert("Correct ansewer! Submit the answer.");
+
     if (submission?.type) {
       await fetchData(`/submissions/submit/${param.id}`, 'POST', {
         submission,
@@ -81,7 +107,7 @@ export default function SubmissionDetail() {
 
     return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param.id, route, submission, user?.walletId]);
+  }, [param.id, route, submission, user?.walletId, answer]);
 
   return (
     <Wrapper>
@@ -106,7 +132,12 @@ export default function SubmissionDetail() {
                     </div>
                   </div>
                   {!submission?.submitStatus && submission.type === 'mission' && (
-                    <textarea className={styles.input} placeholder="input your answer" />
+                    <textarea
+                      className={styles.input}
+                      placeholder="input your answer"
+                      value={answer}
+                      onChange={handleChange}
+                    />
                   )}
                   <button
                     className={clsx(styles.submitBtn, submission?.submitStatus ? styles.isSubmit : null)}
@@ -118,7 +149,7 @@ export default function SubmissionDetail() {
                 <Comment type="submission" commentFuc={commentCallData} comments={comments} />
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

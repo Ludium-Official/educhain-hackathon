@@ -119,7 +119,7 @@ export default function MissionEdit() {
                 </div>
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

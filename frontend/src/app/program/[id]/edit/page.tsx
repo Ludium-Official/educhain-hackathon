@@ -8,11 +8,12 @@ import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { ProgramType } from '@/types/program';
 import { TabContext, TabPanel } from '@mui/lab';
-import { Tab, Tabs } from '@mui/material';
-import { PieChart } from '@mui/x-charts';
+import { Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs } from '@mui/material';
+import { LineChart, PieChart } from '@mui/x-charts';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
+import dayjs from 'dayjs';
 
 export default function ProgramEdit() {
   const param = useParams();
@@ -46,6 +47,19 @@ export default function ProgramEdit() {
     callData();
   }, [param.id, user?.walletId]);
 
+  const dates = [];
+  const today = new Date();
+
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    dates.push(date);
+  }
+
+  const dataset = dates.map((date) => {
+    return { date: date, m1: Math.random(), m2: Math.random() };
+  });
+
   return (
     <Wrapper>
       {{
@@ -63,19 +77,122 @@ export default function ProgramEdit() {
                   </Tabs>
 
                   <TabPanel value="1">
-                    <PieChart
-                      series={[
-                        {
-                          data: [
-                            { id: 0, value: 10, label: 'series A' },
-                            { id: 1, value: 15, label: 'series B' },
-                            { id: 2, value: 20, label: 'series C' },
-                          ],
-                        },
-                      ]}
-                      width={400}
-                      height={200}
-                    />
+                    <div className="flex flex-wrap space-x-4">
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.table}>
+                          <div className={styles.tableTitle}>Bounty</div>
+                          <PieChart
+                            series={[
+                              {
+                                data: [
+                                  { id: 0, value: 200, label: 'Remain' },
+                                  { id: 1, value: 10, label: 'Distributed' },
+                                ],
+                              },
+                            ]}
+                            width={350}
+                            height={200}
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.table}>
+                          <div className={styles.tableTitle}>Program Activity</div>
+                          <LineChart
+                            xAxis={[
+                              {
+                                scaleType: 'time',
+                                data: dates,
+                                valueFormatter: (value) => dayjs(value).format('YYYY.MM.DD'),
+                              },
+                            ]}
+                            series={[
+                              {
+                                data: [2, 4, 6, 1, 3, 6, 2],
+                                area: true,
+                              },
+                            ]}
+                            width={350}
+                            height={200}
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.table}>
+                          <div className={styles.tableTitle}>Mission Activity</div>
+                          <LineChart
+                            dataset={dataset}
+                            xAxis={[
+                              {
+                                dataKey: 'date',
+                                scaleType: 'time',
+                                valueFormatter: (value) => dayjs(value).format('YYYY.MM.DD'),
+                              },
+                            ]}
+                            series={[
+                              {
+                                id: 'France',
+                                label: 'Mission1',
+                                dataKey: 'm1',
+                                stack: 'total',
+                                area: true,
+                                showMark: false,
+                              },
+                              {
+                                id: 'United Kingdom',
+                                label: 'Mission2',
+                                dataKey: 'm2',
+                                stack: 'total',
+                                area: true,
+                                showMark: false,
+                              },
+                            ]}
+                            width={350}
+                            height={200}
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.tableWrapper}>
+                        <div className={styles.table}>
+                          <div className={styles.tableTitle}>Recent Activities</div>
+                          <div>
+                            <TableContainer>
+                              <Table>
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell>Address</TableCell>
+                                    <TableCell>Bounty</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell>{dates[0].toDateString()}</TableCell>
+                                    <TableCell>Fiddlestick</TableCell>
+                                    <TableCell>+10 EDU</TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell>{dates[0].toDateString()}</TableCell>
+                                    <TableCell>Zed</TableCell>
+                                    <TableCell>+10 EDU</TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell>{dates[0].toDateString()}</TableCell>
+                                    <TableCell>Yasuo</TableCell>
+                                    <TableCell>+10 EDU</TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell>{dates[0].toDateString()}</TableCell>
+                                    <TableCell>Yone</TableCell>
+                                    <TableCell>+10 EDU</TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </TabPanel>
                   <TabPanel value="2">
                     <div className={styles.tableWrapper}>
@@ -148,7 +265,7 @@ export default function ProgramEdit() {
                 </TabContext>
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

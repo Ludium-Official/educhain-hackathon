@@ -128,7 +128,7 @@ export default function MissionEdit() {
                 </TabContext>
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

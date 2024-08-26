@@ -51,7 +51,7 @@ export default function Mission() {
                     return 'ING';
                   }
 
-                  return 'NOT YET';
+                  return '';
                 };
                 return (
                   <div key={mission.id} className={styles.row}>

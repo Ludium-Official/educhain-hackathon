@@ -86,7 +86,7 @@ export default function SubmissionSubmit() {
                 </button>
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

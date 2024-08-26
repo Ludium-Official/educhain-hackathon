@@ -199,7 +199,7 @@ export default function ProgramEdit() {
                 </div>
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

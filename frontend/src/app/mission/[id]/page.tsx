@@ -150,7 +150,7 @@ export default function MissionDetail() {
                 {!mission.owner_name && <button className={styles.applyBtn}>지원하기</button>}
               </>
             ) : (
-              <div>null</div>
+              <div></div>
             )}
           </div>
         ),

@@ -39,7 +39,8 @@ const SubmissionUsers: React.FC<SubmissionUsersProps> = ({ mission, validatorLis
 
   const missionStatus = useCallback(
     (submission: UserSubmissionListType) => {
-      if (submission.is_claimed === 0 && isNil(submission.sig)) {
+      console.log(submission);
+      if (submission.is_claimed !== 1 && isNil(submission.sig)) {
         return (
           <button
             className={styles.submissionBtn}

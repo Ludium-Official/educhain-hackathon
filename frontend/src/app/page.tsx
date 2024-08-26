@@ -82,7 +82,7 @@ export default function Home() {
             <div className={styles.cardContainer}>
               <div className={styles.cardWrapper}>
                 <div className={styles.missedContainer}>
-                  <div>Whole Builder</div>
+                  <div>Builders</div>
                   <div className={styles.missedAmount}>1,800+</div>
                 </div>
               </div>
@@ -94,7 +94,7 @@ export default function Home() {
               </div>
               <div className={styles.cardWrapper}>
                 <div className={styles.missedContainer}>
-                  <div>Remain Bounty</div>
+                  <div>Current Bounty</div>
                   <div className={styles.missedAmount}>
                     <div className={styles.counter} id="counter">
                       0
