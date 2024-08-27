@@ -10,10 +10,10 @@ import { ProgramType } from '@/types/program';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs } from '@mui/material';
 import { LineChart, PieChart } from '@mui/x-charts';
+import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './page.module.scss';
-import dayjs from 'dayjs';
 
 export default function ProgramEdit() {
   const param = useParams();
@@ -77,7 +77,7 @@ export default function ProgramEdit() {
                   </Tabs>
 
                   <TabPanel value="1">
-                    <div className="flex flex-wrap space-x-4">
+                    <div className={styles.section1Wrapper}>
                       <div className={styles.tableWrapper}>
                         <div className={styles.table}>
                           <div className={styles.tableTitle}>Bounty</div>
@@ -90,7 +90,6 @@ export default function ProgramEdit() {
                                 ],
                               },
                             ]}
-                            width={350}
                             height={200}
                           />
                         </div>
@@ -112,11 +111,13 @@ export default function ProgramEdit() {
                                 area: true,
                               },
                             ]}
-                            width={350}
+                            width={600}
                             height={200}
                           />
                         </div>
                       </div>
+                    </div>
+                    <div className={styles.section2Wrapper}>
                       <div className={styles.tableWrapper}>
                         <div className={styles.table}>
                           <div className={styles.tableTitle}>Mission Activity</div>
@@ -147,8 +148,12 @@ export default function ProgramEdit() {
                                 showMark: false,
                               },
                             ]}
-                            width={350}
-                            height={200}
+                            width={480}
+                            height={270}
+                            {...{
+                              margin: { right: 5 },
+                              legend: { hidden: true },
+                            }}
                           />
                         </div>
                       </div>

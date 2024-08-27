@@ -1,10 +1,14 @@
 'use client';
 
+import { config } from '@/app/provider';
 import AnnouncementLogo from '@/assets/common/AnnouncementLogo.svg';
 import StudyLogo from '@/assets/common/StudyLogo.svg';
 import BackLink from '@/components/BackLink';
 import Wrapper from '@/components/Wrapper';
+import { LD_EduProgramABI } from '@/constant/LD_EduProgramABI';
+import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
 import { PATH } from '@/constant/route';
+import { LOG_TOPIC0 } from '@/constant/topic0';
 import { getConvertDeadline } from '@/functions/deadline-function';
 import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
@@ -14,15 +18,11 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import styles from './page.module.scss';
-import { useWriteContract } from 'wagmi';
-import { waitForTransactionReceipt, readContract } from 'wagmi/actions';
-import { parseEther, decodeEventLog, formatEther } from 'viem';
 import type { Address, Hex } from 'viem';
-import { LD_EduProgramABI } from '@/constant/LD_EduProgramABI';
-import { LD_EventLoggerABI } from '@/constant/LD_EventLogger';
-import { LOG_TOPIC0 } from '@/constant/topic0';
-import { config } from '@/app/provider';
+import { decodeEventLog, formatEther, parseEther } from 'viem';
+import { useWriteContract } from 'wagmi';
+import { readContract, waitForTransactionReceipt } from 'wagmi/actions';
+import styles from './page.module.scss';
 
 export default function ProgramManage() {
   const { user } = useUser();
@@ -128,7 +128,6 @@ export default function ProgramManage() {
             <div className={styles.introCard}>
               <div className={styles.content}>
                 <div className={styles.cardTitle}>Prize</div>
-                {/* TODO: 컨트렉트에서 현재 남은 token수 가져오기 */}
                 <div className={styles.cardContent}>0 EDU / {totalPrizeAmount} EDU</div>
               </div>
               <div className={styles.content}>
@@ -148,7 +147,7 @@ export default function ProgramManage() {
                 return (
                   <div key={program.id} className={styles.row}>
                     <div className={styles.programTitleWrapper}>
-                      <Link className={styles.programTitle} href={`${PATH.PROGRAM}/${program.id}`}>
+                      <Link className={styles.programTitle} href={`${PATH.PROGRAM}/${program.id}/edit`}>
                         {program.title}
                       </Link>
                       <span>Deadline: {program.end_at ? formatDate : '-'}</span>
@@ -175,7 +174,7 @@ export default function ProgramManage() {
                               />
                             )}
                             <div className={styles.prize}>{mission.prize} EDU</div>
-                            <Link href={`${PATH.MISSION}/${mission.id}`}>{mission.title}</Link>
+                            <Link href={`${PATH.MISSION}/${mission.id}/edit`}>{mission.title}</Link>
                           </div>
                           {!mission.is_confirm && (
                             <button

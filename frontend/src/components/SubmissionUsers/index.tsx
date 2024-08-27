@@ -5,6 +5,7 @@ import { useUser } from '@/hooks/store/user';
 import fetchData from '@/libs/fetchData';
 import { MissionType } from '@/types/mission';
 import { UserSubmissionListType } from '@/types/user_submission_list';
+import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { includes, isNil } from 'ramda';
 import { useCallback, useEffect, useState } from 'react';
@@ -39,7 +40,6 @@ const SubmissionUsers: React.FC<SubmissionUsersProps> = ({ mission, validatorLis
 
   const missionStatus = useCallback(
     (submission: UserSubmissionListType) => {
-      console.log(submission);
       if (submission.is_claimed !== 1 && isNil(submission.sig)) {
         return (
           <button
@@ -69,15 +69,21 @@ const SubmissionUsers: React.FC<SubmissionUsersProps> = ({ mission, validatorLis
   return (
     <div className={styles.container}>
       {userSubmissions.map((submission) => {
+        const percentage = (submission.submission_count / Number(mission?.missionCnt)) * 100;
         return (
-          <div key={submission.address} className={styles.row}>
-            <div className={styles.leftSide}>
-              {submission.name}
-              <div className={styles.addressWrapper}>
-                (<span className={styles.address}>{submission.address}</span>)
+          <div key={submission.address} className={styles.wrapper}>
+            <div className={styles.row}>
+              <div className={styles.leftSide}>
+                {submission.name}
+                <div className={styles.addressWrapper}>
+                  (<span className={styles.address}>{submission.address}</span>)
+                </div>
               </div>
+              {includes(user?.walletId, validatorList) && missionStatus(submission)}
             </div>
-            {includes(user?.walletId, validatorList) && missionStatus(submission)}
+            <div className={styles.progressWrapper}>
+              <div style={{ width: `${percentage}%` }} className={clsx(styles.progressBar)} />
+            </div>
           </div>
         );
       })}

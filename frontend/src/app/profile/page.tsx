@@ -177,7 +177,7 @@ export default function Profile() {
                               return (
                                 <div key={program.id} className={styles.row}>
                                   <div className={styles.rowTitle}>
-                                    <Link href={`${PATH.PROGRAM}/${program.id}`} className={styles.link}>
+                                    <Link href={`${PATH.PROGRAM}/${program.id}/edit`} className={styles.link}>
                                       <span className={styles.programType}>{program.type}</span>
                                       <span className={styles.contentTitle}>{program.title}</span>
                                     </Link>
