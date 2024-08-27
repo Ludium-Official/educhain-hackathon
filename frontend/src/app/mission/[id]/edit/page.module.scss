@@ -20,7 +20,7 @@
     padding: 20px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    background-color: #fafafa;
+    background-color: var(--white);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
     &.validatorList {
