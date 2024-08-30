@@ -1,4 +1,4 @@
-![ludium-educhain.png](https://cdn.dorahacks.io/static/files/191515946df7ca85aa086294a18b0111.png)
+![Front Page](https://cdn.dorahacks.io/static/files/191a15d3d5c1ebfe114c98742e18ceca.png)
 
 # Web3 Calls for a Radical Turnover In Education
 Traditionally, educational system was dictated by the structure of institutions such as colleges and other subsidiary organizations. However, in Web3 global foundations strive to provide community driven educational programs that **increase** **accessibility, diversity, and opportunity** tailored to the local needs. Most of the community driven educational programs are partially subsidized by different Grants and Public Goods Funding similar to how Government support the educational institution. However, since it is intended to be more **open, transparent, and public** in nature, the foundation needs to manage many more individuals and small communities at once.
